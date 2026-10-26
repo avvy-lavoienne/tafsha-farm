@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { hariIniISO } from "@/lib/tanggal";
+import MiniSpin from "@/components/MiniSpin";
 
 export default function HarvestForm({ batchId }: { batchId: string }) {
   const [jumlah, setJumlah] = useState("");
@@ -102,7 +103,7 @@ export default function HarvestForm({ batchId }: { batchId: string }) {
         disabled={sibuk || !jumlah}
         className="tf-btn"
       >
-        {sibuk ? "Menyimpan..." : "Catat panen"}
+        {sibuk ? (<><MiniSpin /> Menyimpan...</>) : ("Catat panen")}
       </button>
     </div>
   );

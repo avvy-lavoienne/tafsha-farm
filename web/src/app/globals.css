@@ -222,4 +222,21 @@ a.tf-card:hover {
 .tf-btn-kecil:disabled {
   opacity: 0.5;
 }
+
+/* Spinner logo — berputar halus, hormati prefers-reduced-motion. */
+@keyframes tf-putar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.tf-spin {
+  animation: tf-putar 1.2s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tf-spin {
+    animation: none;
+  }
+}
 }

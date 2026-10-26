@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
+import MiniSpin from "@/components/MiniSpin";
 
 type SubBlok = { id: string; location_id: string; nama: string };
 type LokasiItem = {
@@ -323,7 +324,7 @@ export default function KebunManager({
               disabled={sibuk}
               className="tf-btn"
             >
-              {sibuk ? "Menyimpan..." : "Simpan lokasi"}
+              {sibuk ? (<><MiniSpin /> Menyimpan...</>) : ("Simpan lokasi")}
             </button>
           </div>
         )}

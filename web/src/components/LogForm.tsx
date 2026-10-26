@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { LABEL_TUGAS } from "@/lib/tanggal";
+import MiniSpin from "@/components/MiniSpin";
 
 export default function LogForm({ batchId }: { batchId: string }) {
   const [jenis, setJenis] = useState("siram");
@@ -73,7 +74,7 @@ export default function LogForm({ batchId }: { batchId: string }) {
         disabled={sibuk}
         className="tf-btn"
       >
-        {sibuk ? "Menyimpan..." : "Catat"}
+        {sibuk ? (<><MiniSpin /> Menyimpan...</>) : ("Catat")}
       </button>
     </div>
   );

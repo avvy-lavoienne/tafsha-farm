@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { LABEL_TUGAS, hariIniISO } from "@/lib/tanggal";
 import { ikonKomoditas } from "@/lib/media";
+import MiniSpin from "@/components/MiniSpin";
 
 type BatchOpsi = {
   id: string;
@@ -102,7 +103,7 @@ export default function TambahTugasForm({
         disabled={sibuk}
         className="tf-btn-outline"
       >
-        {sibuk ? "Menyimpan..." : "Tambah pengingat"}
+        {sibuk ? (<><MiniSpin /> Menyimpan...</>) : ("Tambah pengingat")}
       </button>
     </div>
   );

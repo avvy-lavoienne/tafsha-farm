@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { hariIniISO } from "@/lib/tanggal";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
+import MiniSpin from "@/components/MiniSpin";
 
 type Opsi = { id: string; nama: string; aktif?: boolean | null };
 type SubBlok = { id: string; nama: string; location_id: string };
@@ -245,7 +246,7 @@ export default function BatchForm({
         disabled={sibuk || !commodityId || !locationId || !mediaTypeId}
         className="tf-btn"
       >
-        {sibuk ? "Menyimpan..." : edit ? "Simpan perubahan" : "Simpan batch"}
+        {sibuk ? (<><MiniSpin /> Menyimpan...</>) : edit ? ("Simpan perubahan") : ("Simpan batch")}
       </button>
     </div>
   );

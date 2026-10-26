@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import MiniSpin from "@/components/MiniSpin";
 
 export default function SeedButton() {
   const [pesan, setPesan] = useState<string | null>(null);
@@ -33,7 +34,7 @@ export default function SeedButton() {
         disabled={sibuk}
         className="tf-btn disabled:opacity-50"
       >
-        {sibuk ? "Mengisi..." : "Isi data awal kebun"}
+        {sibuk ? (<><MiniSpin /> Mengisi...</>) : ("Isi data awal kebun")}
       </button>
       {pesan && <p className="mt-2 text-xs text-red-700">{pesan}</p>}
       <p className="mt-1 text-xs text-zinc-500">
