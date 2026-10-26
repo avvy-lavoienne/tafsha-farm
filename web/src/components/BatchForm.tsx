@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { hariIniISO } from "@/lib/tanggal";
-import { ikonMedia } from "@/lib/media";
+import { ikonKomoditas, ikonMedia } from "@/lib/media";
 
 type Opsi = { id: string; nama: string; aktif?: boolean | null };
 type SubBlok = { id: string; nama: string; location_id: string };
@@ -135,7 +135,7 @@ export default function BatchForm({
         >
           {komoditas.map((k) => (
             <option key={k.id} value={k.id}>
-              {k.nama}
+              {ikonKomoditas(k.nama)} {k.nama}
               {k.aktif === false ? " (rencana)" : ""}
             </option>
           ))}

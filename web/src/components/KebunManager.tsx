@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { ikonMedia } from "@/lib/media";
+import { ikonKomoditas, ikonMedia } from "@/lib/media";
 
 type SubBlok = { id: string; location_id: string; nama: string };
 type LokasiItem = {
@@ -448,7 +448,7 @@ export default function KebunManager({
                     >
                       <span className="min-w-0">
                         <span className="block truncate text-sm font-semibold text-green-900">
-                          {bt.komoditas} × {bt.jumlah}
+                          {ikonKomoditas(bt.komoditas)} {bt.komoditas} × {bt.jumlah}
                         </span>
                         <span className="block truncate text-xs text-zinc-600">
                           {bt.subBlok ? `${bt.subBlok} • ` : ""}

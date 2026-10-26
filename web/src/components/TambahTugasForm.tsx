@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { LABEL_TUGAS, hariIniISO } from "@/lib/tanggal";
+import { ikonKomoditas } from "@/lib/media";
 
 type BatchOpsi = {
   id: string;
@@ -67,7 +68,7 @@ export default function TambahTugasForm({
             : b.locations?.nama;
           return (
             <option key={b.id} value={b.id}>
-              {kom} × {b.jumlah} ({lok})
+              {ikonKomoditas(kom)} {kom} × {b.jumlah} ({lok})
             </option>
           );
         })}

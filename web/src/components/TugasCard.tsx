@@ -1,4 +1,5 @@
 import { LABEL_TUGAS, formatTanggal, hariIniISO } from "@/lib/tanggal";
+import { ikonKomoditas } from "@/lib/media";
 
 type BatchMini = {
   id: string;
@@ -50,7 +51,7 @@ export default function TugasCard({ tugas }: { tugas: Tugas }) {
       </span>
       <div className="min-w-0 flex-1">
         <p className="text-sm font-semibold text-zinc-900">
-          {LABEL_TUGAS[tugas.jenis] ?? tugas.jenis} — {komoditas ?? "?"}
+          {LABEL_TUGAS[tugas.jenis] ?? tugas.jenis} — {ikonKomoditas(komoditas)} {komoditas ?? "?"}
         </p>
         <p className="text-xs text-zinc-500">
           {batch?.jumlah ?? 0} wadah • {kapan}

@@ -10,7 +10,7 @@ import BatchStatusButtons from "@/components/BatchStatusButtons";
 import LogForm from "@/components/LogForm";
 import HarvestForm from "@/components/HarvestForm";
 import TugasCard from "@/components/TugasCard";
-import { ikonMedia } from "@/lib/media";
+import { ikonKomoditas, ikonMedia } from "@/lib/media";
 
 export default async function BatchDetailPage({
   params,
@@ -75,7 +75,7 @@ export default async function BatchDetailPage({
         </div>
         <div className="mt-1 flex items-center justify-between gap-2">
           <h1 className="text-xl font-bold text-green-900">
-            {komoditas?.nama ?? "?"} × {b.jumlah}
+            {ikonKomoditas(komoditas?.nama)} {komoditas?.nama ?? "?"} × {b.jumlah}
           </h1>
           <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
             {LABEL_STATUS[b.status] ?? b.status}

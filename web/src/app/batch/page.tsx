@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { LABEL_STATUS, formatTanggal, hitungHST } from "@/lib/tanggal";
-import { ikonMedia } from "@/lib/media";
+import { ikonKomoditas, ikonMedia } from "@/lib/media";
 
 export default async function BatchPage({
   searchParams,
@@ -116,7 +116,7 @@ export default async function BatchPage({
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="font-bold text-green-900">
-                  {komoditas} × {b.jumlah}
+                  {ikonKomoditas(komoditas)} {komoditas} × {b.jumlah}
                 </p>
                 <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
                   {LABEL_STATUS[b.status] ?? b.status}
