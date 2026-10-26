@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import SeedButton from "@/components/SeedButton";
 import { formatTanggal, hariIniISO, hitungHST } from "@/lib/tanggal";
@@ -8,28 +9,8 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return (
-      <div className="flex flex-col gap-4">
-        <section className="tf-card">
-          <h1 className="text-xl font-bold text-green-900">
-            Selamat datang di Tafsha Farm
-          </h1>
-          <p className="mt-1 text-sm text-zinc-600">
-            Catat tanam, rawat, dan panen di Halaman Depan & Lahan Mushola.
-            Masuk dulu untuk melihat tugas hari ini.
-          </p>
-          <a
-            href="/masuk"
-            className="mt-3 inline-block tf-btn"
-          >
-            Masuk / Daftar
-          </a>
-        </section>
-        <MenuGrid />
-      </div>
-    );
-  }
+  // Tamu → landing publik (boleh dibuka tanpa login, lihat middleware).
+  if (!user) redirect("/landing.html");
 
   const hariIni = hariIniISO();
 
@@ -94,10 +75,10 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <section className="tf-card">
+    <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-4 lg:grid-cols-3">
+      <section className="tf-card lg:col-span-2 lg:row-span-2">
         <p className="tf-eyebrow">Kebun hari ini</p>
-        <h1 className="mt-1 text-2xl font-extrabold text-[#18181b]">
+        <h1 className="mt-1 text-2xl font-extrabold text-[#18181b] lg:text-3xl">
           Selamat berkebun 🌱
         </h1>
         <p className="mt-1 text-sm text-zinc-600">
@@ -173,7 +154,9 @@ export default async function Home() {
         </section>
       )}
 
-      <MenuGrid />
+      <div className="lg:col-span-3">
+        <MenuGrid />
+      </div>
     </div>
   );
 }
@@ -205,7 +188,7 @@ function MenuGrid() {
     { title: "Komoditas", desc: "9 komoditas + SOP", href: "/komoditas" },
   ];
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
       {CARDS.map((c) => (
         <a
           key={c.title}

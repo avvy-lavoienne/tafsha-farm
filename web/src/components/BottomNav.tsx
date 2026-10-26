@@ -20,7 +20,7 @@ export default function BottomNav() {
       className="fixed inset-x-0 bottom-0 z-40 border-t border-green-100 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-lg backdrop-blur"
       aria-label="Navigasi utama"
     >
-      <ul className="mx-auto grid max-w-3xl grid-cols-6 text-center">
+      <ul className="mx-auto grid max-w-3xl grid-cols-6 text-center lg:max-w-6xl">
         {NAV.map((item) => {
           const aktif =
             item.href === "/" ? path === "/" : path.startsWith(item.href);

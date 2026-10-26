@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav";
+import LogoutButton from "@/components/LogoutButton";
 
 export const metadata: Metadata = {
   title: "Tafsha Farm — Manajemen Kebun",
@@ -38,11 +39,11 @@ export default function RootLayout({
         className={`${inter.variable} ${jakarta.variable} flex min-h-full flex-col bg-[#fffbeb] text-zinc-900`}
       >
         <header className="sticky top-0 z-40 border-b border-green-900/10 bg-[#fffbeb]/95 backdrop-blur">
-          <div className="mx-auto flex min-h-[76px] w-full max-w-3xl items-center gap-2 px-4">
+          <div className="mx-auto flex min-h-[76px] w-full max-w-3xl items-center gap-2 px-4 lg:max-w-6xl">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-[#166534] text-xl text-white">
               🌱
             </span>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="text-base font-extrabold text-[#166534]">
                 Tafsha Farm
               </p>
@@ -50,9 +51,10 @@ export default function RootLayout({
                 Halaman Depan & Lahan Mushola — Pakuwon, Cisurupan, Garut
               </p>
             </div>
+            <LogoutButton />
           </div>
         </header>
-        <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-4 pb-28">
+        <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-4 pb-28 lg:max-w-6xl">
           {children}
         </main>
         <BottomNav />
