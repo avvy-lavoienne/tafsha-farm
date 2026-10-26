@@ -11,7 +11,7 @@ export default async function Home() {
   if (!user) {
     return (
       <div className="flex flex-col gap-4">
-        <section className="rounded-2xl bg-white p-4 shadow-sm">
+        <section className="tf-card">
           <h1 className="text-xl font-bold text-green-900">
             Selamat datang di Tafsha Farm
           </h1>
@@ -21,7 +21,7 @@ export default async function Home() {
           </p>
           <a
             href="/masuk"
-            className="mt-3 inline-block rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white"
+            className="mt-3 inline-block tf-btn"
           >
             Masuk / Daftar
           </a>
@@ -76,7 +76,7 @@ export default async function Home() {
   if ((lokasiRes.data ?? []).length === 0 && batchAktif.length === 0) {
     return (
       <div className="flex flex-col gap-4">
-        <section className="rounded-2xl bg-white p-4 shadow-sm">
+        <section className="tf-card">
           <h1 className="text-xl font-bold text-green-900">
             Akun sudah masuk 🎉
           </h1>
@@ -95,40 +95,51 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col gap-4">
-      <section className="grid grid-cols-2 gap-3">
-        <StatCard
-          angka={String(tugas.length)}
-          label="Pengingat hari ini"
-          href="/tugas"
-        />
-        <StatCard
-          angka={String(siapPanen)}
-          label="Siap panen"
-          href="/batch"
-        />
-        <StatCard
-          angka={String(batchAktif.length)}
-          label="Batch aktif"
-          href="/batch"
-        />
-        <StatCard
-          angka={String(totalPanenBulanIni)}
-          label="Panen bulan ini"
-          href="/panen"
-        />
+      <section className="tf-card">
+        <p className="tf-eyebrow">Kebun hari ini</p>
+        <h1 className="mt-1 text-2xl font-extrabold text-[#18181b]">
+          Selamat berkebun 🌱
+        </h1>
+        <p className="mt-1 text-sm text-zinc-600">
+          {tugas.length === 0
+            ? "Tidak ada pengingat hari ini. Santai 🎉"
+            : `${tugas.length} pengingat perlu dibaca — tanpa centang, tanpa laporan.`}
+        </p>
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          <StatCard
+            angka={String(tugas.length)}
+            label="Pengingat hari ini"
+            href="/tugas"
+          />
+          <StatCard
+            angka={String(siapPanen)}
+            label="Siap panen"
+            href="/batch"
+          />
+          <StatCard
+            angka={String(batchAktif.length)}
+            label="Batch aktif"
+            href="/batch"
+          />
+          <StatCard
+            angka={String(totalPanenBulanIni)}
+            label="Panen bulan ini"
+            href="/panen"
+          />
+        </div>
       </section>
 
       {menipis > 0 && (
         <a
           href="/sarana"
-          className="rounded-2xl bg-amber-50 p-4 text-sm font-medium text-amber-800 shadow-sm"
+          className="tf-card border-l-4 border-l-amber-500 text-sm font-medium text-amber-800"
         >
           ⚠️ {menipis} sarana di bawah stok minimum. Cek persediaan.
         </a>
       )}
 
       {batchAktif.length === 0 ? (
-        <section className="rounded-2xl bg-white p-4 shadow-sm">
+        <section className="tf-card">
           <h1 className="text-xl font-bold text-green-900">
             Belum ada tanaman
           </h1>
@@ -138,13 +149,13 @@ export default async function Home() {
           </p>
           <a
             href="/batch"
-            className="mt-3 inline-block rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white"
+            className="mt-3 inline-block tf-btn"
           >
             + Tambah batch tanam
           </a>
         </section>
       ) : (
-        <section className="rounded-2xl bg-white p-4 shadow-sm">
+        <section className="tf-card">
           <h2 className="font-bold text-green-900">
             🔔 Pengingat hari ini ({formatTanggal(hariIni)})
           </h2>
@@ -155,7 +166,7 @@ export default async function Home() {
           </p>
           <a
             href="/tugas"
-            className="mt-3 inline-block rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white"
+            className="mt-3 inline-block tf-btn"
           >
             Lihat pengingat
           </a>
@@ -177,11 +188,8 @@ function StatCard({
   href: string;
 }) {
   return (
-    <a
-      href={href}
-      className="rounded-2xl bg-white p-4 shadow-sm hover:bg-green-100"
-    >
-      <p className="text-2xl font-bold text-green-900">{angka}</p>
+    <a href={href} className="tf-card">
+      <p className="text-2xl font-bold text-[#166534]">{angka}</p>
       <p className="mt-1 text-xs text-zinc-600">{label}</p>
     </a>
   );
@@ -202,9 +210,9 @@ function MenuGrid() {
         <a
           key={c.title}
           href={c.href}
-          className="rounded-2xl bg-white p-4 shadow-sm hover:bg-green-100"
+          className="tf-card"
         >
-          <p className="font-semibold text-green-900">{c.title}</p>
+          <p className="font-semibold text-[#166534]">{c.title}</p>
           <p className="mt-1 text-xs text-zinc-600">{c.desc}</p>
         </a>
       ))}

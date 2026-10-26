@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import BottomNav from "@/components/BottomNav";
 
 export const metadata: Metadata = {
   title: "Tafsha Farm — Manajemen Kebun",
@@ -19,14 +21,11 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-const NAV = [
-  { href: "/", label: "Beranda" },
-  { href: "/kebun", label: "Kebun" },
-  { href: "/batch", label: "Tanam" },
-  { href: "/tugas", label: "Tugas" },
-  { href: "/panen", label: "Panen" },
-  { href: "/sarana", label: "Sarana" },
-];
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+});
 
 export default function RootLayout({
   children,
@@ -35,30 +34,28 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" className="h-full">
-      <body className="flex min-h-full flex-col bg-green-50 text-zinc-900">
-        <header className="bg-green-800 px-4 py-3 text-white">
-          <p className="text-lg font-bold">🌱 Tafsha Farm</p>
-          <p className="text-xs text-green-200">
-            Halaman Depan & Lahan Mushola — Pakuwon, Cisurupan, Garut
-          </p>
+      <body
+        className={`${inter.variable} ${jakarta.variable} flex min-h-full flex-col bg-[#fffbeb] text-zinc-900`}
+      >
+        <header className="sticky top-0 z-40 border-b border-green-900/10 bg-[#fffbeb]/95 backdrop-blur">
+          <div className="mx-auto flex min-h-[76px] w-full max-w-3xl items-center gap-2 px-4">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-[#166534] text-xl text-white">
+              🌱
+            </span>
+            <div className="min-w-0">
+              <p className="text-base font-extrabold text-[#166534]">
+                Tafsha Farm
+              </p>
+              <p className="truncate text-[11px] text-zinc-600">
+                Halaman Depan & Lahan Mushola — Pakuwon, Cisurupan, Garut
+              </p>
+            </div>
+          </div>
         </header>
-        <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-4 pb-24">
+        <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-4 pb-28">
           {children}
         </main>
-        <nav className="fixed inset-x-0 bottom-0 border-t border-green-200 bg-white">
-          <ul className="mx-auto grid max-w-3xl grid-cols-6 text-center text-xs font-medium">
-            {NAV.map((item) => (
-              <li key={item.href}>
-                <a
-                  href={item.href}
-                  className="block px-1 py-3 text-green-900 hover:bg-green-100"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <BottomNav />
       </body>
     </html>
   );

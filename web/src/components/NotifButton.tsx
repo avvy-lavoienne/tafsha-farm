@@ -33,7 +33,7 @@ export default function NotifButton() {
   }
 
   return (
-    <div className="rounded-xl border p-3">
+    <div className="tf-item">
       <p className="text-sm font-semibold">Nyalakan pengingat HP?</p>
       <p className="mt-0.5 text-xs text-zinc-600">
         Browser akan meminta izin notifikasi. Tanpa centang-centang, cukup
@@ -41,7 +41,7 @@ export default function NotifButton() {
       </p>
       <button
         onClick={aktifkan}
-        className="mt-2 rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white"
+        className="mt-2 tf-btn"
       >
         Aktifkan notifikasi
       </button>

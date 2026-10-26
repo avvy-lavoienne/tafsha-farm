@@ -35,7 +35,7 @@ export default function MasukPage() {
   }
 
   return (
-    <div className="mx-auto max-w-sm rounded-2xl bg-white p-5 shadow-sm">
+    <div className="mx-auto max-w-sm tf-card">
       <h1 className="text-xl font-bold text-green-900">Masuk Tafsha Farm</h1>
       <p className="mt-1 text-sm text-zinc-600">
         Satu akun untuk pemilik + anggota keluarga.
@@ -46,7 +46,7 @@ export default function MasukPage() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full rounded-xl border px-3 py-2"
+          className="mt-1 tf-input"
           placeholder="nama@email.com"
           autoComplete="email"
         />
@@ -57,7 +57,7 @@ export default function MasukPage() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 w-full rounded-xl border px-3 py-2"
+          className="mt-1 tf-input"
           placeholder="••••••••"
           autoComplete="current-password"
         />
@@ -71,14 +71,14 @@ export default function MasukPage() {
         <button
           onClick={() => kirim("masuk")}
           disabled={sibuk}
-          className="flex-1 rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className="flex-1 tf-btn"
         >
           Masuk
         </button>
         <button
           onClick={() => kirim("daftar")}
           disabled={sibuk}
-          className="flex-1 rounded-xl border border-green-700 px-4 py-2 text-sm font-semibold text-green-800 disabled:opacity-50"
+          className="flex-1 tf-btn-outline"
         >
           Daftar
         </button>

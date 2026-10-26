@@ -56,7 +56,7 @@ export default function TambahTugasForm({
       <select
         value={batchId}
         onChange={(e) => setBatchId(e.target.value)}
-        className="rounded-xl border px-3 py-2 text-sm"
+        className="tf-input"
       >
         {batchAktif.map((b) => {
           const kom = Array.isArray(b.commodities)
@@ -76,7 +76,7 @@ export default function TambahTugasForm({
         <select
           value={jenis}
           onChange={(e) => setJenis(e.target.value)}
-          className="rounded-xl border px-3 py-2 text-sm"
+          className="tf-input"
         >
           {Object.entries(LABEL_TUGAS)
             .filter(([v]) => v !== "siram")
@@ -90,7 +90,7 @@ export default function TambahTugasForm({
           type="date"
           value={tanggal}
           onChange={(e) => setTanggal(e.target.value)}
-          className="rounded-xl border px-3 py-2 text-sm"
+          className="tf-input"
         />
       </div>
       {pesan && (
@@ -99,7 +99,7 @@ export default function TambahTugasForm({
       <button
         onClick={simpan}
         disabled={sibuk}
-        className="rounded-xl border border-green-700 px-4 py-2 text-sm font-semibold text-green-800 disabled:opacity-50"
+        className="tf-btn-outline"
       >
         {sibuk ? "Menyimpan..." : "Tambah pengingat"}
       </button>

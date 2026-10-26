@@ -60,7 +60,7 @@ export default async function BatchDetailPage({
 
   return (
     <div className="flex flex-col gap-4">
-      <section className="rounded-2xl bg-white p-4 shadow-sm">
+      <section className="tf-card">
         <a href="/batch" className="text-xs font-semibold text-green-700">
           ← Kembali ke daftar
         </a>
@@ -105,7 +105,7 @@ export default async function BatchDetailPage({
       </section>
 
       {!tutup && (
-        <section className="rounded-2xl bg-white p-4 shadow-sm">
+        <section className="tf-card">
           <h2 className="font-bold text-green-900">🔔 Pengingat</h2>
           <p className="mt-1 text-xs text-zinc-600">
             Hanya pengingat — tidak perlu dicentang atau dilaporkan.
@@ -146,7 +146,7 @@ export default async function BatchDetailPage({
         </section>
       )}
 
-      <section className="rounded-2xl bg-white p-4 shadow-sm">
+      <section className="tf-card">
         <h2 className="font-bold text-green-900">Catatan (opsional)</h2>
         <p className="mt-1 text-xs text-zinc-600">
           Hanya isi kalau ada hal penting — misal daun menguning, dosis pupuk
@@ -158,7 +158,7 @@ export default async function BatchDetailPage({
         <h3 className="mt-4 font-semibold text-green-900">Riwayat</h3>
         <ul className="mt-2 flex flex-col gap-2">
           {(logRes.data ?? []).map((l) => (
-            <li key={l.id} className="rounded-xl border p-3">
+            <li key={l.id} className="tf-item">
               <p className="text-sm font-semibold">
                 {LABEL_TUGAS[l.jenis] ?? l.jenis}
                 <span className="ml-2 text-xs font-normal text-zinc-500">
@@ -185,7 +185,7 @@ export default async function BatchDetailPage({
         )}
       </section>
 
-      <section className="rounded-2xl bg-white p-4 shadow-sm">
+      <section className="tf-card">
         <h2 className="font-bold text-green-900">Panen batch ini</h2>
         <div className="mt-2">
           <HarvestForm batchId={b.id} />
@@ -194,7 +194,7 @@ export default async function BatchDetailPage({
           {(panenRes.data ?? []).map((p) => (
             <li
               key={p.id}
-              className="flex items-center justify-between rounded-xl border p-3 text-sm"
+              className="flex items-center justify-between tf-item text-sm"
             >
               <span>
                 <strong>

@@ -43,7 +43,7 @@ export default function LogForm({ batchId }: { batchId: string }) {
         <select
           value={jenis}
           onChange={(e) => setJenis(e.target.value)}
-          className="rounded-xl border px-3 py-2 text-sm"
+          className="tf-input"
         >
           {Object.entries(LABEL_TUGAS).map(([v, l]) => (
             <option key={v} value={v}>
@@ -55,7 +55,7 @@ export default function LogForm({ batchId }: { batchId: string }) {
           value={dosis}
           onChange={(e) => setDosis(e.target.value)}
           placeholder="Dosis (opsional)"
-          className="rounded-xl border px-3 py-2 text-sm"
+          className="tf-input"
         />
       </div>
       <textarea
@@ -63,7 +63,7 @@ export default function LogForm({ batchId }: { batchId: string }) {
         onChange={(e) => setDeskripsi(e.target.value)}
         placeholder="cth: daun menguning di 2 galon, kasih NPK 1 sdm"
         rows={2}
-        className="rounded-xl border px-3 py-2 text-sm"
+        className="tf-input"
       />
       {pesan && (
         <p className="rounded-xl bg-red-50 p-2 text-sm text-red-700">{pesan}</p>
@@ -71,7 +71,7 @@ export default function LogForm({ batchId }: { batchId: string }) {
       <button
         onClick={simpan}
         disabled={sibuk}
-        className="rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+        className="tf-btn"
       >
         {sibuk ? "Menyimpan..." : "Catat"}
       </button>

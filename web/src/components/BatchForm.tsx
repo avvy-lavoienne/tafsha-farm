@@ -92,7 +92,7 @@ export default function BatchForm({
         <select
           value={commodityId}
           onChange={(e) => setCommodityId(e.target.value)}
-          className="mt-1 w-full rounded-xl border px-3 py-2"
+          className="mt-1 tf-input"
         >
           {komoditas.map((k) => (
             <option key={k.id} value={k.id}>
@@ -112,7 +112,7 @@ export default function BatchForm({
               setLocationId(e.target.value);
               setSubBlockId("");
             }}
-            className="mt-1 w-full rounded-xl border px-3 py-2"
+            className="mt-1 tf-input"
           >
             {lokasi.map((l) => (
               <option key={l.id} value={l.id}>
@@ -126,7 +126,7 @@ export default function BatchForm({
           <select
             value={subBlockId}
             onChange={(e) => setSubBlockId(e.target.value)}
-            className="mt-1 w-full rounded-xl border px-3 py-2"
+            className="mt-1 tf-input"
           >
             <option value="">—</option>
             {subBlokTampil.map((s) => (
@@ -144,7 +144,7 @@ export default function BatchForm({
           <select
             value={mediaTypeId}
             onChange={(e) => setMediaTypeId(e.target.value)}
-            className="mt-1 w-full rounded-xl border px-3 py-2"
+            className="mt-1 tf-input"
           >
             {media.map((m) => (
               <option key={m.id} value={m.id}>
@@ -160,7 +160,7 @@ export default function BatchForm({
             min={1}
             value={jumlah}
             onChange={(e) => setJumlah(e.target.value)}
-            className="mt-1 w-full rounded-xl border px-3 py-2"
+            className="mt-1 tf-input"
           />
         </label>
       </div>
@@ -172,7 +172,7 @@ export default function BatchForm({
             type="date"
             value={tglTanam}
             onChange={(e) => setTglTanam(e.target.value)}
-            className="mt-1 w-full rounded-xl border px-3 py-2"
+            className="mt-1 tf-input"
           />
         </label>
         <label className="text-sm font-medium">
@@ -181,7 +181,7 @@ export default function BatchForm({
             type="date"
             value={tglSemai}
             onChange={(e) => setTglSemai(e.target.value)}
-            className="mt-1 w-full rounded-xl border px-3 py-2"
+            className="mt-1 tf-input"
           />
         </label>
       </div>
@@ -191,7 +191,7 @@ export default function BatchForm({
         <textarea
           value={catatan}
           onChange={(e) => setCatatan(e.target.value)}
-          className="mt-1 w-full rounded-xl border px-3 py-2"
+          className="mt-1 tf-input"
           rows={2}
           placeholder="cth: cabai rawit, galon bekas dicuci dulu"
         />
@@ -204,7 +204,7 @@ export default function BatchForm({
       <button
         onClick={simpan}
         disabled={sibuk || !commodityId || !locationId || !mediaTypeId}
-        className="rounded-xl bg-green-700 px-4 py-3 text-sm font-semibold text-white disabled:opacity-50"
+        className="tf-btn"
       >
         {sibuk ? "Menyimpan..." : "Simpan batch"}
       </button>

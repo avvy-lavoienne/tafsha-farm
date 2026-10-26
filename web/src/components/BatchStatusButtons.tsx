@@ -51,7 +51,7 @@ export default function BatchStatusButtons({
               ubah("tumbuh", null);
           }}
           disabled={sibuk}
-          className="rounded-xl border border-green-700 px-4 py-2 text-sm font-semibold text-green-800 disabled:opacity-50"
+          className="tf-btn-outline"
         >
           Buka lagi batch ini
         </button>
@@ -64,7 +64,7 @@ export default function BatchStatusButtons({
 
   if (modeGagal) {
     return (
-      <div className="mt-3 rounded-xl border p-3">
+      <div className="mt-3 tf-item">
         <p className="text-sm font-semibold">Penyebab gagal?</p>
         <div className="mt-2 flex flex-wrap gap-2">
           {PENYEBAB.map((p) => (
@@ -87,13 +87,13 @@ export default function BatchStatusButtons({
               if (confirm("Tandai batch ini gagal dan tutup?")) ubah("gagal", penyebab);
             }}
             disabled={sibuk}
-            className="rounded-xl bg-red-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            className="tf-btn-merah"
           >
             Tandai gagal
           </button>
           <button
             onClick={() => setModeGagal(false)}
-            className="rounded-xl border px-4 py-2 text-sm"
+            className="tf-btn-kecil tf-btn-abu"
           >
             Batal
           </button>
@@ -109,7 +109,7 @@ export default function BatchStatusButtons({
           <button
             onClick={() => ubah("panen", null)}
             disabled={sibuk}
-            className="rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            className="tf-btn"
           >
             Mulai masa panen
           </button>
@@ -124,14 +124,14 @@ export default function BatchStatusButtons({
               ubah("selesai", null);
           }}
           disabled={sibuk}
-          className="rounded-xl border border-green-700 px-4 py-2 text-sm font-semibold text-green-800 disabled:opacity-50"
+          className="tf-btn-outline"
         >
           Tutup batch
         </button>
         <button
           onClick={() => setModeGagal(true)}
           disabled={sibuk}
-          className="rounded-xl border border-red-300 px-4 py-2 text-sm font-semibold text-red-700 disabled:opacity-50"
+          className="tf-btn-bahaya"
         >
           Gagal
         </button>

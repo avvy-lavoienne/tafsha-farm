@@ -259,7 +259,7 @@ export default function KebunManager({
 
   return (
     <div className="flex flex-col gap-4">
-      <section className="rounded-2xl bg-white p-4 shadow-sm">
+      <section className="tf-card">
         <div className="flex items-center justify-between gap-2">
           <div>
             <h1 className="text-xl font-bold text-green-900">Kebun</h1>
@@ -271,14 +271,14 @@ export default function KebunManager({
           </div>
           <button
             onClick={() => setTambahBuka((v) => !v)}
-            className="rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white"
+            className="tf-btn"
           >
             {tambahBuka ? "Tutup" : "+ Lokasi"}
           </button>
         </div>
 
         {tambahBuka && (
-          <div className="mt-3 flex flex-col gap-2 rounded-xl border p-3">
+          <div className="mt-3 flex flex-col gap-2 tf-item">
             <div className="grid grid-cols-2 gap-2">
               <label className="text-sm font-medium">
                 Kode
@@ -286,7 +286,7 @@ export default function KebunManager({
                   value={kode}
                   onChange={(e) => setKode(e.target.value)}
                   placeholder="cth: MUS-01"
-                  className="mt-1 w-full rounded-xl border px-3 py-2"
+                  className="mt-1 tf-input"
                 />
               </label>
               <label className="text-sm font-medium">
@@ -295,7 +295,7 @@ export default function KebunManager({
                   value={nama}
                   onChange={(e) => setNama(e.target.value)}
                   placeholder="cth: Lahan Depan Mushola"
-                  className="mt-1 w-full rounded-xl border px-3 py-2"
+                  className="mt-1 tf-input"
                 />
               </label>
             </div>
@@ -305,13 +305,13 @@ export default function KebunManager({
                 value={deskripsi}
                 onChange={(e) => setDeskripsi(e.target.value)}
                 placeholder="cth: petak dekat pagar"
-                className="mt-1 w-full rounded-xl border px-3 py-2"
+                className="mt-1 tf-input"
               />
             </label>
             <button
               onClick={tambahLokasi}
               disabled={sibuk}
-              className="rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              className="tf-btn"
             >
               {sibuk ? "Menyimpan..." : "Simpan lokasi"}
             </button>
@@ -324,13 +324,13 @@ export default function KebunManager({
       </section>
 
       {daftar.length === 0 && (
-        <section className="rounded-2xl bg-white p-4 text-sm text-zinc-600 shadow-sm">
+        <section className="tf-card text-sm text-zinc-600">
           Belum ada lokasi. Tambahkan lokasi pertama lewat tombol + Lokasi.
         </section>
       )}
 
       {daftar.map((l) => (
-        <section key={l.id} className="rounded-2xl bg-white p-4 shadow-sm">
+        <section key={l.id} className="tf-card">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
@@ -361,23 +361,23 @@ export default function KebunManager({
           </div>
 
           {editId === l.id ? (
-            <div className="mt-3 flex flex-col gap-2 rounded-xl border p-3">
+            <div className="mt-3 flex flex-col gap-2 tf-item">
               <input
                 value={editNama}
                 onChange={(e) => setEditNama(e.target.value)}
-                className="w-full rounded-xl border px-3 py-2 text-sm"
+                className="tf-input"
               />
               <input
                 value={editDeskripsi}
                 onChange={(e) => setEditDeskripsi(e.target.value)}
                 placeholder="Deskripsi (opsional)"
-                className="w-full rounded-xl border px-3 py-2 text-sm"
+                className="tf-input"
               />
               <div className="flex gap-2">
                 <button
                   onClick={() => simpanEdit(l.id)}
                   disabled={sibuk}
-                  className="rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                  className="tf-btn"
                 >
                   Simpan
                 </button>
@@ -393,14 +393,14 @@ export default function KebunManager({
             <div className="mt-3 flex flex-wrap gap-2">
               <button
                 onClick={() => mulaiEdit(l)}
-                className="rounded-xl border border-green-700 px-3 py-1.5 text-sm font-semibold text-green-800"
+                className="tf-btn-outline tf-btn-kecil"
               >
                 Edit
               </button>
               <button
                 onClick={() => toggleAktif(l)}
                 disabled={sibuk}
-                className={`rounded-xl border px-3 py-1.5 text-sm font-semibold disabled:opacity-50 ${
+                className={`tf-btn-kecil tf-btn-abu ${
                   l.aktif
                     ? "border-zinc-300 text-zinc-600"
                     : "border-green-700 text-green-800"
@@ -410,7 +410,7 @@ export default function KebunManager({
               </button>
               <a
                 href={`/batch?lokasi=${l.id}`}
-                className="rounded-xl border border-zinc-300 px-3 py-1.5 text-sm text-zinc-600"
+                className="tf-btn-kecil tf-btn-abu"
               >
                 Lihat batch →
               </a>
@@ -431,18 +431,18 @@ export default function KebunManager({
                       <input
                         value={editBlokNama}
                         onChange={(e) => setEditBlokNama(e.target.value)}
-                        className="w-full rounded-xl border px-3 py-1.5 text-sm"
+                        className="tf-input"
                       />
                       <button
                         onClick={() => simpanEditBlok(l.id, b.id)}
                         disabled={sibuk}
-                        className="shrink-0 rounded-xl bg-green-700 px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
+                        className="shrink-0 tf-btn"
                       >
                         OK
                       </button>
                       <button
                         onClick={() => setEditBlokId(null)}
-                        className="shrink-0 rounded-xl border px-3 py-1.5 text-sm"
+                        className="shrink-0 tf-btn-kecil tf-btn-abu"
                       >
                         Batal
                       </button>
@@ -450,7 +450,7 @@ export default function KebunManager({
                   ) : (
                     <li
                       key={b.id}
-                      className="flex items-center justify-between gap-2 rounded-xl bg-green-50 px-3 py-2"
+                      className="flex items-center justify-between gap-2 rounded-xl bg-[#f0fdf4] px-3 py-2"
                     >
                       <span className="text-sm font-medium text-green-900">
                         {b.nama}
@@ -481,12 +481,12 @@ export default function KebunManager({
                   setBlokBaru((s) => ({ ...s, [l.id]: e.target.value }))
                 }
                 placeholder="Nama sub-blok baru, cth: Blok C"
-                className="w-full rounded-xl border px-3 py-2 text-sm"
+                className="tf-input"
               />
               <button
                 onClick={() => tambahBlok(l.id)}
                 disabled={sibuk}
-                className="shrink-0 rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                className="shrink-0 tf-btn"
               >
                 + Tambah
               </button>

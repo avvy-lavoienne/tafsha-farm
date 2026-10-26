@@ -12,7 +12,7 @@ export default async function BatchBaruPage() {
   ]);
 
   return (
-    <div className="rounded-2xl bg-white p-4 shadow-sm">
+    <div className="tf-card">
       <h1 className="text-xl font-bold text-green-900">Batch Tanam Baru</h1>
       <p className="mt-1 text-sm text-zinc-600">
         Tugas siram otomatis dibuat 30 hari ke depan setelah disimpan.

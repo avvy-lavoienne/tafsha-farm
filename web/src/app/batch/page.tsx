@@ -37,7 +37,7 @@ export default async function BatchPage({
 
   return (
     <div className="flex flex-col gap-4">
-      <section className="rounded-2xl bg-white p-4 shadow-sm">
+      <section className="tf-card">
         <h1 className="text-xl font-bold text-green-900">Batch Tanam</h1>
         <div className="mt-3 flex flex-wrap gap-2">
           {[
@@ -50,10 +50,10 @@ export default async function BatchPage({
             <a
               key={v}
               href={`/batch?status=${v}`}
-              className={`rounded-xl px-3 py-1.5 text-sm font-semibold ${
+              className={`tf-chip ${
                 filterStatus === v
-                  ? "bg-green-700 text-white"
-                  : "border border-green-700 text-green-800"
+                  ? "tf-chip-on"
+                  : ""
               }`}
             >
               {label}
@@ -62,7 +62,7 @@ export default async function BatchPage({
         </div>
         <a
           href="/batch/baru"
-          className="mt-3 inline-block rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white"
+          className="mt-3 inline-block tf-btn"
         >
           + Batch baru
         </a>
@@ -70,10 +70,10 @@ export default async function BatchPage({
           <div className="mt-3 flex flex-wrap gap-2">
             <a
               href={`/batch?status=${filterStatus}`}
-              className={`rounded-xl px-3 py-1.5 text-sm font-semibold ${
+              className={`tf-chip ${
                 !filterLokasi
-                  ? "bg-green-700 text-white"
-                  : "border border-green-700 text-green-800"
+                  ? "tf-chip-on"
+                  : ""
               }`}
             >
               Semua lokasi
@@ -82,10 +82,10 @@ export default async function BatchPage({
               <a
                 key={l.id}
                 href={`/batch?status=${filterStatus}&lokasi=${l.id}`}
-                className={`rounded-xl px-3 py-1.5 text-sm font-semibold ${
+                className={`tf-chip ${
                   filterLokasi === l.id
-                    ? "bg-green-700 text-white"
-                    : "border border-green-700 text-green-800"
+                    ? "tf-chip-on"
+                    : ""
                 }`}
               >
                 {l.nama}
@@ -96,7 +96,7 @@ export default async function BatchPage({
       </section>
 
       {(batch ?? []).length === 0 ? (
-        <section className="rounded-2xl bg-white p-4 text-sm text-zinc-600 shadow-sm">
+        <section className="tf-card text-sm text-zinc-600">
           Belum ada batch
           {filterStatus === "aktif" ? " aktif" : ""}. Tambahkan batch tanam
           pertama — misal cabai di galon 15L.
@@ -111,7 +111,7 @@ export default async function BatchPage({
             <a
               key={b.id}
               href={`/batch/${b.id}`}
-              className="rounded-2xl bg-white p-4 shadow-sm hover:bg-green-50"
+              className="tf-card"
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="font-bold text-green-900">

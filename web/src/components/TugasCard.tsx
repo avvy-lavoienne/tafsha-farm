@@ -41,7 +41,7 @@ export default function TugasCard({ tugas }: { tugas: Tugas }) {
 
   return (
     <li
-      className={`flex items-center gap-3 rounded-xl border p-3 ${
+      className={`flex items-center gap-3 tf-item ${
         terlewat ? "border-amber-300 bg-amber-50" : "border-zinc-200"
       }`}
     >

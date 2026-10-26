@@ -50,12 +50,12 @@ export default function HarvestForm({ batchId }: { batchId: string }) {
           value={jumlah}
           onChange={(e) => setJumlah(e.target.value)}
           placeholder="Jumlah"
-          className="rounded-xl border px-3 py-2 text-sm"
+          className="tf-input"
         />
         <select
           value={satuan}
           onChange={(e) => setSatuan(e.target.value)}
-          className="rounded-xl border px-3 py-2 text-sm"
+          className="tf-input"
         >
           {["ikat", "kg", "gram", "buah", "batang", "potong"].map((s) => (
             <option key={s} value={s}>
@@ -67,14 +67,14 @@ export default function HarvestForm({ batchId }: { batchId: string }) {
           type="date"
           value={tanggal}
           onChange={(e) => setTanggal(e.target.value)}
-          className="rounded-xl border px-3 py-2 text-sm"
+          className="tf-input"
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
         <select
           value={kualitas}
           onChange={(e) => setKualitas(e.target.value)}
-          className="rounded-xl border px-3 py-2 text-sm"
+          className="tf-input"
         >
           {["bagus", "sedang", "rusak"].map((s) => (
             <option key={s} value={s}>
@@ -85,7 +85,7 @@ export default function HarvestForm({ batchId }: { batchId: string }) {
         <select
           value={peruntukan}
           onChange={(e) => setPeruntukan(e.target.value)}
-          className="rounded-xl border px-3 py-2 text-sm"
+          className="tf-input"
         >
           {["konsumsi", "jual", "bagi"].map((s) => (
             <option key={s} value={s}>
@@ -100,7 +100,7 @@ export default function HarvestForm({ batchId }: { batchId: string }) {
       <button
         onClick={simpan}
         disabled={sibuk || !jumlah}
-        className="rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+        className="tf-btn"
       >
         {sibuk ? "Menyimpan..." : "Catat panen"}
       </button>

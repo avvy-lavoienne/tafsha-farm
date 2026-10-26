@@ -31,7 +31,7 @@ export default function SeedButton() {
       <button
         onClick={isi}
         disabled={sibuk}
-        className="rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+        className="tf-btn disabled:opacity-50"
       >
         {sibuk ? "Mengisi..." : "Isi data awal kebun"}
       </button>

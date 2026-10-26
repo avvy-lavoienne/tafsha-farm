@@ -39,7 +39,7 @@ export default async function TugasPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <section className="rounded-2xl bg-white p-4 shadow-sm">
+      <section className="tf-card">
         <h1 className="text-xl font-bold text-green-900">
           🔔 Pengingat hari ini
         </h1>
@@ -50,21 +50,21 @@ export default async function TugasPage() {
       </section>
 
       {(tugas ?? []).length === 0 ? (
-        <section className="rounded-2xl bg-white p-4 shadow-sm">
+        <section className="tf-card">
           <p className="text-sm text-zinc-600">
             🎉 Tidak ada pengingat hari ini. Pengingat siram otomatis dibuat
             saat menambah batch tanam baru.
           </p>
           <a
             href="/batch/baru"
-            className="mt-3 inline-block rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white"
+            className="mt-3 inline-block tf-btn"
           >
             + Batch tanam baru
           </a>
         </section>
       ) : (
         [...perLokasi.entries()].map(([lokasi, daftar]) => (
-          <section key={lokasi} className="rounded-2xl bg-white p-4 shadow-sm">
+          <section key={lokasi} className="tf-card">
             <h2 className="font-bold text-green-900">📍 {lokasi}</h2>
             <ul className="mt-2 flex flex-col gap-2">
               {daftar.map((t) => (
@@ -75,11 +75,11 @@ export default async function TugasPage() {
         ))
       )}
 
-      <section className="rounded-2xl bg-white p-4 shadow-sm">
+      <section className="tf-card">
         <NotifButton />
       </section>
 
-      <section className="rounded-2xl bg-white p-4 shadow-sm">
+      <section className="tf-card">
         <h2 className="font-bold text-green-900">+ Pengingat lain</h2>
         <p className="mt-1 text-xs text-zinc-600">
           Misal pupuk susulan tanggal sekian, semprot hama — tanpa jadwal
