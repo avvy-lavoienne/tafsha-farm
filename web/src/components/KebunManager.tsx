@@ -12,6 +12,15 @@ type LokasiItem = {
   deskripsi: string | null;
   aktif: boolean;
   subBlok: SubBlok[];
+  batch: {
+    id: string;
+    komoditas: string;
+    media: string;
+    subBlok: string | null;
+    jumlah: number;
+    hst: number;
+    siap: boolean;
+  }[];
   batchAktif: number;
   siapPanen: number;
 };
@@ -72,7 +81,7 @@ export default function KebunManager({
       if (error) throw error;
       setDaftar((d) => [
         ...d,
-        { ...data, subBlok: [], batchAktif: 0, siapPanen: 0 },
+        { ...data, subBlok: [], batch: [], batchAktif: 0, siapPanen: 0 },
       ]);
       setKode("");
       setNama("");
@@ -416,6 +425,46 @@ export default function KebunManager({
               </a>
             </div>
           )}
+
+          <div className="mt-4 border-t pt-3">
+            <p className="text-sm font-semibold text-green-900">
+              Batch di lokasi ini ({l.batch.length})
+            </p>
+            {l.batch.length === 0 ? (
+              <p className="mt-1 text-xs text-zinc-500">
+                Belum ada batch aktif di sini.{" "}
+                <a href="/batch/baru" className="font-semibold text-green-800 underline">
+                  Tanam baru →
+                </a>
+              </p>
+            ) : (
+              <ul className="mt-2 flex flex-col gap-2">
+                {l.batch.map((bt) => (
+                  <li key={bt.id}>
+                    <a
+                      href={`/batch/${bt.id}`}
+                      className="flex items-center justify-between gap-2 rounded-xl bg-[#f0fdf4] px-3 py-2"
+                    >
+                      <span className="min-w-0">
+                        <span className="block truncate text-sm font-semibold text-green-900">
+                          {bt.komoditas} × {bt.jumlah}
+                        </span>
+                        <span className="block truncate text-xs text-zinc-600">
+                          {bt.subBlok ? `${bt.subBlok} • ` : ""}
+                          {bt.media} • HST {bt.hst}
+                        </span>
+                      </span>
+                      {bt.siap && (
+                        <span className="shrink-0 rounded-full bg-[#166534] px-2 py-0.5 text-xs font-semibold text-white">
+                          Siap panen
+                        </span>
+                      )}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
           <div className="mt-4 border-t pt-3">
             <p className="text-sm font-semibold text-green-900">Sub-blok</p>

@@ -61,9 +61,14 @@ export default async function BatchDetailPage({
   return (
     <div className="flex flex-col gap-4">
       <section className="tf-card">
-        <a href="/batch" className="text-xs font-semibold text-green-700">
-          ← Kembali ke daftar
-        </a>
+        <div className="flex items-center justify-between gap-2">
+          <a href="/batch" className="text-xs font-semibold text-green-700">
+            ← Kembali ke daftar
+          </a>
+          <a href={`/batch/${id}/edit`} className="tf-btn-kecil tf-btn-abu">
+            Edit batch
+          </a>
+        </div>
         <div className="mt-1 flex items-center justify-between gap-2">
           <h1 className="text-xl font-bold text-green-900">
             {komoditas?.nama ?? "?"} × {b.jumlah}

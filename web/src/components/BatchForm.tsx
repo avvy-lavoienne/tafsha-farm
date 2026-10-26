@@ -12,20 +12,38 @@ export default function BatchForm({
   lokasi,
   subBlok,
   media,
+  edit,
 }: {
   komoditas: Opsi[];
   lokasi: Opsi[];
   subBlok: SubBlok[];
   media: Opsi[];
+  edit?: {
+    id: string;
+    commodity_id: string;
+    location_id: string;
+    sub_block_id: string | null;
+    media_type_id: string;
+    jumlah: number;
+    tgl_tanam: string;
+    tgl_semai: string | null;
+    catatan: string | null;
+  };
 }) {
-  const [commodityId, setCommodityId] = useState(komoditas[0]?.id ?? "");
-  const [locationId, setLocationId] = useState(lokasi[0]?.id ?? "");
-  const [subBlockId, setSubBlockId] = useState("");
-  const [mediaTypeId, setMediaTypeId] = useState(media[0]?.id ?? "");
-  const [jumlah, setJumlah] = useState("5");
-  const [tglTanam, setTglTanam] = useState(hariIniISO());
-  const [tglSemai, setTglSemai] = useState("");
-  const [catatan, setCatatan] = useState("");
+  const [commodityId, setCommodityId] = useState(
+    edit?.commodity_id ?? komoditas[0]?.id ?? "",
+  );
+  const [locationId, setLocationId] = useState(
+    edit?.location_id ?? lokasi[0]?.id ?? "",
+  );
+  const [subBlockId, setSubBlockId] = useState(edit?.sub_block_id ?? "");
+  const [mediaTypeId, setMediaTypeId] = useState(
+    edit?.media_type_id ?? media[0]?.id ?? "",
+  );
+  const [jumlah, setJumlah] = useState(String(edit?.jumlah ?? "5"));
+  const [tglTanam, setTglTanam] = useState(edit?.tgl_tanam ?? hariIniISO());
+  const [tglSemai, setTglSemai] = useState(edit?.tgl_semai ?? "");
+  const [catatan, setCatatan] = useState(edit?.catatan ?? "");
   const [pesan, setPesan] = useState<string | null>(null);
   const [sibuk, setSibuk] = useState(false);
 
@@ -40,6 +58,26 @@ export default function BatchForm({
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) throw new Error("Harus masuk dulu.");
+
+      if (edit) {
+        // Mode edit: ubah data batch, tanpa menyentuh tugas/panen/riwayat.
+        const { error } = await supabase
+          .from("plant_batches")
+          .update({
+            commodity_id: commodityId,
+            location_id: locationId,
+            sub_block_id: subBlockId || null,
+            media_type_id: mediaTypeId,
+            jumlah: Number(jumlah) || 1,
+            tgl_tanam: tglTanam,
+            tgl_semai: tglSemai || null,
+            catatan: catatan || null,
+          })
+          .eq("id", edit.id);
+        if (error) throw error;
+        window.location.href = `/batch/${edit.id}`;
+        return;
+      }
 
       const { data: batch, error } = await supabase
         .from("plant_batches")
@@ -206,7 +244,7 @@ export default function BatchForm({
         disabled={sibuk || !commodityId || !locationId || !mediaTypeId}
         className="tf-btn"
       >
-        {sibuk ? "Menyimpan..." : "Simpan batch"}
+        {sibuk ? "Menyimpan..." : edit ? "Simpan perubahan" : "Simpan batch"}
       </button>
     </div>
   );
