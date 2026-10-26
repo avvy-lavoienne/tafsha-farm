@@ -10,6 +10,7 @@ import BatchStatusButtons from "@/components/BatchStatusButtons";
 import LogForm from "@/components/LogForm";
 import HarvestForm from "@/components/HarvestForm";
 import TugasCard from "@/components/TugasCard";
+import { ikonMedia } from "@/lib/media";
 
 export default async function BatchDetailPage({
   params,
@@ -30,6 +31,9 @@ export default async function BatchDetailPage({
   if (!b) notFound();
 
   const komoditas = satu(b.commodities);
+  const mediaNama = Array.isArray(b.media_types)
+    ? (b.media_types[0]?.nama ?? null)
+    : ((b.media_types as { nama: string | null } | null)?.nama ?? null);
   const hst = hitungHST(b.tgl_tanam);
   const siap =
     komoditas?.umur_panen_min != null && hst >= komoditas.umur_panen_min;
@@ -82,7 +86,7 @@ export default async function BatchDetailPage({
           {satu(b.sub_blocks)?.nama
             ? ` • ${satu(b.sub_blocks)?.nama}`
             : ""}{" "}
-          • {satu(b.media_types)?.nama ?? "-"}
+          • {ikonMedia(mediaNama)} {mediaNama}
         </p>
         <p className="mt-1 text-sm text-zinc-600">
           HST <strong>{hst}</strong> • tanam {formatTanggal(b.tgl_tanam)}

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { hariIniISO } from "@/lib/tanggal";
+import { ikonMedia } from "@/lib/media";
 
 type Opsi = { id: string; nama: string; aktif?: boolean | null };
 type SubBlok = { id: string; nama: string; location_id: string };
@@ -186,7 +187,7 @@ export default function BatchForm({
           >
             {media.map((m) => (
               <option key={m.id} value={m.id}>
-                {m.nama}
+                {ikonMedia(m.nama)} {m.nama}
               </option>
             ))}
           </select>

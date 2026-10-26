@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { LABEL_STATUS, formatTanggal, hitungHST } from "@/lib/tanggal";
+import { ikonMedia } from "@/lib/media";
 
 export default async function BatchPage({
   searchParams,
@@ -126,7 +127,8 @@ export default async function BatchPage({
                 {satu(b.sub_blocks)?.nama
                   ? ` • ${satu(b.sub_blocks)?.nama}`
                   : ""}{" "}
-                • {satu(b.media_types)?.nama ?? "-"}
+                • {ikonMedia(satu(b.media_types)?.nama)}{" "}
+                {satu(b.media_types)?.nama ?? "-"}
               </p>
               <p className="mt-1 text-xs text-zinc-600">
                 HST {hst} • tanam {formatTanggal(b.tgl_tanam)}
