@@ -1,0 +1,20 @@
+{
+  "name": "Tafsha Farm — Manajemen Kebun",
+  "short_name": "Tafsha Farm",
+  "description": "Catat tanam, rawat, panen di Halaman Depan & Lahan Mushola, Pakuwon - Cisurupan - Garut.",
+  "lang": "id",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#166534",
+  "background_color": "#f0fdf4",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

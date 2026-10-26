@@ -1,0 +1,113 @@
+import { createClient } from "@/lib/supabase/server";
+import { LABEL_STATUS, formatTanggal, hitungHST } from "@/lib/tanggal";
+
+export default async function BatchPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const supabase = await createClient();
+  const params = await searchParams;
+  const filterStatus = params.status ?? "aktif";
+
+  let query = supabase
+    .from("plant_batches")
+    .select(
+      "id,jumlah,tgl_semai,tgl_tanam,status,commodities(nama,umur_panen_min),locations(nama),sub_blocks(nama),media_types(nama)",
+    )
+    .order("tgl_tanam", { ascending: false });
+
+  if (filterStatus === "aktif") {
+    query = query.not("status", "in", "(selesai,gagal)");
+  } else if (filterStatus !== "semua") {
+    query = query.eq("status", filterStatus);
+  }
+
+  const { data: batch } = await query;
+
+  return (
+    <div className="flex flex-col gap-4">
+      <section className="rounded-2xl bg-white p-4 shadow-sm">
+        <h1 className="text-xl font-bold text-green-900">Batch Tanam</h1>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {[
+            ["aktif", "Aktif"],
+            ["panen", "Panen"],
+            ["selesai", "Selesai"],
+            ["gagal", "Gagal"],
+            ["semua", "Semua"],
+          ].map(([v, label]) => (
+            <a
+              key={v}
+              href={`/batch?status=${v}`}
+              className={`rounded-xl px-3 py-1.5 text-sm font-semibold ${
+                filterStatus === v
+                  ? "bg-green-700 text-white"
+                  : "border border-green-700 text-green-800"
+              }`}
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+        <a
+          href="/batch/baru"
+          className="mt-3 inline-block rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white"
+        >
+          + Batch baru
+        </a>
+      </section>
+
+      {(batch ?? []).length === 0 ? (
+        <section className="rounded-2xl bg-white p-4 text-sm text-zinc-600 shadow-sm">
+          Belum ada batch
+          {filterStatus === "aktif" ? " aktif" : ""}. Tambahkan batch tanam
+          pertama — misal cabai di galon 15L.
+        </section>
+      ) : (
+        (batch ?? []).map((b) => {
+          const komoditas = satu(b.commodities)?.nama ?? "?";
+          const umurMin = satu(b.commodities)?.umur_panen_min;
+          const hst = hitungHST(b.tgl_tanam);
+          const siap = umurMin != null && hst >= umurMin;
+          return (
+            <a
+              key={b.id}
+              href={`/batch/${b.id}`}
+              className="rounded-2xl bg-white p-4 shadow-sm hover:bg-green-50"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="font-bold text-green-900">
+                  {komoditas} × {b.jumlah}
+                </p>
+                <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
+                  {LABEL_STATUS[b.status] ?? b.status}
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-zinc-600">
+                {satu(b.locations)?.nama ?? "-"}
+                {satu(b.sub_blocks)?.nama
+                  ? ` • ${satu(b.sub_blocks)?.nama}`
+                  : ""}{" "}
+                • {satu(b.media_types)?.nama ?? "-"}
+              </p>
+              <p className="mt-1 text-xs text-zinc-600">
+                HST {hst} • tanam {formatTanggal(b.tgl_tanam)}
+                {siap && (
+                  <span className="ml-2 font-semibold text-green-700">
+                    Siap panen!
+                  </span>
+                )}
+              </p>
+            </a>
+          );
+        })
+      )}
+    </div>
+  );
+}
+
+function satu<T>(v: T | T[] | null): T | null {
+  if (Array.isArray(v)) return v[0] ?? null;
+  return v;
+}
