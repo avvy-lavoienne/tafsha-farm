@@ -4,16 +4,22 @@ import { LABEL_STATUS, formatTanggal, hitungHST } from "@/lib/tanggal";
 export default async function BatchPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; lokasi?: string }>;
 }) {
   const supabase = await createClient();
   const params = await searchParams;
   const filterStatus = params.status ?? "aktif";
+  const filterLokasi = params.lokasi ?? "";
+
+  const { data: semuaLokasi } = await supabase
+    .from("locations")
+    .select("id,nama")
+    .order("nama");
 
   let query = supabase
     .from("plant_batches")
     .select(
-      "id,jumlah,tgl_semai,tgl_tanam,status,commodities(nama,umur_panen_min),locations(nama),sub_blocks(nama),media_types(nama)",
+      "id,jumlah,tgl_semai,tgl_tanam,status,location_id,commodities(nama,umur_panen_min),locations(nama),sub_blocks(nama),media_types(nama)",
     )
     .order("tgl_tanam", { ascending: false });
 
@@ -21,6 +27,10 @@ export default async function BatchPage({
     query = query.not("status", "in", "(selesai,gagal)");
   } else if (filterStatus !== "semua") {
     query = query.eq("status", filterStatus);
+  }
+
+  if (filterLokasi) {
+    query = query.eq("location_id", filterLokasi);
   }
 
   const { data: batch } = await query;
@@ -56,6 +66,33 @@ export default async function BatchPage({
         >
           + Batch baru
         </a>
+        {(semuaLokasi ?? []).length > 1 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            <a
+              href={`/batch?status=${filterStatus}`}
+              className={`rounded-xl px-3 py-1.5 text-sm font-semibold ${
+                !filterLokasi
+                  ? "bg-green-700 text-white"
+                  : "border border-green-700 text-green-800"
+              }`}
+            >
+              Semua lokasi
+            </a>
+            {(semuaLokasi ?? []).map((l) => (
+              <a
+                key={l.id}
+                href={`/batch?status=${filterStatus}&lokasi=${l.id}`}
+                className={`rounded-xl px-3 py-1.5 text-sm font-semibold ${
+                  filterLokasi === l.id
+                    ? "bg-green-700 text-white"
+                    : "border border-green-700 text-green-800"
+                }`}
+              >
+                {l.nama}
+              </a>
+            ))}
+          </div>
+        )}
       </section>
 
       {(batch ?? []).length === 0 ? (
