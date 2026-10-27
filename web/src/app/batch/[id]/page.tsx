@@ -10,6 +10,7 @@ import BatchStatusButtons from "@/components/BatchStatusButtons";
 import LogForm from "@/components/LogForm";
 import HarvestForm from "@/components/HarvestForm";
 import TugasCard from "@/components/TugasCard";
+import RiwayatFoto from "@/components/RiwayatFoto";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
 
 export default async function BatchDetailPage({
@@ -23,7 +24,7 @@ export default async function BatchDetailPage({
   const { data: b } = await supabase
     .from("plant_batches")
     .select(
-      "id,jumlah,tgl_semai,tgl_tanam,status,penyebab_gagal,catatan,created_at,commodities(id,nama,tipe_panen,umur_panen_min,umur_panen_maks,siram_default),locations(id,nama),sub_blocks(nama),media_types(nama)",
+      "id,jumlah,tgl_semai,tgl_tanam,status,penyebab_gagal,catatan,foto_url,created_at,commodities(id,nama,tipe_panen,umur_panen_min,umur_panen_maks,siram_default),locations(id,nama),sub_blocks(nama),media_types(nama)",
     )
     .eq("id", id)
     .single();
@@ -113,6 +114,7 @@ export default async function BatchDetailPage({
         <BatchStatusButtons id={b.id} status={b.status} />
       </section>
 
+      <RiwayatFoto subjek="batch" id={b.id} fotoUtama={b.foto_url ?? null} />
       {!tutup && (
         <section className="tf-card">
           <h2 className="font-bold text-green-900">🔔 Pengingat</h2>

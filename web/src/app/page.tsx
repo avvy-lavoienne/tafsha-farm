@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import SeedButton from "@/components/SeedButton";
+import CuacaCard from "@/components/CuacaCard";
 import { formatTanggal, hariIniISO, hitungHST } from "@/lib/tanggal";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
 
@@ -160,6 +161,8 @@ export default async function Home() {
           />
         </div>
       </section>
+
+      <CuacaCard mode="beranda" />
 
       {menipis > 0 && (
         <a

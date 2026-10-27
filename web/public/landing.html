@@ -243,7 +243,9 @@
      <div class="wrap">
       <p data-template-id="gallery-kicker" class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">RUANG TUMBUH</p>
       <h2 data-template-id="gallery-title" class="canva-text mt-3 text-4xl font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Kebun bisa mulai dari sudut kecil.</h2>
-      <p data-template-id="gallery-disclaimer" class="canva-text mt-3 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Foto ilustrasi metode berkebun; bukan dokumentasi asli Tafsha Farm.</p>
+      <p data-template-id="gallery-disclaimer" class="canva-text mt-3 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Galeri live — foto asli dari kebun, diperbarui tiap ada upload baru.</p>
+      <div id="galeri-live" class="gallery-grid mt-6 grid gap-4 md:grid-cols-4"></div>
+      <p class="canva-text mt-3 text-sm text-gray-600">Foto ilustrasi metode berkebun di bawah ini.</p>
       <div class="gallery-grid mt-9 grid gap-4 md:grid-cols-4">
        <figure class="overflow-hidden rounded-3xl bg-[#f0fdf4]">
         <img data-template-id="gallery-one-image" class="canva-image photo h-52" loading="lazy" src="https://images.pexels.com/photos/16981288/pexels-photo-16981288.jpeg" alt="Bibit disiram dalam wadah plastik daur ulang di kebun">
@@ -474,6 +476,16 @@
     document.getElementById('native-install').classList.add('hidden');
   });
   lucide.createIcons();
+   fetch("/api/galeri").then(r=>r.json()).then(d=>{
+   var w=document.getElementById("galeri-live");if(!w)return;
+   var f=(d.foto||[]).slice(0,8);
+   if(!f.length){w.innerHTML='<p class="text-sm text-gray-500">Belum ada foto kebun. Upload pertama dari aplikasi untuk mengisi galeri ini.</p>';return}
+   w.innerHTML=f.map(function(x){
+   var t=x.created_at?new Date(x.created_at).toLocaleDateString("id-ID",{day:"numeric",month:"short"}):"";
+   var tag=x.subjek_tipe==="lokasi"?"📍 Lokasi":x.subjek_tipe==="sub_blok"?"🧱 Sub-blok":"🌱 Batch";
+   return '<figure class="overflow-hidden rounded-3xl bg-[#f0fdf4]"><img loading="lazy" src="'+x.foto_url+'" alt="Foto kebun Tafsha Farm" style="width:100%;height:13rem;object-fit:cover"><figcaption class="p-4 text-sm font-semibold">'+tag+(t?" · "+t:"")+'</figcaption></figure>'
+   }).join('')
+   }).catch(function(){});
 </script>
  
 </body></html>

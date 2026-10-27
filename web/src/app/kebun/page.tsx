@@ -8,9 +8,9 @@ export default async function KebunPage() {
   const [lokasiRes, blokRes, batchRes] = await Promise.all([
     supabase
       .from("locations")
-      .select("id,kode,nama,deskripsi,aktif")
+      .select("id,kode,nama,deskripsi,foto_url,aktif")
       .order("nama"),
-    supabase.from("sub_blocks").select("id,location_id,nama").order("nama"),
+    supabase.from("sub_blocks").select("id,location_id,nama,foto_url").order("nama"),
     supabase
       .from("plant_batches")
       .select(
@@ -57,8 +57,16 @@ export default async function KebunPage() {
       kode: l.kode,
       nama: l.nama,
       deskripsi: l.deskripsi,
+      fotoUrl: l.foto_url ?? null,
       aktif: l.aktif,
-      subBlok: semuaBlok.filter((s) => s.location_id === l.id),
+      subBlok: semuaBlok
+        .filter((s) => s.location_id === l.id)
+        .map((s) => ({
+          id: s.id,
+          location_id: s.location_id,
+          nama: s.nama,
+          fotoUrl: s.foto_url ?? null,
+        })),
       batch,
       batchAktif: batch.length,
       siapPanen: siap,

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { formatTanggal, hariIniISO } from "@/lib/tanggal";
 import TugasCard from "@/components/TugasCard";
+import CuacaCard from "@/components/CuacaCard";
 import TambahTugasForm from "@/components/TambahTugasForm";
 import NotifButton from "@/components/NotifButton";
 
@@ -48,6 +49,8 @@ export default async function TugasPage() {
           Dibaca saja, tidak perlu dicentang.
         </p>
       </section>
+
+      <CuacaCard mode="tugas" />
 
       {(tugas ?? []).length === 0 ? (
         <section className="tf-card">

@@ -5,14 +5,16 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
 import MiniSpin from "@/components/MiniSpin";
+import UnggahFoto from "@/components/UnggahFoto";
 
-type SubBlok = { id: string; location_id: string; nama: string };
+type SubBlok = { id: string; location_id: string; nama: string; fotoUrl: string | null };
 type LokasiItem = {
   id: string;
   kode: string;
   nama: string;
   deskripsi: string | null;
   aktif: boolean;
+  fotoUrl: string | null;
   subBlok: SubBlok[];
   batch: {
     id: string;
@@ -83,7 +85,7 @@ export default function KebunManager({
       if (error) throw error;
       setDaftar((d) => [
         ...d,
-        { ...data, subBlok: [], batch: [], batchAktif: 0, siapPanen: 0 },
+        { ...data, fotoUrl: null, subBlok: [], batch: [], batchAktif: 0, siapPanen: 0 },
       ]);
       setKode("");
       setNama("");
@@ -185,7 +187,7 @@ export default function KebunManager({
       if (error) throw error;
       setDaftar((d) =>
         d.map((l) =>
-          l.id === locationId ? { ...l, subBlok: [...l.subBlok, data] } : l,
+          l.id === locationId ? { ...l, subBlok: [...l.subBlok, { ...data, fotoUrl: null }] } : l,
         ),
       );
       setBlokBaru((s) => ({ ...s, [locationId]: "" }));
@@ -342,6 +344,14 @@ export default function KebunManager({
 
       {daftar.map((l) => (
         <section key={l.id} className="tf-card">
+          {l.fotoUrl && (
+            <img
+              src={l.fotoUrl}
+              alt={`Foto ${l.nama}`}
+              loading="lazy"
+              className="mb-3 h-44 w-full rounded-2xl object-cover"
+            />
+          )}
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
@@ -425,6 +435,17 @@ export default function KebunManager({
               >
                 Lihat batch →
               </a>
+              <UnggahFoto
+                subjek="lokasi"
+                id={l.id}
+                label="Foto lokasi"
+                kompak
+                saatSelesai={(url) =>
+                  setDaftar((d) =>
+                    d.map((x) => (x.id === l.id ? { ...x, fotoUrl: url } : x)),
+                  )
+                }
+              />
             </div>
           )}
 
@@ -503,8 +524,42 @@ export default function KebunManager({
                       key={b.id}
                       className="flex items-center justify-between gap-2 rounded-xl bg-[#f0fdf4] px-3 py-2"
                     >
-                      <span className="text-sm font-medium text-green-900">
-                        {b.nama}
+                      <span className="flex min-w-0 items-center gap-2">
+                        {b.fotoUrl && (
+                          <img
+                            src={b.fotoUrl}
+                            alt={`Foto ${b.nama}`}
+                            loading="lazy"
+                            className="h-10 w-10 shrink-0 rounded-xl object-cover"
+                          />
+                        )}
+                        <span className="min-w-0">
+                          <span className="block truncate text-sm font-medium text-green-900">
+                            {b.nama}
+                          </span>
+                          <UnggahFoto
+                            subjek="sub_blok"
+                            id={b.id}
+                            label="Foto"
+                            kompak
+                            saatSelesai={(url) =>
+                              setDaftar((d) =>
+                                d.map((x) =>
+                                  x.id === l.id
+                                    ? {
+                                        ...x,
+                                        subBlok: x.subBlok.map((sb) =>
+                                          sb.id === b.id
+                                            ? { ...sb, fotoUrl: url }
+                                            : sb,
+                                        ),
+                                      }
+                                    : x,
+                                ),
+                              )
+                            }
+                          />
+                        </span>
                       </span>
                       <span className="flex shrink-0 gap-2">
                         <button
