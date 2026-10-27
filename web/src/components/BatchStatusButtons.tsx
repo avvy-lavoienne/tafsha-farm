@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const PENYEBAB = [
@@ -22,6 +23,7 @@ export default function BatchStatusButtons({
   const [sibuk, setSibuk] = useState(false);
   const [modeGagal, setModeGagal] = useState(false);
   const [penyebab, setPenyebab] = useState(PENYEBAB[0]);
+  const router = useRouter();
 
   async function ubah(statusBaru: string, penyebabGagal: string | null) {
     setSibuk(true);
@@ -32,7 +34,7 @@ export default function BatchStatusButtons({
         .update({ status: statusBaru, penyebab_gagal: penyebabGagal })
         .eq("id", id);
       if (error) throw error;
-      window.location.reload();
+      router.refresh();
     } catch {
       alert("Gagal mengubah status.");
     } finally {

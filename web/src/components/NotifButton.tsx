@@ -1,17 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
+function statusAwal(): string {
+  if (typeof window === "undefined" || !("Notification" in window))
+    return "tidak-dukung";
+  return Notification.permission;
+}
 
 export default function NotifButton() {
-  const [status, setStatus] = useState<string>("cek");
-
-  useEffect(() => {
-    if (!("Notification" in window)) {
-      setStatus("tidak-dukung");
-      return;
-    }
-    setStatus(Notification.permission);
-  }, []);
+  const [status, setStatus] = useState<string>(statusAwal);
 
   async function aktifkan() {
     if (!("Notification" in window)) return;

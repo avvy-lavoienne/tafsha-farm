@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import SeedButton from "@/components/SeedButton";
@@ -165,12 +166,12 @@ export default async function Home() {
       <CuacaCard mode="beranda" />
 
       {menipis > 0 && (
-        <a
+        <Link
           href="/sarana"
           className="tf-card border-l-4 border-l-amber-500 text-sm font-medium text-amber-800"
         >
           ⚠️ {menipis} sarana di bawah stok minimum. Cek persediaan.
-        </a>
+        </Link>
       )}
 
       {batchAktif.length === 0 ? (
@@ -182,12 +183,12 @@ export default async function Home() {
             Data dasar sudah ada. Tambahkan batch tanam pertamamu — misal cabai
             di galon 15L — supaya tugas siram otomatis muncul tiap pagi.
           </p>
-          <a
+          <Link
             href="/batch"
             className="mt-3 inline-block tf-btn"
           >
             + Tambah batch tanam
-          </a>
+          </Link>
         </section>
       ) : (
         <section className="tf-card">
@@ -199,12 +200,12 @@ export default async function Home() {
               ? "Tidak ada pengingat hari ini. Santai 🎉"
               : `${tugas.length} hal perlu dikerjakan — dibaca saja, tidak perlu laporan.`}
           </p>
-          <a
+          <Link
             href="/tugas"
             className="mt-3 inline-block tf-btn"
           >
             Lihat pengingat
-          </a>
+          </Link>
         </section>
       )}
 
@@ -221,9 +222,9 @@ export default async function Home() {
                 🌱 Rangkuman tanaman ({ringkasan.length} batch)
               </h2>
             </div>
-            <a href="/kebun" className="tf-btn-kecil tf-btn-abu shrink-0">
+            <Link href="/kebun" className="tf-btn-kecil tf-btn-abu shrink-0">
               Kelola kebun →
-            </a>
+            </Link>
           </div>
           <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
             {perLokasi.map((l) => (
@@ -237,18 +238,18 @@ export default async function Home() {
                 {l.batch.length === 0 ? (
                   <p className="mt-1 text-xs text-zinc-500">
                     Belum ada batch di sini.{" "}
-                    <a
+                    <Link
                       href="/batch/baru"
                       className="font-semibold text-green-800 underline"
                     >
                       Tanam baru →
-                    </a>
+                    </Link>
                   </p>
                 ) : (
                   <ul className="mt-2 flex flex-col gap-1.5">
                     {l.batch.slice(0, 5).map((r) => (
                       <li key={r.id}>
-                        <a
+                        <Link
                           href={`/batch/${r.id}`}
                           className="flex items-center justify-between gap-2 text-sm"
                         >
@@ -269,17 +270,17 @@ export default async function Home() {
                               Segera panen
                             </span>
                           ) : null}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                     {l.batch.length > 5 && (
                       <li>
-                        <a
+                        <Link
                           href={`/batch?lokasi=${l.id}`}
                           className="text-xs font-semibold text-green-800 underline"
                         >
                           + {l.batch.length - 5} batch lagi →
-                        </a>
+                        </Link>
                       </li>
                     )}
                   </ul>
@@ -303,10 +304,10 @@ function StatCard({
   href: string;
 }) {
   return (
-    <a href={href} className="tf-card">
+    <Link href={href} className="tf-card">
       <p className="text-2xl font-bold text-[#166534]">{angka}</p>
       <p className="mt-1 text-xs text-zinc-600">{label}</p>
-    </a>
+    </Link>
   );
 }
 
@@ -322,14 +323,14 @@ function MenuGrid() {
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
       {CARDS.map((c) => (
-        <a
+        <Link
           key={c.title}
           href={c.href}
           className="tf-card"
         >
           <p className="font-semibold text-[#166534]">{c.title}</p>
           <p className="mt-1 text-xs text-zinc-600">{c.desc}</p>
-        </a>
+        </Link>
       ))}
     </div>
   );

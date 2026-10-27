@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatTanggal, hariIniISO } from "@/lib/tanggal";
 import TugasCard from "@/components/TugasCard";
@@ -58,12 +59,12 @@ export default async function TugasPage() {
             🎉 Tidak ada pengingat hari ini. Pengingat siram otomatis dibuat
             saat menambah batch tanam baru.
           </p>
-          <a
+          <Link
             href="/batch/baru"
             className="mt-3 inline-block tf-btn"
           >
             + Batch tanam baru
-          </a>
+          </Link>
         </section>
       ) : (
         [...perLokasi.entries()].map(([lokasi, daftar]) => (

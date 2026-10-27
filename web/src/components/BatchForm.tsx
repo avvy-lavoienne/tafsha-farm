@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { hariIniISO } from "@/lib/tanggal";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
@@ -48,6 +49,7 @@ export default function BatchForm({
   const [catatan, setCatatan] = useState(edit?.catatan ?? "");
   const [pesan, setPesan] = useState<string | null>(null);
   const [sibuk, setSibuk] = useState(false);
+  const router = useRouter();
 
   const subBlokTampil = subBlok.filter((s) => s.location_id === locationId);
 
@@ -77,7 +79,7 @@ export default function BatchForm({
           })
           .eq("id", edit.id);
         if (error) throw error;
-        window.location.href = `/batch/${edit.id}`;
+        router.push(`/batch/${edit.id}`);
         return;
       }
 
@@ -117,7 +119,7 @@ export default function BatchForm({
         .insert(tugas);
       if (errTugas) throw errTugas;
 
-      window.location.href = `/batch/${batch.id}`;
+      router.push(`/batch/${batch.id}`);
     } catch (e) {
       setPesan(e instanceof Error ? e.message : "Gagal menyimpan.");
     } finally {

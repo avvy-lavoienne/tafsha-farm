@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { LABEL_STATUS, formatTanggal, hitungHST } from "@/lib/tanggal";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
@@ -48,7 +49,7 @@ export default async function BatchPage({
             ["gagal", "Gagal"],
             ["semua", "Semua"],
           ].map(([v, label]) => (
-            <a
+            <Link
               key={v}
               href={`/batch?status=${v}`}
               className={`tf-chip ${
@@ -58,18 +59,18 @@ export default async function BatchPage({
               }`}
             >
               {label}
-            </a>
+            </Link>
           ))}
         </div>
-        <a
+        <Link
           href="/batch/baru"
           className="mt-3 inline-block tf-btn"
         >
           + Batch baru
-        </a>
+        </Link>
         {(semuaLokasi ?? []).length > 1 && (
           <div className="mt-3 flex flex-wrap gap-2">
-            <a
+            <Link
               href={`/batch?status=${filterStatus}`}
               className={`tf-chip ${
                 !filterLokasi
@@ -78,9 +79,9 @@ export default async function BatchPage({
               }`}
             >
               Semua lokasi
-            </a>
+            </Link>
             {(semuaLokasi ?? []).map((l) => (
-              <a
+              <Link
                 key={l.id}
                 href={`/batch?status=${filterStatus}&lokasi=${l.id}`}
                 className={`tf-chip ${
@@ -90,7 +91,7 @@ export default async function BatchPage({
                 }`}
               >
                 {l.nama}
-              </a>
+              </Link>
             ))}
           </div>
         )}
@@ -109,7 +110,7 @@ export default async function BatchPage({
           const hst = hitungHST(b.tgl_tanam);
           const siap = umurMin != null && hst >= umurMin;
           return (
-            <a
+            <Link
               key={b.id}
               href={`/batch/${b.id}`}
               className="tf-card"
@@ -138,7 +139,7 @@ export default async function BatchPage({
                   </span>
                 )}
               </p>
-            </a>
+            </Link>
           );
         })
       )}

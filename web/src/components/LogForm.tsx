@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { LABEL_TUGAS } from "@/lib/tanggal";
 import MiniSpin from "@/components/MiniSpin";
@@ -11,6 +12,7 @@ export default function LogForm({ batchId }: { batchId: string }) {
   const [dosis, setDosis] = useState("");
   const [sibuk, setSibuk] = useState(false);
   const [pesan, setPesan] = useState<string | null>(null);
+  const router = useRouter();
 
   async function simpan() {
     setSibuk(true);
@@ -30,7 +32,7 @@ export default function LogForm({ batchId }: { batchId: string }) {
       if (error) throw error;
       setDeskripsi("");
       setDosis("");
-      window.location.reload();
+      router.refresh();
     } catch (e) {
       setPesan(e instanceof Error ? e.message : "Gagal menyimpan.");
     } finally {

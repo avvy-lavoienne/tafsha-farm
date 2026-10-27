@@ -1,11 +1,15 @@
-export default function KomoditasPage() {
-  return (
-    <div className="tf-card">
-      <h1 className="text-xl font-bold text-green-900">Komoditas</h1>
-      <p className="mt-1 text-sm text-zinc-600">
-        Cabai, timun, terong, talas, tomat, kangkung, bayam + rencana lavender &
-        selada. Master + SOP menyusul di M2.
-      </p>
-    </div>
-  );
+import { createClient } from "@/lib/supabase/server";
+import KomoditasManager from "@/components/KomoditasManager";
+
+export default async function KomoditasPage() {
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from("commodities")
+    .select(
+      "id,nama,tipe_panen,umur_panen_min,umur_panen_maks,siram_default,catatan,aktif",
+    )
+    .order("nama");
+
+  return <KomoditasManager awal={data ?? []} />;
 }

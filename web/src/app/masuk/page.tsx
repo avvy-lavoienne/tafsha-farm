@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const configured = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 
 export default function MasukPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pesan, setPesan] = useState<string | null>(null);
@@ -26,7 +28,7 @@ export default function MasukPage() {
           : supabase.auth.signUp({ email, password });
       const { error } = await fn;
       if (error) throw error;
-      window.location.href = "/";
+      router.push("/");
     } catch (e) {
       setPesan(e instanceof Error ? e.message : "Gagal. Coba lagi.");
     } finally {

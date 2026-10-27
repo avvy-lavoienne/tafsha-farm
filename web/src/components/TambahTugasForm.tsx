@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { LABEL_TUGAS, hariIniISO } from "@/lib/tanggal";
 import { ikonKomoditas } from "@/lib/media";
@@ -23,6 +24,7 @@ export default function TambahTugasForm({
   const [tanggal, setTanggal] = useState(hariIniISO());
   const [sibuk, setSibuk] = useState(false);
   const [pesan, setPesan] = useState<string | null>(null);
+  const router = useRouter();
 
   async function simpan() {
     if (!batchId) {
@@ -45,7 +47,7 @@ export default function TambahTugasForm({
         status: "belum",
       });
       if (error) throw error;
-      window.location.reload();
+      router.refresh();
     } catch (e) {
       setPesan(e instanceof Error ? e.message : "Gagal menyimpan.");
     } finally {

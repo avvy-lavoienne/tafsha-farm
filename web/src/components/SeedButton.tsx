@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import MiniSpin from "@/components/MiniSpin";
 
 export default function SeedButton() {
   const [pesan, setPesan] = useState<string | null>(null);
   const [sibuk, setSibuk] = useState(false);
+  const router = useRouter();
 
   async function isi() {
     setSibuk(true);
@@ -15,7 +17,7 @@ export default function SeedButton() {
       const supabase = createClient();
       const { error } = await supabase.rpc("seed_tafsha_farm");
       if (error) throw error;
-      window.location.reload();
+      router.refresh();
     } catch (e) {
       setPesan(
         e instanceof Error

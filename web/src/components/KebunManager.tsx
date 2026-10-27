@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
 import MiniSpin from "@/components/MiniSpin";
@@ -345,9 +347,11 @@ export default function KebunManager({
       {daftar.map((l) => (
         <section key={l.id} className="tf-card">
           {l.fotoUrl && (
-            <img
+            <Image
               src={l.fotoUrl}
               alt={`Foto ${l.nama}`}
+              width={800}
+              height={300}
               loading="lazy"
               className="mb-3 h-44 w-full rounded-2xl object-cover"
             />
@@ -429,12 +433,12 @@ export default function KebunManager({
               >
                 {l.aktif ? "Nonaktifkan" : "Aktifkan lagi"}
               </button>
-              <a
+              <Link
                 href={`/batch?lokasi=${l.id}`}
                 className="tf-btn-kecil tf-btn-abu"
               >
                 Lihat batch →
-              </a>
+              </Link>
               <UnggahFoto
                 subjek="lokasi"
                 id={l.id}
@@ -456,15 +460,15 @@ export default function KebunManager({
             {l.batch.length === 0 ? (
               <p className="mt-1 text-xs text-zinc-500">
                 Belum ada batch aktif di sini.{" "}
-                <a href="/batch/baru" className="font-semibold text-green-800 underline">
+                <Link href="/batch/baru" className="font-semibold text-green-800 underline">
                   Tanam baru →
-                </a>
+                </Link>
               </p>
             ) : (
               <ul className="mt-2 flex flex-col gap-2">
                 {l.batch.map((bt) => (
                   <li key={bt.id}>
-                    <a
+                    <Link
                       href={`/batch/${bt.id}`}
                       className="flex items-center justify-between gap-2 rounded-xl bg-[#f0fdf4] px-3 py-2"
                     >
@@ -482,7 +486,7 @@ export default function KebunManager({
                           Siap panen
                         </span>
                       )}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -526,9 +530,11 @@ export default function KebunManager({
                     >
                       <span className="flex min-w-0 items-center gap-2">
                         {b.fotoUrl && (
-                          <img
+                          <Image
                             src={b.fotoUrl}
                             alt={`Foto ${b.nama}`}
+                            width={80}
+                            height={80}
                             loading="lazy"
                             className="h-10 w-10 shrink-0 rounded-xl object-cover"
                           />

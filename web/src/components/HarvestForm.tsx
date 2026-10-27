@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { hariIniISO } from "@/lib/tanggal";
 import MiniSpin from "@/components/MiniSpin";
@@ -13,6 +14,7 @@ export default function HarvestForm({ batchId }: { batchId: string }) {
   const [tanggal, setTanggal] = useState(hariIniISO());
   const [sibuk, setSibuk] = useState(false);
   const [pesan, setPesan] = useState<string | null>(null);
+  const router = useRouter();
 
   async function simpan() {
     setSibuk(true);
@@ -33,7 +35,7 @@ export default function HarvestForm({ batchId }: { batchId: string }) {
       });
       if (error) throw error;
       setJumlah("");
-      window.location.reload();
+      router.refresh();
     } catch (e) {
       setPesan(e instanceof Error ? e.message : "Gagal menyimpan.");
     } finally {

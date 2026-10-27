@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import {
   LABEL_STATUS,
   LABEL_TUGAS,
@@ -67,12 +68,12 @@ export default async function BatchDetailPage({
     <div className="flex flex-col gap-4">
       <section className="tf-card">
         <div className="flex items-center justify-between gap-2">
-          <a href="/batch" className="text-xs font-semibold text-green-700">
+          <Link href="/batch" className="text-xs font-semibold text-green-700">
             ← Kembali ke daftar
-          </a>
-          <a href={`/batch/${id}/edit`} className="tf-btn-kecil tf-btn-abu">
+          </Link>
+          <Link href={`/batch/${id}/edit`} className="tf-btn-kecil tf-btn-abu">
             Edit batch
-          </a>
+          </Link>
         </div>
         <div className="mt-1 flex items-center justify-between gap-2">
           <h1 className="text-xl font-bold text-green-900">

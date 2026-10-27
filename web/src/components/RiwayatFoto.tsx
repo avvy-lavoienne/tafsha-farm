@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import UnggahFoto, { type SubjekFoto } from "@/components/UnggahFoto";
 
@@ -31,9 +32,11 @@ export default async function RiwayatFoto({
         Foto terbaru jadi sampul. Semua foto otomatis masuk galeri landing.
       </p>
       {fotoUtama && (
-        <img
+        <Image
           src={fotoUtama}
           alt="Foto terbaru"
+          width={800}
+          height={400}
           loading="lazy"
           className="mt-2 h-52 w-full rounded-2xl object-cover"
         />
@@ -45,9 +48,11 @@ export default async function RiwayatFoto({
         <div className="mt-3 grid grid-cols-3 gap-2">
           {riwayat.slice(1).map((f) => (
             <a key={f.id} href={f.foto_url} target="_blank" rel="noreferrer">
-              <img
+              <Image
                 src={f.foto_url}
                 alt={`Foto ${new Date(f.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "short" })}`}
+                width={200}
+                height={120}
                 loading="lazy"
                 className="h-20 w-full rounded-xl object-cover"
               />
