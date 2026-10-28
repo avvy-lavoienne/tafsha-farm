@@ -21,7 +21,7 @@ export default async function Home() {
 
   const [lokasiRes, tugasRes, batchRes, panenRes] = await Promise.all([
     supabase.from("locations").select("id,nama").eq("aktif", true),
-    supabase.from("care_tasks").select("id").eq("due_date", hariIni),
+    supabase.from("care_tasks").select("id,status").eq("due_date", hariIni),
     supabase
       .from("plant_batches")
       .select(
@@ -44,6 +44,8 @@ export default async function Home() {
     0;
 
   const tugas = tugasRes.data ?? [];
+  const tugasSelesai = tugas.filter((t) => t.status === "selesai").length;
+  const tugasBelum = tugas.length - tugasSelesai;
   const batchAktif = batchRes.data ?? [];
   const daftarLokasi = lokasiRes.data ?? [];
 
@@ -141,7 +143,7 @@ export default async function Home() {
         <p className="mt-1 text-sm text-zinc-600">
           {tugas.length === 0
             ? "Tidak ada pengingat hari ini. Santai 🎉"
-            : `${tugas.length} pengingat perlu dibaca — tanpa centang, tanpa laporan.`}
+            : `${tugasBelum} belum • ${tugasSelesai} selesai — centang di halaman tugas ✅`}
         </p>
         <div className="mt-3 grid grid-cols-2 gap-3">
           <StatCard
@@ -202,7 +204,7 @@ export default async function Home() {
           <p className="mt-1 text-sm text-zinc-600">
             {tugas.length === 0
               ? "Tidak ada pengingat hari ini. Santai 🎉"
-              : `${tugas.length} hal perlu dikerjakan — dibaca saja, tidak perlu laporan.`}
+              : `${tugasBelum} belum • ${tugasSelesai} selesai. Buka daftar dan centang ✅`}
           </p>
           <Link
             href="/tugas"

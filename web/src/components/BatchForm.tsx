@@ -7,7 +7,12 @@ import { hariIniISO } from "@/lib/tanggal";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
 import MiniSpin from "@/components/MiniSpin";
 
-type Opsi = { id: string; nama: string; aktif?: boolean | null };
+type Opsi = {
+  id: string;
+  nama: string;
+  aktif?: boolean | null;
+  siram_default?: string | null;
+};
 type SubBlok = { id: string; nama: string; location_id: string };
 
 export default function BatchForm({
@@ -101,18 +106,28 @@ export default function BatchForm({
         .single();
       if (error) throw error;
 
-      // Tugas siram otomatis 30 hari ke depan
+      // Tugas siram otomatis 30 hari ke depan.
+      // Teks siram bebas ("1x pagi", "suka lembap") tak bisa diparse presisi —
+      // hanya pola "2x" yang dispesialkan jadi 2 tugas/hari (pagi+sore);
+      // sisanya 1 tugas/hari. Skema care_tasks tanpa kolom waktu/deskripsi,
+      // jadi pembeda pagi/sore hanya jumlah baris (2 baris per hari).
+      const siramDefault = (
+        komoditas.find((k) => k.id === commodityId)?.siram_default ?? ""
+      ).toLowerCase();
+      const duaKali = siramDefault.includes("2x");
       const tugas = [];
       for (let i = 0; i < 30; i++) {
         const d = new Date(tglTanam + "T00:00:00");
         d.setDate(d.getDate() + i);
-        tugas.push({
+        const baris = {
           user_id: user.id,
           batch_id: batch.id,
           jenis: "siram",
           due_date: d.toISOString().slice(0, 10),
           status: "belum",
-        });
+        };
+        tugas.push(baris);
+        if (duaKali) tugas.push({ ...baris });
       }
       const { error: errTugas } = await supabase
         .from("care_tasks")

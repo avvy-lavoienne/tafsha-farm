@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatTanggal, hariIniISO } from "@/lib/tanggal";
-import TugasCard from "@/components/TugasCard";
+import DaftarTugas from "@/components/DaftarTugas";
 import CuacaCard from "@/components/CuacaCard";
 import TambahTugasForm from "@/components/TambahTugasForm";
 import NotifButton from "@/components/NotifButton";
@@ -51,7 +51,7 @@ export default async function TugasPage() {
         </h1>
         <p className="mt-1 text-sm text-zinc-600">
           {formatTanggal(tanggal)} — {tugas?.length ?? 0} hal perlu dikerjakan.
-          Dibaca saja, tidak perlu dicentang.
+          Centang kalau sudah selesai ✅
         </p>
       </section>
 
@@ -74,11 +74,7 @@ export default async function TugasPage() {
         [...perLokasi.entries()].map(([lokasi, daftar]) => (
           <section key={lokasi} className="tf-card">
             <h2 className="font-bold text-green-900">📍 {lokasi}</h2>
-            <ul className="mt-2 flex flex-col gap-2">
-              {daftar.map((t) => (
-                <TugasCard key={t.id} tugas={t} />
-              ))}
-            </ul>
+            <DaftarTugas tugas={daftar} />
           </section>
         ))
       )}

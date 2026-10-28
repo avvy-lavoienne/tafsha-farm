@@ -5,7 +5,7 @@ export default async function BatchBaruPage() {
   const supabase = await createClient();
 
   const [komoditas, lokasi, subBlok, media] = await Promise.all([
-    supabase.from("commodities").select("id,nama,aktif").order("nama"),
+    supabase.from("commodities").select("id,nama,aktif,siram_default").order("nama"),
     supabase.from("locations").select("id,nama").eq("aktif", true).order("nama"),
     supabase.from("sub_blocks").select("id,nama,location_id"),
     supabase.from("media_types").select("id,nama"),

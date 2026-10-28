@@ -10,7 +10,7 @@ import {
 import BatchStatusButtons from "@/components/BatchStatusButtons";
 import LogForm from "@/components/LogForm";
 import HarvestForm from "@/components/HarvestForm";
-import TugasCard from "@/components/TugasCard";
+import DaftarTugas from "@/components/DaftarTugas";
 import RiwayatFoto from "@/components/RiwayatFoto";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
 
@@ -120,7 +120,7 @@ export default async function BatchDetailPage({
         <section className="tf-card">
           <h2 className="font-bold text-green-900">🔔 Pengingat</h2>
           <p className="mt-1 text-xs text-zinc-600">
-            Hanya pengingat — tidak perlu dicentang atau dilaporkan.
+            Centang kalau sudah dikerjakan — tercatat ke logbook ✅
           </p>
           {(() => {
             const semua = tugasRes.data ?? [];
@@ -146,11 +146,7 @@ export default async function BatchDetailPage({
                     Tidak ada pengingat ke depan.
                   </p>
                 ) : (
-                  <ul className="mt-2 flex flex-col gap-2">
-                    {depan.map((t) => (
-                      <TugasCard key={t.id} tugas={t} />
-                    ))}
-                  </ul>
+                  <DaftarTugas tugas={depan} />
                 )}
               </>
             );
