@@ -325,6 +325,7 @@ function MenuGrid() {
     { title: "Panen", desc: "Hasil kg / ikat / buah", href: "/panen" },
     { title: "Sarana", desc: "Benih, pupuk & media", href: "/sarana" },
     { title: "Komoditas", desc: "9 komoditas + SOP", href: "/komoditas" },
+    { title: "Pengaturan", desc: "Akun, notifikasi & data", href: "/pengaturan" },
   ];
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">

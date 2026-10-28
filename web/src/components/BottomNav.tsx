@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Ikon + label ala bottom nav landing — tetap 6 menu aplikasi.
+// Ikon + label ala bottom nav landing — 7 menu aplikasi.
 const NAV = [
   { href: "/", label: "Beranda", ikon: "🏠" },
   { href: "/kebun", label: "Kebun", ikon: "🌱" },
@@ -11,6 +11,7 @@ const NAV = [
   { href: "/tugas", label: "Tugas", ikon: "🔔" },
   { href: "/panen", label: "Panen", ikon: "🧺" },
   { href: "/sarana", label: "Sarana", ikon: "📦" },
+  { href: "/komoditas", label: "Komoditas", ikon: "🌿" },
 ];
 
 export default function BottomNav() {
@@ -20,7 +21,7 @@ export default function BottomNav() {
       className="fixed inset-x-0 bottom-0 z-40 border-t border-green-100 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-lg backdrop-blur"
       aria-label="Navigasi utama"
     >
-      <ul className="mx-auto grid max-w-3xl grid-cols-6 text-center lg:max-w-6xl">
+      <ul className="mx-auto grid max-w-3xl grid-cols-7 text-center lg:max-w-6xl">
         {NAV.map((item) => {
           const aktif =
             item.href === "/" ? path === "/" : path.startsWith(item.href);
