@@ -31,7 +31,7 @@ export default async function Home() {
       .order("tgl_tanam", { ascending: false }),
     supabase
       .from("harvests")
-      .select("jumlah")
+      .select("jumlah,satuan")
       .gte("tanggal", hariIni.slice(0, 7) + "-01"),
   ]);
 
@@ -105,10 +105,24 @@ export default async function Home() {
     ),
   }));
 
-  const totalPanenBulanIni = (panenRes.data ?? []).reduce(
-    (a, p) => a + Number(p.jumlah ?? 0),
-    0,
-  );
+  const panenBulanIni = panenRes.data ?? [];
+  // Jangan jumlahkan kg+ikat: kelompokkan per satuan.
+  const jumPerSatuan = new Map<string, number>();
+  for (const p of panenBulanIni) {
+    const satuan = (p.satuan ?? "-").trim() || "-";
+    jumPerSatuan.set(satuan, (jumPerSatuan.get(satuan) ?? 0) + Number(p.jumlah ?? 0));
+  }
+  const rincianPanen = [...jumPerSatuan.entries()]
+    .map(([s, j]) => `${j} ${s}`)
+    .join(" • ");
+  const teksPanenBulanIni =
+    panenBulanIni.length === 0
+      ? "0"
+      : jumPerSatuan.size === 1
+        ? rincianPanen
+        : `${panenBulanIni.length} entri`;
+  const labelPanenBulanIni =
+    jumPerSatuan.size > 1 ? `Panen bulan ini (${rincianPanen})` : "Panen bulan ini";
 
   // Belum seed: tidak ada lokasi sama sekali
   if ((lokasiRes.data ?? []).length === 0 && batchAktif.length === 0) {
@@ -119,7 +133,7 @@ export default async function Home() {
             Akun sudah masuk 🎉
           </h1>
           <p className="mt-1 text-sm text-zinc-600">
-            Tinggal satu langkah: isi data awal kebun (2 lokasi, 4 tipe media,
+            Tinggal satu langkah: isi data awal kebun (2 lokasi, 6 tipe media,
             9 komoditas).
           </p>
           <div className="mt-3">
@@ -162,8 +176,8 @@ export default async function Home() {
             href="/batch"
           />
           <StatCard
-            angka={String(totalPanenBulanIni)}
-            label="Panen bulan ini"
+            angka={teksPanenBulanIni}
+            label={labelPanenBulanIni}
             href="/panen"
           />
         </div>

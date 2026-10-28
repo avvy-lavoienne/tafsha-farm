@@ -167,18 +167,17 @@ async function kirimSatu(
   uid: string,
   entri: EntriAntrean,
 ): Promise<void> {
-  const p = entri.payload as Record<
-    string,
-    string | number | null | undefined
-  >;
+  const p = entri.payload as Record<string, unknown>;
   const pemilik = (p.user_id as string | null | undefined) ?? uid;
   if (entri.tipe === "activity_log") {
     const { error } = await supabase.from("activity_logs").insert({
       user_id: pemilik,
       batch_id: p.batch_id,
       jenis: p.jenis,
-      deskripsi: p.deskripsi ?? null,
-      dosis: p.dosis ?? null,
+      deskripsi: (p.deskripsi as string | null | undefined) ?? null,
+      dosis: (p.dosis as string | null | undefined) ?? null,
+      oleh: (p.oleh as string | null | undefined) ?? null,
+      foto_urls: (p.foto_urls as string[] | undefined) ?? [],
     });
     if (error) throw error;
     return;

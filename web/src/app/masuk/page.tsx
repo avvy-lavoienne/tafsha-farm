@@ -22,13 +22,26 @@ export default function MasukPage() {
     setPesan(null);
     try {
       const supabase = createClient();
-      const fn =
+      const { data, error } =
         mode === "masuk"
-          ? supabase.auth.signInWithPassword({ email, password })
-          : supabase.auth.signUp({ email, password });
-      const { error } = await fn;
+          ? await supabase.auth.signInWithPassword({ email, password })
+          : await supabase.auth.signUp({ email, password });
       if (error) throw error;
+      if (!data.session) {
+        // Proyek Supabase mewajibkan konfirmasi email: akun terdaftar
+        // tapi sesi belum ada — jangan dorong ke beranda (pasti mental
+        // ke /masuk lagi). Minta user cek email lalu tekan Masuk.
+        setPesan(
+          mode === "daftar"
+            ? "Pendaftaran berhasil! Cek email untuk konfirmasi, lalu tekan Masuk."
+            : "Belum ada sesi masuk. Coba tekan Masuk sekali lagi.",
+        );
+        return;
+      }
+      // Penting: refresh agar cache prefetch (bottom nav ikut prefetch
+      // saat masih tamu) tidak menyajikan halaman /masuk yang basi.
       router.push("/");
+      router.refresh();
     } catch (e) {
       setPesan(e instanceof Error ? e.message : "Gagal. Coba lagi.");
     } finally {

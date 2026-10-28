@@ -21,6 +21,7 @@ export default function BatchForm({
   subBlok,
   media,
   edit,
+  duplikat,
 }: {
   komoditas: Opsi[];
   lokasi: Opsi[];
@@ -37,21 +38,37 @@ export default function BatchForm({
     tgl_semai: string | null;
     catatan: string | null;
   };
+  duplikat?: {
+    commodity_id: string;
+    location_id: string;
+    sub_block_id: string | null;
+    media_type_id: string;
+    jumlah: number;
+    tgl_semai: string | null;
+    catatan: string | null;
+    nama: string | null;
+    tgl_tanam_asal: string | null;
+  } | null;
 }) {
   const [commodityId, setCommodityId] = useState(
-    edit?.commodity_id ?? komoditas[0]?.id ?? "",
+    edit?.commodity_id ?? duplikat?.commodity_id ?? komoditas[0]?.id ?? "",
   );
   const [locationId, setLocationId] = useState(
-    edit?.location_id ?? lokasi[0]?.id ?? "",
+    edit?.location_id ?? duplikat?.location_id ?? lokasi[0]?.id ?? "",
   );
-  const [subBlockId, setSubBlockId] = useState(edit?.sub_block_id ?? "");
+  const [subBlockId, setSubBlockId] = useState(edit?.sub_block_id ?? duplikat?.sub_block_id ?? "");
   const [mediaTypeId, setMediaTypeId] = useState(
-    edit?.media_type_id ?? media[0]?.id ?? "",
+    edit?.media_type_id ?? duplikat?.media_type_id ?? media[0]?.id ?? "",
   );
-  const [jumlah, setJumlah] = useState(String(edit?.jumlah ?? "5"));
+  const [jumlah, setJumlah] = useState(String(edit?.jumlah ?? duplikat?.jumlah ?? "5"));
   const [tglTanam, setTglTanam] = useState(edit?.tgl_tanam ?? hariIniISO());
-  const [tglSemai, setTglSemai] = useState(edit?.tgl_semai ?? "");
-  const [catatan, setCatatan] = useState(edit?.catatan ?? "");
+  const [tglSemai, setTglSemai] = useState(edit?.tgl_semai ?? duplikat?.tgl_semai ?? "");
+  const [catatan, setCatatan] = useState(
+    edit?.catatan ??
+      (duplikat
+        ? `Duplikat dari ${duplikat.nama ?? "batch"}${duplikat.tgl_tanam_asal ? ` (tanam ${duplikat.tgl_tanam_asal})` : ""}${duplikat.catatan ? ` — ${duplikat.catatan}` : ""}`
+        : ""),
+  );
   const [pesan, setPesan] = useState<string | null>(null);
   const [sibuk, setSibuk] = useState(false);
   const router = useRouter();
@@ -88,6 +105,7 @@ export default function BatchForm({
         return;
       }
 
+      const hariIni = hariIniISO();
       const { data: batch, error } = await supabase
         .from("plant_batches")
         .insert({
@@ -99,7 +117,7 @@ export default function BatchForm({
           jumlah: Number(jumlah) || 1,
           tgl_tanam: tglTanam,
           tgl_semai: tglSemai || null,
-          status: "tumbuh",
+          status: tglTanam > hariIni ? "semai" : "tumbuh",
           catatan: catatan || null,
         })
         .select("id")

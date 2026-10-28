@@ -19,7 +19,10 @@ const pwaConfig = withPWA({
   dest: "public",
   register: true,
   disable: process.env.NODE_ENV === "development",
-  cacheOnFrontEndNav: true,
+  // MATI: cache navigasi menyimpan hasil redirect /masuk saat masih tamu
+  // (prefetch bottom nav jalan sebelum login), lalu disajikan lagi
+  // setelah login → dikira sesi hilang / loginform muncul lagi.
+  cacheOnFrontEndNav: false,
   reloadOnOnline: true,
   workboxOptions: {
     disableDevLogs: true,

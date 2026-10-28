@@ -56,6 +56,9 @@ export default function SaranaManager({
   const [editId, setEditId] = useState<string | null>(null);
   const [edit, setEdit] = useState({ nama: "", kategori: "", satuan: "", min_stok: "" });
   const [gerakForm, setGerakForm] = useState<Record<string, { arah: string; jumlah: string }>>({});
+  const [mediaEditId, setMediaEditId] = useState<string | null>(null);
+  const [mediaEdit, setMediaEdit] = useState({ total: "", rusak: "" });
+  const [daftarMedia, setDaftarMedia] = useState<MediaRingkasan[]>(media);
   const [sibuk, setSibuk] = useState(false);
   const [pesan, setPesan] = useState<string | null>(null);
 
@@ -249,6 +252,46 @@ export default function SaranaManager({
 
   const menipis = daftar.filter((s) => Number(s.stok) <= Number(s.min_stok)).length;
 
+  function mulaiEditMedia(m: MediaRingkasan) {
+    setMediaEditId(m.id);
+    setMediaEdit({ total: String(m.total ?? 0), rusak: String(m.rusak ?? 0) });
+  }
+
+  async function simpanMedia(m: MediaRingkasan) {
+    const total = Number(mediaEdit.total);
+    const rusak = Number(mediaEdit.rusak);
+    if (!Number.isFinite(total) || total < 0 || !Number.isInteger(total)) {
+      setPesan(`Total "${m.nama}" wajib angka bulat 0 atau lebih.`);
+      return;
+    }
+    if (!Number.isFinite(rusak) || rusak < 0 || !Number.isInteger(rusak)) {
+      setPesan(`Rusak "${m.nama}" wajib angka bulat 0 atau lebih.`);
+      return;
+    }
+    if (total < m.terpakaiHitung + rusak) {
+      setPesan(
+        `Total "${m.nama}" (${total}) kurang dari terpakai ${m.terpakaiHitung} + rusak ${rusak}. Tambah dulu wadahnya.`,
+      );
+      return;
+    }
+    setSibuk(true);
+    setPesan(null);
+    try {
+      const { supabase } = await uid();
+      const { error } = await supabase
+        .from("media_stocks")
+        .upsert({ media_type_id: m.id, total, rusak }, { onConflict: "media_type_id" });
+      if (error) throw error;
+      setDaftarMedia((d) => d.map((x) => (x.id === m.id ? { ...x, total, rusak } : x)));
+      setMediaEditId(null);
+      segarkan();
+    } catch (e) {
+      setPesan(e instanceof Error ? e.message : "Gagal menyimpan stok media.");
+    } finally {
+      setSibuk(false);
+    }
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <section className="tf-card">
@@ -265,12 +308,12 @@ export default function SaranaManager({
       </section>
 
       <section className="tf-card">
-        <h2 className="font-bold text-green-900">🪴 Media tanam (read-only)</h2>
+        <h2 className="font-bold text-green-900">🪴 Media tanam</h2>
         <p className="mt-1 text-xs text-zinc-600">
           Terpakai dihitung otomatis dari batch aktif. Kosong = total − terpakai − rusak.
         </p>
         <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
-          {media.map((m) => {
+          {daftarMedia.map((m) => {
             const kosong = Math.max(0, m.total - m.terpakaiHitung - m.rusak);
             return (
               <div key={m.id} className="tf-item">
@@ -295,11 +338,60 @@ export default function SaranaManager({
                   )}
                 </div>
                 <p className="mt-1 text-xs text-zinc-500">{m.batchAktif} batch aktif memakai media ini.</p>
+                {mediaEditId === m.id ? (
+                  <div className="mt-2 flex flex-col gap-2">
+                    <div className="grid grid-cols-2 gap-2">
+                      <label className="text-xs font-medium">
+                        Total
+                        <input
+                          type="number"
+                          min={0}
+                          step={1}
+                          value={mediaEdit.total}
+                          onChange={(e) => setMediaEdit((v) => ({ ...v, total: e.target.value }))}
+                          className="tf-input mt-1"
+                        />
+                      </label>
+                      <label className="text-xs font-medium">
+                        Rusak
+                        <input
+                          type="number"
+                          min={0}
+                          step={1}
+                          value={mediaEdit.rusak}
+                          onChange={(e) => setMediaEdit((v) => ({ ...v, rusak: e.target.value }))}
+                          className="tf-input mt-1"
+                        />
+                      </label>
+                    </div>
+                    <p className="text-xs text-zinc-500">
+                      Total wajib ≥ terpakai ({m.terpakaiHitung}) + rusak.
+                    </p>
+                    <div className="flex gap-2">
+                      <button onClick={() => simpanMedia(m)} disabled={sibuk} className="tf-btn">
+                        {sibuk ? (
+                          <>
+                            <MiniSpin /> Menyimpan...
+                          </>
+                        ) : (
+                          "Simpan"
+                        )}
+                      </button>
+                      <button onClick={() => setMediaEditId(null)} className="rounded-xl border px-4 py-2 text-sm">
+                        Batal
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button onClick={() => mulaiEditMedia(m)} className="tf-btn-outline tf-btn-kecil mt-2">
+                    Edit total/rusak
+                  </button>
+                )}
               </div>
             );
           })}
         </div>
-        {media.length === 0 && (
+        {daftarMedia.length === 0 && (
           <p className="mt-2 text-sm text-zinc-600">Belum ada tipe media.</p>
         )}
       </section>

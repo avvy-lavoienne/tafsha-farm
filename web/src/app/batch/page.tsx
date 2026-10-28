@@ -6,22 +6,34 @@ import { ikonKomoditas, ikonMedia } from "@/lib/media";
 export default async function BatchPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; lokasi?: string }>;
+  searchParams: Promise<{
+    status?: string;
+    lokasi?: string;
+    komoditas?: string;
+    siap?: string;
+  }>;
 }) {
   const supabase = await createClient();
   const params = await searchParams;
   const filterStatus = params.status ?? "aktif";
   const filterLokasi = params.lokasi ?? "";
+  const filterKomoditas = params.komoditas ?? "";
+  const hanyaSiap = params.siap === "1";
 
   const { data: semuaLokasi } = await supabase
     .from("locations")
     .select("id,nama")
     .order("nama");
 
+  const { data: semuaKomoditas } = await supabase
+    .from("commodities")
+    .select("id,nama")
+    .order("nama");
+
   let query = supabase
     .from("plant_batches")
     .select(
-      "id,jumlah,tgl_semai,tgl_tanam,status,location_id,commodities(nama,umur_panen_min),locations(nama),sub_blocks(nama),media_types(nama)",
+      "id,commodity_id,jumlah,tgl_semai,tgl_tanam,status,location_id,commodities(nama,umur_panen_min),locations(nama),sub_blocks(nama),media_types(nama)",
     )
     .order("tgl_tanam", { ascending: false });
 
@@ -35,7 +47,33 @@ export default async function BatchPage({
     query = query.eq("location_id", filterLokasi);
   }
 
+  if (filterKomoditas) {
+    query = query.eq("commodity_id", filterKomoditas);
+  }
+
   const { data: batch } = await query;
+
+  // Chip "Siap panen": HST >= umur_min (hitung di sini, reuse hitungHST).
+  const daftar = (batch ?? []).filter((b) => {
+    if (!hanyaSiap) return true;
+    const umurMin = satu(b.commodities)?.umur_panen_min;
+    return umurMin != null && hitungHST(b.tgl_tanam) >= umurMin;
+  });
+
+  function qs(patch: Record<string, string | undefined>): string {
+    const s = new URLSearchParams();
+    const status = patch.status ?? filterStatus;
+    if (status && status !== "aktif") s.set("status", status);
+    if (status === "aktif" && patch.status === "aktif") s.set("status", "aktif");
+    const lokasi = patch.lokasi ?? filterLokasi;
+    if (lokasi) s.set("lokasi", lokasi);
+    const komoditas = patch.komoditas ?? filterKomoditas;
+    if (komoditas) s.set("komoditas", komoditas);
+    const siap = patch.siap ?? (hanyaSiap ? "1" : "");
+    if (siap) s.set("siap", siap);
+    const q = s.toString();
+    return `/batch${q ? `?${q}` : ""}`;
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -51,7 +89,7 @@ export default async function BatchPage({
           ].map(([v, label]) => (
             <Link
               key={v}
-              href={`/batch?status=${v}`}
+              href={qs({ status: v })}
               className={`tf-chip ${
                 filterStatus === v
                   ? "tf-chip-on"
@@ -61,6 +99,12 @@ export default async function BatchPage({
               {label}
             </Link>
           ))}
+          <Link
+            href={qs(hanyaSiap ? { siap: "" } : { siap: "1" })}
+            className={`tf-chip ${hanyaSiap ? "tf-chip-on" : ""}`}
+          >
+            🌱 Siap panen
+          </Link>
         </div>
         <Link
           href="/batch/baru"
@@ -71,7 +115,7 @@ export default async function BatchPage({
         {(semuaLokasi ?? []).length > 1 && (
           <div className="mt-3 flex flex-wrap gap-2">
             <Link
-              href={`/batch?status=${filterStatus}`}
+              href={qs({ lokasi: "" })}
               className={`tf-chip ${
                 !filterLokasi
                   ? "tf-chip-on"
@@ -83,7 +127,7 @@ export default async function BatchPage({
             {(semuaLokasi ?? []).map((l) => (
               <Link
                 key={l.id}
-                href={`/batch?status=${filterStatus}&lokasi=${l.id}`}
+                href={qs({ lokasi: filterLokasi === l.id ? "" : l.id })}
                 className={`tf-chip ${
                   filterLokasi === l.id
                     ? "tf-chip-on"
@@ -95,16 +139,49 @@ export default async function BatchPage({
             ))}
           </div>
         )}
+        {(semuaKomoditas ?? []).length > 1 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Link
+              href={qs({ komoditas: "" })}
+              className={`tf-chip ${
+                !filterKomoditas
+                  ? "tf-chip-on"
+                  : ""
+              }`}
+            >
+              Semua komoditas
+            </Link>
+            {(semuaKomoditas ?? []).map((k) => (
+              <Link
+                key={k.id}
+                href={qs({
+                  komoditas: filterKomoditas === k.id ? "" : k.id,
+                })}
+                className={`tf-chip ${
+                  filterKomoditas === k.id
+                    ? "tf-chip-on"
+                    : ""
+                }`}
+              >
+                {ikonKomoditas(k.nama)} {k.nama}
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
-      {(batch ?? []).length === 0 ? (
+      {daftar.length === 0 ? (
         <section className="tf-card text-sm text-zinc-600">
           Belum ada batch
-          {filterStatus === "aktif" ? " aktif" : ""}. Tambahkan batch tanam
-          pertama — misal cabai di galon 15L.
+          {hanyaSiap
+            ? " yang siap panen untuk filter ini"
+            : filterStatus === "aktif"
+              ? " aktif"
+              : ""}
+          . Tambahkan batch tanam pertama — misal cabai di galon 15L.
         </section>
       ) : (
-        (batch ?? []).map((b) => {
+        daftar.map((b) => {
           const komoditas = satu(b.commodities)?.nama ?? "?";
           const umurMin = satu(b.commodities)?.umur_panen_min;
           const hst = hitungHST(b.tgl_tanam);

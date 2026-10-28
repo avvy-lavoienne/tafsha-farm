@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import {
   LABEL_STATUS,
@@ -51,7 +52,7 @@ export default async function BatchDetailPage({
       .limit(30),
     supabase
       .from("activity_logs")
-      .select("id,jenis,deskripsi,dosis,oleh,created_at")
+      .select("id,jenis,deskripsi,dosis,oleh,foto_urls,created_at")
       .eq("batch_id", id)
       .order("created_at", { ascending: false })
       .limit(20),
@@ -71,9 +72,14 @@ export default async function BatchDetailPage({
           <Link href="/batch" className="text-xs font-semibold text-green-700">
             ← Kembali ke daftar
           </Link>
-          <Link href={`/batch/${id}/edit`} className="tf-btn-kecil tf-btn-abu">
-            Edit batch
-          </Link>
+          <div className="flex gap-2">
+            <Link href={`/batch/baru?dari=${id}`} className="tf-btn-kecil">
+              Duplikat batch
+            </Link>
+            <Link href={`/batch/${id}/edit`} className="tf-btn-kecil tf-btn-abu">
+              Edit batch
+            </Link>
+          </div>
         </div>
         <div className="mt-1 flex items-center justify-between gap-2">
           <h1 className="text-xl font-bold text-green-900">
@@ -184,6 +190,18 @@ export default async function BatchDetailPage({
               )}
               {l.dosis && (
                 <p className="text-xs text-zinc-500">Dosis: {l.dosis}</p>
+              )}
+              {Array.isArray(l.foto_urls) && l.foto_urls.length > 0 && (
+                <a href={l.foto_urls[0]} target="_blank" rel="noreferrer">
+                  <Image
+                    src={l.foto_urls[0]}
+                    alt="Foto lampiran catatan"
+                    width={160}
+                    height={100}
+                    loading="lazy"
+                    className="mt-1 h-20 w-auto rounded-xl object-cover"
+                  />
+                </a>
               )}
             </li>
           ))}
