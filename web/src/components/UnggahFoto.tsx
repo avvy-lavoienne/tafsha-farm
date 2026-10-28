@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { tambahAntrean, apakahJaringanGagal } from "@/lib/outbox";
 import MiniSpin from "@/components/MiniSpin";
 
 // Batas & kompres: foto HP 4MB+ diterima, dikompres dulu di HP baru diupload.
@@ -93,25 +94,62 @@ export default function UnggahFoto({
     if (!file) return;
     setSibuk(true);
     setPesan(null);
+    let hasil: { blob: Blob; asliKb: number; akhirKb: number } | null = null;
+    let userId: string | null = null;
     try {
       if (!file.type.startsWith("image/")) throw new Error("Pilih file gambar (JPG/PNG).");
       if (file.size > MAKS_ASLI) throw new Error("Foto terlalu besar (maks 15MB).");
       // 0) kompres dulu di HP — foto kamera 4MB jadi ~200-400KB sebelum dikirim
       setTahap("Mengompres foto...");
-      let hasil: { blob: Blob; asliKb: number; akhirKb: number };
       try {
         hasil = await kompresFoto(file);
       } catch {
         throw new Error("Foto tidak bisa dibaca HP ini. Coba foto JPG biasa (bukan HEIC).");
       }
-      setTahap("Mengunggah...");
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("Harus masuk dulu.");
+      // getUser() butuh jaringan — offline gagal di sini, anggap user null.
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        userId = user?.id ?? null;
+      } catch (e) {
+        if (!apakahJaringanGagal(e)) throw e;
+      }
+      const sedangOffline =
+        typeof navigator !== "undefined" && !navigator.onLine;
+      if (sedangOffline || !userId || !hasil) {
+        // Offline (atau sesi belum kebaca): antrekan blob JPEG terkompres.
+        // Saat sinkron: upload dengan nama outboxId + upsert agar retry aman.
+        if (!hasil) {
+          setPesan("Foto tidak terbaca. Coba foto ulang ya 📷");
+          return;
+        }
+        try {
+          const n = await tambahAntrean(
+            "foto",
+            {
+              user_id: userId,
+              subjek,
+              subjek_id: id,
+              created_at: new Date().toISOString(),
+            },
+            hasil.blob,
+          );
+          setPesan(
+            `📴 Foto tersimpan offline, menunggu sinkron: ${n} (${formatKb(hasil.asliKb)} → ${formatKb(hasil.akhirKb)})`,
+          );
+          saatSelesai?.(URL.createObjectURL(hasil.blob));
+        } catch (antre) {
+          setPesan(
+            antre instanceof Error ? antre.message : "Gagal menyimpan foto offline.",
+          );
+        }
+        return;
+      }
+      setTahap("Mengunggah...");
 
-      const path = `${user.id}/${subjek}/${id}/${Date.now()}.jpg`;
+      const path = `${userId}/${subjek}/${id}/${Date.now()}.jpg`;
       const { error: errUp } = await supabase.storage
         .from("kebun-foto")
         .upload(path, hasil.blob, { contentType: "image/jpeg", upsert: false });
@@ -123,7 +161,7 @@ export default function UnggahFoto({
 
       // 1) catat ke riwayat berkala
       const { error: errRiwayat } = await supabase.from("kebun_foto").insert({
-        user_id: user.id,
+        user_id: userId,
         subjek_tipe: subjek,
         subjek_id: id,
         foto_url: publicUrl,
@@ -142,6 +180,31 @@ export default function UnggahFoto({
       setPesan(`Foto tersimpan ✅ (${formatKb(hasil.asliKb)} → ${formatKb(hasil.akhirKb)})`);
       saatSelesai?.(publicUrl);
     } catch (e) {
+      // Jaringan putus di tengah upload → antrekan offline agar tidak hilang.
+      const gagal = apakahJaringanGagal(e) ? hasil : null;
+      if (gagal) {
+        try {
+          const n = await tambahAntrean(
+            "foto",
+            {
+              user_id: userId,
+              subjek,
+              subjek_id: id,
+              created_at: new Date().toISOString(),
+            },
+            gagal.blob,
+          );
+          setPesan(
+            `📴 Foto tersimpan offline, menunggu sinkron: ${n} (${formatKb(gagal.asliKb)} → ${formatKb(gagal.akhirKb)})`,
+          );
+          saatSelesai?.(URL.createObjectURL(gagal.blob));
+        } catch (antre) {
+          setPesan(
+            antre instanceof Error ? antre.message : "Gagal menyimpan foto offline.",
+          );
+        }
+        return;
+      }
       setPesan(e instanceof Error ? e.message : "Gagal mengunggah foto.");
     } finally {
       setSibuk(false);

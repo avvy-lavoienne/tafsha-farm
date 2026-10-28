@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { hariIniISO } from "@/lib/tanggal";
 
 function statusAwal(): string {
   if (typeof window === "undefined" || !("Notification" in window))
@@ -8,8 +10,58 @@ function statusAwal(): string {
   return Notification.permission;
 }
 
+// Kunci sekali sehari agar notifikasi pagi tidak muncul berulang tiap buka halaman.
+function sudahDiingatkanHariIni(): boolean {
+  try {
+    return localStorage.getItem("tafsha-ingat") === hariIniISO();
+  } catch {
+    return true; // gagal baca: diam saja, jangan spam
+  }
+}
+
+function tandaiDiingatkan(): void {
+  try {
+    localStorage.setItem("tafsha-ingat", hariIniISO());
+  } catch {
+    // abaikan: ingat lagi besok
+  }
+}
+
 export default function NotifButton() {
   const [status, setStatus] = useState<string>(statusAwal);
+
+  // Pengingat lokal: pagi hari (sblm jam 12) saat tab dibuka + ada tugas
+  // hari ini → kirim 1x notifikasi browser. Tanpa server, tanpa VAPID (M5).
+  useEffect(() => {
+    if (status !== "granted") return;
+    if (localStorage.getItem("tafsha-notif") !== "aktif") return;
+    if (sudahDiingatkanHariIni()) return;
+    const jam = new Date().getHours();
+    if (jam >= 12) return;
+    let hidup = true;
+    const cek = async () => {
+      try {
+        const supabase = createClient();
+        const { count } = await supabase
+          .from("care_tasks")
+          .select("id", { count: "exact", head: true })
+          .eq("due_date", hariIniISO());
+        if (!hidup || (count ?? 0) === 0) return;
+        tandaiDiingatkan();
+        new Notification("🌱 Tafsha Farm — pengingat pagi", {
+          body: `${count} hal perlu dikerjakan hari ini. Buka aplikasi ya!`,
+          icon: "/icons/icon-192.png",
+        });
+      } catch {
+        // offline/query gagal: coba lagi di kunjungan berikutnya
+      }
+    };
+    const t = setTimeout(cek, 2000);
+    return () => {
+      hidup = false;
+      clearTimeout(t);
+    };
+  }, [status]);
 
   async function aktifkan() {
     if (!("Notification" in window)) return;

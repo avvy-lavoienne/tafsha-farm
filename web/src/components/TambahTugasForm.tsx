@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { apakahJaringanGagal, tambahAntrean } from "@/lib/outbox";
 import { LABEL_TUGAS, hariIniISO } from "@/lib/tanggal";
 import { ikonKomoditas } from "@/lib/media";
 import MiniSpin from "@/components/MiniSpin";
@@ -33,20 +34,48 @@ export default function TambahTugasForm({
     }
     setSibuk(true);
     setPesan(null);
+    const muatan = {
+      batch_id: batchId,
+      jenis,
+      due_date: tanggal,
+      status: "belum",
+      created_at: new Date().toISOString(),
+    };
     try {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("Harus masuk dulu.");
-      const { error } = await supabase.from("care_tasks").insert({
-        user_id: user.id,
-        batch_id: batchId,
-        jenis,
-        due_date: tanggal,
-        status: "belum",
-      });
-      if (error) throw error;
+      // getUser() butuh jaringan — offline gagal di sini, anggap user null
+      // (user_id diganti user asli saat sinkron).
+      let userId: string | null = null;
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        userId = user?.id ?? null;
+      } catch (e) {
+        if (!apakahJaringanGagal(e)) throw e;
+      }
+      const sedangOffline =
+        typeof navigator !== "undefined" && !navigator.onLine;
+      if (!userId && !sedangOffline) throw new Error("Harus masuk dulu.");
+      const baris = { ...muatan, user_id: userId };
+      if (sedangOffline) {
+        const n = await tambahAntrean("care_task", baris);
+        setPesan(`📴 tersimpan offline, menunggu sinkron: ${n}`);
+        router.refresh();
+        return;
+      }
+      try {
+        const { error } = await supabase.from("care_tasks").insert(baris);
+        if (error) throw error;
+      } catch (e) {
+        if (apakahJaringanGagal(e)) {
+          const n = await tambahAntrean("care_task", baris);
+          setPesan(`📴 tersimpan offline, menunggu sinkron: ${n}`);
+          router.refresh();
+          return;
+        }
+        throw e;
+      }
       router.refresh();
     } catch (e) {
       setPesan(e instanceof Error ? e.message : "Gagal menyimpan.");

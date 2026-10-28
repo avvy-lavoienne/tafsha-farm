@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { apakahJaringanGagal, tambahAntrean } from "@/lib/outbox";
 import { LABEL_TUGAS } from "@/lib/tanggal";
 import MiniSpin from "@/components/MiniSpin";
 
@@ -17,19 +18,47 @@ export default function LogForm({ batchId }: { batchId: string }) {
   async function simpan() {
     setSibuk(true);
     setPesan(null);
+    const muatan = {
+      batch_id: batchId,
+      jenis,
+      deskripsi: deskripsi || null,
+      dosis: dosis || null,
+      created_at: new Date().toISOString(),
+    };
     try {
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      const { error } = await supabase.from("activity_logs").insert({
-        user_id: user?.id ?? null,
-        batch_id: batchId,
-        jenis,
-        deskripsi: deskripsi || null,
-        dosis: dosis || null,
-      });
-      if (error) throw error;
+      // getUser() butuh jaringan — offline gagal di sini, anggap user null
+      // (user_id diganti user asli saat sinkron).
+      let userId: string | null = null;
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        userId = user?.id ?? null;
+      } catch (e) {
+        if (!apakahJaringanGagal(e)) throw e;
+      }
+      const baris = { ...muatan, user_id: userId };
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        const n = await tambahAntrean("activity_log", baris);
+        setPesan(`📴 tersimpan offline, menunggu sinkron: ${n}`);
+        setDeskripsi("");
+        setDosis("");
+        return;
+      }
+      try {
+        const { error } = await supabase.from("activity_logs").insert(baris);
+        if (error) throw error;
+      } catch (e) {
+        if (apakahJaringanGagal(e)) {
+          const n = await tambahAntrean("activity_log", baris);
+          setPesan(`📴 tersimpan offline, menunggu sinkron: ${n}`);
+          setDeskripsi("");
+          setDosis("");
+          return;
+        }
+        throw e;
+      }
       setDeskripsi("");
       setDosis("");
       router.refresh();

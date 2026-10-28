@@ -5,6 +5,8 @@ import TugasCard from "@/components/TugasCard";
 import CuacaCard from "@/components/CuacaCard";
 import TambahTugasForm from "@/components/TambahTugasForm";
 import NotifButton from "@/components/NotifButton";
+import BadgeAntrean from "@/components/BadgeAntrean";
+import SinkronButton from "@/components/SinkronButton";
 
 export default async function TugasPage() {
   const supabase = await createClient();
@@ -41,6 +43,8 @@ export default async function TugasPage() {
 
   return (
     <div className="flex flex-col gap-4">
+      <BadgeAntrean />
+      <SinkronButton />
       <section className="tf-card">
         <h1 className="text-xl font-bold text-green-900">
           🔔 Pengingat hari ini

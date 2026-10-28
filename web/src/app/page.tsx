@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import SeedButton from "@/components/SeedButton";
 import CuacaCard from "@/components/CuacaCard";
+import BadgeAntrean from "@/components/BadgeAntrean";
+import SinkronButton from "@/components/SinkronButton";
 import { formatTanggal, hariIniISO, hitungHST } from "@/lib/tanggal";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
 
@@ -129,6 +131,8 @@ export default async function Home() {
 
   return (
     <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-4 lg:grid-cols-3">
+      <BadgeAntrean />
+      <SinkronButton />
       <section className="tf-card lg:col-span-2 lg:row-span-2">
         <p className="tf-eyebrow">Kebun hari ini</p>
         <h1 className="mt-1 text-2xl font-extrabold text-[#18181b] lg:text-3xl">

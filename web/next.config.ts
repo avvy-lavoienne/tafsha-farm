@@ -24,6 +24,31 @@ const pwaConfig = withPWA({
   workboxOptions: {
     disableDevLogs: true,
     skipWaiting: true,
+    runtimeCaching: [
+      // API Supabase (REST): bisa dibuka offline di kunjungan kedua.
+      {
+        urlPattern: /^https:\/\/.*\.supabase\.co\/rest\/v1\/.*/i,
+        handler: "NetworkFirst",
+        method: "GET",
+        options: {
+          cacheName: "tafsha-supabase-rest",
+          expiration: { maxEntries: 64, maxAgeSeconds: 5 * 60 },
+          networkTimeoutSeconds: 8,
+          cacheableResponse: { statuses: [0, 200] },
+        },
+      },
+      // Foto kebun dari storage: tampil dari cache saat offline.
+      {
+        urlPattern: /^https:\/\/.*\.supabase\.co\/storage\/v1\/object\/public\/kebun-foto\/.*/i,
+        handler: "CacheFirst",
+        method: "GET",
+        options: {
+          cacheName: "tafsha-kebun-foto",
+          expiration: { maxEntries: 120, maxAgeSeconds: 7 * 24 * 60 * 60 },
+          cacheableResponse: { statuses: [0, 200] },
+        },
+      },
+    ],
   },
 });
 
