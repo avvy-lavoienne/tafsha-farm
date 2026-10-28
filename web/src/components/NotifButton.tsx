@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import MiniSpin from "@/components/MiniSpin";
+import { berhentiPush, daftarPush } from "@/lib/push";
 import { hariIniISO } from "@/lib/tanggal";
 
 function statusAwal(): string {
@@ -29,6 +31,10 @@ function tandaiDiingatkan(): void {
 
 export default function NotifButton() {
   const [status, setStatus] = useState<string>(statusAwal);
+  const [pushAktif, setPushAktif] = useState(false);
+  const [siap, setSiap] = useState(false);
+  const [sibuk, setSibuk] = useState(false);
+  const [pesan, setPesan] = useState("");
 
   // Pengingat lokal: pagi hari (sblm jam 12) saat tab dibuka + ada tugas
   // hari ini → kirim 1x notifikasi browser. Tanpa server, tanpa VAPID (M5).
@@ -72,13 +78,104 @@ export default function NotifButton() {
     }
   }
 
+  useEffect(() => {
+    let hidup = true;
+    const baca = async () => {
+      try {
+        const aktif = localStorage.getItem("tafsha-push") === "aktif";
+        if (!hidup) return;
+        setPushAktif(aktif);
+      } catch {
+        // abaikan: anggap push belum aktif
+      } finally {
+        if (hidup) setSiap(true);
+      }
+    };
+    baca();
+    return () => {
+      hidup = false;
+    };
+  }, []);
+
+  async function aktifkanPush() {
+    setSibuk(true);
+    setPesan("");
+    try {
+      await daftarPush();
+      localStorage.setItem("tafsha-push", "aktif");
+      setPushAktif(true);
+      setPesan("✅ Push otomatis aktif. Pengingat tiba tiap pagi walau aplikasi tutup.");
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "tidak diketahui";
+      setPesan(`Gagal daftar push: ${msg}. Pengingat lokal tetap jalan tiap buka aplikasi.`);
+    } finally {
+      setSibuk(false);
+    }
+  }
+
+  async function matikanPush() {
+    setSibuk(true);
+    setPesan("");
+    try {
+      await berhentiPush();
+    } catch {
+      // unsubscribe gagal (mis. offline): flag lokal tetap dihapus
+    } finally {
+      try {
+        localStorage.removeItem("tafsha-push");
+      } catch {
+        // abaikan
+      }
+      setPushAktif(false);
+      setSibuk(false);
+    }
+  }
+
   if (status === "tidak-dukung") return null;
 
   if (status === "granted") {
     return (
-      <p className="rounded-xl bg-green-50 p-3 text-sm text-green-800">
-        🔔 Notifikasi aktif. Pengingat muncul tiap buka aplikasi pagi hari.
-      </p>
+      <div>
+        <p className="rounded-xl bg-green-50 p-3 text-sm text-green-800">
+          🔔 Notifikasi aktif. Pengingat muncul tiap buka aplikasi pagi hari.
+        </p>
+        {siap && (
+        <div className="tf-item mt-2">
+          {pushAktif ? (
+            <>
+              <p className="text-sm font-semibold">📲 Push otomatis aktif</p>
+              <p className="mt-0.5 text-xs text-zinc-600">
+                Pengingat tiba tiap pagi walau aplikasi tutup.
+              </p>
+              <button
+                onClick={matikanPush}
+                disabled={sibuk}
+                className="mt-2 tf-btn-kecil"
+              >
+                {sibuk ? (<><MiniSpin /> Mematikan...</>) : ("Matikan")}
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="text-sm font-semibold">Aktifkan push otomatis 📲?</p>
+              <p className="mt-0.5 text-xs text-zinc-600">
+                Pengingat tiba tiap pagi walau aplikasi tutup.
+              </p>
+              <button
+                onClick={aktifkanPush}
+                disabled={sibuk}
+                className="mt-2 tf-btn"
+              >
+                {sibuk ? (<><MiniSpin /> Mendaftarkan...</>) : ("Aktifkan push otomatis 📲")}
+              </button>
+            </>
+          )}
+          {pesan && (
+            <p className="mt-2 text-xs text-zinc-700">{pesan}</p>
+          )}
+        </div>
+        )}
+      </div>
     );
   }
 

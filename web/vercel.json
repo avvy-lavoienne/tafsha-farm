@@ -1,0 +1,3 @@
+{
+  "crons": [{ "path": "/api/push/kirim", "schedule": "0 23 * * *" }]
+}
