@@ -11,6 +11,7 @@ export default async function BatchPage({
     lokasi?: string;
     komoditas?: string;
     siap?: string;
+    tujuan?: string;
   }>;
 }) {
   const supabase = await createClient();
@@ -18,6 +19,7 @@ export default async function BatchPage({
   const filterStatus = params.status ?? "aktif";
   const filterLokasi = params.lokasi ?? "";
   const filterKomoditas = params.komoditas ?? "";
+  const filterTujuan = params.tujuan ?? "";
   const hanyaSiap = params.siap === "1";
 
   const { data: semuaLokasi } = await supabase
@@ -30,31 +32,39 @@ export default async function BatchPage({
     .select("id,nama")
     .order("nama");
 
-  let query = supabase
-    .from("plant_batches")
-    .select(
-      "id,commodity_id,jumlah,tgl_semai,tgl_tanam,status,location_id,commodities(nama,umur_panen_min),locations(nama),sub_blocks(nama),media_types(nama)",
-    )
-    .order("tgl_tanam", { ascending: false });
-
-  if (filterStatus === "aktif") {
-    query = query.not("status", "in", "(selesai,gagal)");
-  } else if (filterStatus !== "semua") {
-    query = query.eq("status", filterStatus);
+  async function ambilBatch() {
+    // Coba kolom bibit (migrasi 0007); fallback ke skema lama bila DB belum update.
+    let q = supabase
+      .from("plant_batches")
+      .select(
+        "id,commodity_id,jumlah,tgl_semai,tgl_tanam,status,tujuan,stok_siap,harga_pcs,location_id,commodities(nama,umur_panen_min),locations(nama),sub_blocks(nama),media_types(nama)",
+      )
+      .order("tgl_tanam", { ascending: false });
+    if (filterStatus === "aktif") q = q.not("status", "in", "(selesai,gagal)");
+    else if (filterStatus !== "semua") q = q.eq("status", filterStatus);
+    if (filterLokasi) q = q.eq("location_id", filterLokasi);
+    if (filterKomoditas) q = q.eq("commodity_id", filterKomoditas);
+    if (filterTujuan) q = q.eq("tujuan", filterTujuan);
+    const r = await q;
+    if (!r.error) return r.data ?? [];
+    let q2 = supabase
+      .from("plant_batches")
+      .select(
+        "id,commodity_id,jumlah,tgl_semai,tgl_tanam,status,location_id,commodities(nama,umur_panen_min),locations(nama),sub_blocks(nama),media_types(nama)",
+      )
+      .order("tgl_tanam", { ascending: false });
+    if (filterStatus === "aktif") q2 = q2.not("status", "in", "(selesai,gagal)");
+    else if (filterStatus !== "semua") q2 = q2.eq("status", filterStatus);
+    if (filterLokasi) q2 = q2.eq("location_id", filterLokasi);
+    if (filterKomoditas) q2 = q2.eq("commodity_id", filterKomoditas);
+    const r2 = await q2;
+    return r2.data ?? [];
   }
 
-  if (filterLokasi) {
-    query = query.eq("location_id", filterLokasi);
-  }
-
-  if (filterKomoditas) {
-    query = query.eq("commodity_id", filterKomoditas);
-  }
-
-  const { data: batch } = await query;
+  const rows = await ambilBatch();
 
   // Chip "Siap panen": HST >= umur_min (hitung di sini, reuse hitungHST).
-  const daftar = (batch ?? []).filter((b) => {
+  const daftar = (rows ?? []).filter((b) => {
     if (!hanyaSiap) return true;
     const umurMin = satu(b.commodities)?.umur_panen_min;
     return umurMin != null && hitungHST(b.tgl_tanam) >= umurMin;
@@ -69,6 +79,8 @@ export default async function BatchPage({
     if (lokasi) s.set("lokasi", lokasi);
     const komoditas = patch.komoditas ?? filterKomoditas;
     if (komoditas) s.set("komoditas", komoditas);
+    const tujuan = patch.tujuan ?? filterTujuan;
+    if (tujuan) s.set("tujuan", tujuan);
     const siap = patch.siap ?? (hanyaSiap ? "1" : "");
     if (siap) s.set("siap", siap);
     const q = s.toString();
@@ -104,6 +116,26 @@ export default async function BatchPage({
             className={`tf-chip ${hanyaSiap ? "tf-chip-on" : ""}`}
           >
             🌱 Siap panen
+          </Link>
+        </div>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <Link
+            href={qs({ tujuan: "" })}
+            className={`tf-chip ${!filterTujuan ? "tf-chip-on" : ""}`}
+          >
+            Semua tujuan
+          </Link>
+          <Link
+            href={qs({ tujuan: filterTujuan === "kebun" ? "" : "kebun" })}
+            className={`tf-chip ${filterTujuan === "kebun" ? "tf-chip-on" : ""}`}
+          >
+            🏡 Kebun
+          </Link>
+          <Link
+            href={qs({ tujuan: filterTujuan === "jual" ? "" : "jual" })}
+            className={`tf-chip ${filterTujuan === "jual" ? "tf-chip-on" : ""}`}
+          >
+            🌱 Bibit jual
           </Link>
         </div>
         <Link
@@ -186,6 +218,8 @@ export default async function BatchPage({
           const umurMin = satu(b.commodities)?.umur_panen_min;
           const hst = hitungHST(b.tgl_tanam);
           const siap = umurMin != null && hst >= umurMin;
+          const tujuan = (b as { tujuan?: string }).tujuan ?? "kebun";
+          const stokSiap = Number((b as { stok_siap?: number }).stok_siap ?? 0);
           return (
             <Link
               key={b.id}
@@ -194,7 +228,12 @@ export default async function BatchPage({
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="min-w-0 break-words font-bold text-green-900">
-                  {ikonKomoditas(komoditas)} {komoditas} × {b.jumlah}
+                  {ikonKomoditas(komoditas)} {komoditas} × {b.jumlah} pcs
+                  {tujuan === "jual" && (
+                    <span className="ml-2 rounded-full bg-green-700 px-2 py-0.5 text-[11px] font-bold text-white">
+                      🌱 {stokSiap} siap
+                    </span>
+                  )}
                 </p>
                 <span className="shrink-0 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
                   {LABEL_STATUS[b.status] ?? b.status}

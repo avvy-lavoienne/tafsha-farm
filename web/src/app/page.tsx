@@ -19,7 +19,7 @@ export default async function Home() {
 
   const hariIni = hariIniISO();
 
-  const [lokasiRes, tugasRes, batchRes, panenRes] = await Promise.all([
+  const [lokasiRes, tugasRes, batchRes, panenRes, bibitRes] = await Promise.all([
     supabase.from("locations").select("id,nama").eq("aktif", true),
     supabase.from("care_tasks").select("id,status").eq("due_date", hariIni),
     supabase
@@ -33,7 +33,16 @@ export default async function Home() {
       .from("harvests")
       .select("jumlah,satuan")
       .gte("tanggal", hariIni.slice(0, 7) + "-01"),
+    supabase
+      .from("plant_batches")
+      .select("stok_siap")
+      .eq("tujuan", "jual")
+      .not("status", "in", "(selesai,gagal)"),
   ]);
+  const totalBibitSiap = (bibitRes.data ?? []).reduce(
+    (a, b) => a + Number((b as { stok_siap?: number }).stok_siap ?? 0),
+    0,
+  );
 
   // stok menipis: stok <= min_stok (query di atas hanya pendekatan; saring manual)
   const { data: semuaSarana } = await supabase
@@ -134,7 +143,7 @@ export default async function Home() {
           </h1>
           <p className="mt-1 text-sm text-zinc-600">
             Tinggal satu langkah: isi data awal kebun (2 lokasi, 6 tipe media,
-            9 komoditas).
+            13 komoditas — 8 bibit jual).
           </p>
           <div className="mt-3">
             <SeedButton />
@@ -174,6 +183,11 @@ export default async function Home() {
             angka={String(batchAktif.length)}
             label="Batch aktif"
             href="/batch"
+          />
+          <StatCard
+            angka={String(totalBibitSiap)}
+            label="Bibit siap jual (pcs)"
+            href="/bibit"
           />
           <StatCard
             angka={teksPanenBulanIni}
@@ -333,13 +347,14 @@ function StatCard({
 
 function MenuGrid() {
   const CARDS = [
+    { title: "Bibit", desc: "Stok siap jual per pcs", href: "/bibit" },
     { title: "Pengingat", desc: "Apa yang perlu dikerjakan", href: "/tugas" },
     { title: "Kalender", desc: "Semai, tanam & panen", href: "/kalender" },
     { title: "Tanam", desc: "Batch per galon/polybag", href: "/batch" },
     { title: "Kebun", desc: "2 lokasi + sub-blok", href: "/kebun" },
     { title: "Panen", desc: "Hasil kg / ikat / buah", href: "/panen" },
     { title: "Sarana", desc: "Benih, pupuk & media", href: "/sarana" },
-    { title: "Komoditas", desc: "9 komoditas + SOP", href: "/komoditas" },
+    { title: "Komoditas", desc: "13 komoditas + bibit", href: "/komoditas" },
     { title: "Pengaturan", desc: "Akun, notifikasi & data", href: "/pengaturan" },
   ];
   return (

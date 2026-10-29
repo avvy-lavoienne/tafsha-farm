@@ -12,6 +12,8 @@ type Opsi = {
   nama: string;
   aktif?: boolean | null;
   siram_default?: string | null;
+  jual_bibit?: boolean | null;
+  harga_pcs?: number | null;
 };
 type SubBlok = { id: string; nama: string; location_id: string };
 
@@ -37,6 +39,9 @@ export default function BatchForm({
     tgl_tanam: string;
     tgl_semai: string | null;
     catatan: string | null;
+    tujuan?: string | null;
+    harga_pcs?: number | null;
+    stok_siap?: number | null;
   };
   duplikat?: {
     commodity_id: string;
@@ -48,6 +53,9 @@ export default function BatchForm({
     catatan: string | null;
     nama: string | null;
     tgl_tanam_asal: string | null;
+    tujuan?: string | null;
+    harga_pcs?: number | null;
+    stok_siap?: number | null;
   } | null;
 }) {
   const [commodityId, setCommodityId] = useState(
@@ -63,6 +71,21 @@ export default function BatchForm({
   const [jumlah, setJumlah] = useState(String(edit?.jumlah ?? duplikat?.jumlah ?? "5"));
   const [tglTanam, setTglTanam] = useState(edit?.tgl_tanam ?? hariIniISO());
   const [tglSemai, setTglSemai] = useState(edit?.tgl_semai ?? duplikat?.tgl_semai ?? "");
+  const [tujuan, setTujuan] = useState(edit?.tujuan ?? duplikat?.tujuan ?? "kebun");
+  const [hargaPcs, setHargaPcs] = useState(
+    edit?.harga_pcs != null
+      ? String(edit.harga_pcs)
+      : duplikat?.harga_pcs != null
+        ? String(duplikat.harga_pcs)
+        : "",
+  );
+  const [stokAwal, setStokAwal] = useState(
+    edit?.stok_siap != null
+      ? String(edit.stok_siap)
+      : duplikat?.stok_siap != null
+        ? String(duplikat.stok_siap)
+        : "",
+  );
   const [catatan, setCatatan] = useState(
     edit?.catatan ??
       (duplikat
@@ -87,29 +110,9 @@ export default function BatchForm({
 
       if (edit) {
         // Mode edit: ubah data batch, tanpa menyentuh tugas/panen/riwayat.
-        const { error } = await supabase
-          .from("plant_batches")
-          .update({
-            commodity_id: commodityId,
-            location_id: locationId,
-            sub_block_id: subBlockId || null,
-            media_type_id: mediaTypeId,
-            jumlah: Number(jumlah) || 1,
-            tgl_tanam: tglTanam,
-            tgl_semai: tglSemai || null,
-            catatan: catatan || null,
-          })
-          .eq("id", edit.id);
-        if (error) throw error;
-        router.push(`/batch/${edit.id}`);
-        return;
-      }
-
-      const hariIni = hariIniISO();
-      const { data: batch, error } = await supabase
-        .from("plant_batches")
-        .insert({
-          user_id: user.id,
+        // Fallback: bila kolom bibit belum ada (migrasi 0007 belum jalan),
+        // simpan versi lama tanpa tujuan/harga/stok.
+        const inti = {
           commodity_id: commodityId,
           location_id: locationId,
           sub_block_id: subBlockId || null,
@@ -117,12 +120,82 @@ export default function BatchForm({
           jumlah: Number(jumlah) || 1,
           tgl_tanam: tglTanam,
           tgl_semai: tglSemai || null,
-          status: tglTanam > hariIni ? "semai" : "tumbuh",
           catatan: catatan || null,
-        })
-        .select("id")
-        .single();
+        };
+        const { error } = await supabase
+          .from("plant_batches")
+          .update({ ...inti, tujuan, harga_pcs: hargaPcs ? Number(hargaPcs) : null, stok_siap: stokAwal !== "" ? Number(stokAwal) : 0 })
+          .eq("id", edit.id)
+          .then(async (r) => {
+            if (r.error && /tujuan|stok_siap|harga_pcs|column|schema cache/i.test(r.error.message)) {
+              return await supabase.from("plant_batches").update(inti).eq("id", edit.id);
+            }
+            return r;
+          });
+        if (error) throw error;
+        // Tracker: abaikan diam-diam bila tabel batch_moves belum ada.
+        await supabase.from("batch_moves").insert({
+          user_id: user.id,
+          batch_id: edit.id,
+          jenis: "catat",
+          ke_status: null,
+          jumlah: Number(jumlah) || 1,
+          sisa: Number(jumlah) || 1,
+          stok_siap: stokAwal !== "" ? Number(stokAwal) : 0,
+          catatan: "Edit batch",
+        }).then(() => undefined, () => undefined);
+        router.push(`/batch/${edit.id}`);
+        return;
+      }
+
+      const hariIni = hariIniISO();
+      const komTerpilih = komoditas.find((k) => k.id === commodityId);
+      const intiBaru = {
+        user_id: user.id,
+        commodity_id: commodityId,
+        location_id: locationId,
+        sub_block_id: subBlockId || null,
+        media_type_id: mediaTypeId,
+        jumlah: Number(jumlah) || 1,
+        tgl_tanam: tglTanam,
+        tgl_semai: tglSemai || null,
+        status: tglTanam > hariIni ? "semai" : "tumbuh",
+        catatan: catatan || null,
+      };
+      const siapBaru =
+        tujuan === "jual"
+          ? (stokAwal !== "" ? Number(stokAwal) : Number(jumlah) || 1)
+          : 0;
+      async function insertBatch() {
+        const baru = await supabase
+          .from("plant_batches")
+          .insert({
+            ...intiBaru,
+            tujuan: tujuan === "jual" ? "jual" : "kebun",
+            harga_pcs: hargaPcs !== "" ? Number(hargaPcs) : (komTerpilih?.harga_pcs ?? null),
+            stok_siap: siapBaru,
+          })
+          .select("id")
+          .single();
+        if (!baru.error) return baru;
+        if (/tujuan|stok_siap|harga_pcs|column|schema cache/i.test(baru.error.message)) {
+          return await supabase.from("plant_batches").insert(intiBaru).select("id").single();
+        }
+        return baru;
+      }
+      const { data: batch, error } = await insertBatch();
       if (error) throw error;
+      await supabase.from("batch_moves").insert({
+        user_id: user.id,
+        batch_id: batch.id,
+        jenis: "semai",
+        ke_status: tglTanam > hariIni ? "semai" : "tumbuh",
+        jumlah: Number(jumlah) || 1,
+        sisa: Number(jumlah) || 1,
+        stok_siap: siapBaru,
+        catatan:
+          tujuan === "jual" ? "Batch bibit jual dibuat" : "Batch kebun dibuat",
+      }).then(() => undefined, () => undefined);
 
       // Tugas siram otomatis 30 hari ke depan.
       // Teks siram bebas ("1x pagi", "suka lembap") tak bisa diparse presisi —
@@ -173,10 +246,64 @@ export default function BatchForm({
             <option key={k.id} value={k.id}>
               {ikonKomoditas(k.nama)} {k.nama}
               {k.aktif === false ? " (rencana)" : ""}
+              {k.jual_bibit ? " 🌱" : ""}
             </option>
           ))}
         </select>
       </label>
+
+      <div className="grid grid-cols-2 gap-3">
+        <label className="text-sm font-medium">
+          Tujuan batch
+          <select
+            value={tujuan}
+            onChange={(e) => setTujuan(e.target.value)}
+            className="mt-1 tf-input"
+          >
+            <option value="kebun">🏡 Kebun (rawat → panen)</option>
+            <option value="jual">🌱 Bibit jual (per pcs)</option>
+          </select>
+        </label>
+        <label className="text-sm font-medium">
+          Jumlah wadah (pcs)
+          <input
+            type="number"
+            min={1}
+            value={jumlah}
+            onChange={(e) => setJumlah(e.target.value)}
+            className="mt-1 tf-input"
+          />
+        </label>
+      </div>
+
+      {tujuan === "jual" && (
+        <div className="tf-item grid grid-cols-2 gap-3">
+          <label className="text-sm font-medium">
+            Harga/pcs (Rp)
+            <input
+              type="number"
+              min={0}
+              value={hargaPcs}
+              onChange={(e) => setHargaPcs(e.target.value)}
+              placeholder={String(
+                komoditas.find((k) => k.id === commodityId)?.harga_pcs ?? "cth: 5000",
+              )}
+              className="mt-1 tf-input"
+            />
+          </label>
+          <label className="text-sm font-medium">
+            Stok siap jual (pcs)
+            <input
+              type="number"
+              min={0}
+              value={stokAwal}
+              onChange={(e) => setStokAwal(e.target.value)}
+              placeholder={`ikut jumlah (${jumlah}) bila kosong`}
+              className="mt-1 tf-input"
+            />
+          </label>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
         <label className="text-sm font-medium">
@@ -215,7 +342,7 @@ export default function BatchForm({
 
       <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
         <label className="text-sm font-medium">
-          Media
+          Media (polybag per pcs)
           <select
             value={mediaTypeId}
             onChange={(e) => setMediaTypeId(e.target.value)}
@@ -228,16 +355,9 @@ export default function BatchForm({
             ))}
           </select>
         </label>
-        <label className="text-sm font-medium">
-          Jumlah wadah
-          <input
-            type="number"
-            min={1}
-            value={jumlah}
-            onChange={(e) => setJumlah(e.target.value)}
-            className="mt-1 tf-input"
-          />
-        </label>
+        <p className="self-end text-xs text-zinc-500">
+          Jumlah pcs diisi di atas — 1 polybag = 1 pcs bibit.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">

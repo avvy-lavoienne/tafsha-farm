@@ -301,6 +301,14 @@
       <div id="kalender-stat" class="mt-4 grid gap-3 sm:grid-cols-3"></div>
      </div>
     </section>
+    <section id="bibit" class="section-pad bg-[#fffbeb]">
+     <div class="wrap">
+      <p class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">JUALAN BIBIT</p>
+      <h2 class="canva-text mt-3 text-4xl font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Bibit per pcs polybag, siap tanam.</h2>
+      <p class="canva-text mt-3 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Stok live dari kebun — cabai, tomat, daun bawang, seledri, bawang merah, terong, strawberry, mint. Harga per pcs, hubungi untuk order.</p>
+      <div id="bibit-live" class="crop-grid mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"><p class="text-sm text-gray-500">Memuat stok bibit...</p></div>
+     </div>
+    </section>
     <section id="panen" class="section-pad bg-[#fffbeb]">
      <div class="wrap">
       <p data-template-id="harvest-kicker" class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">PORTOFOLIO MINI</p>
@@ -392,6 +400,7 @@
      <a class="fab-link" href="#statistik">📊 Statistik</a>
      <a class="fab-link" href="#galeri">🖼️ Galeri</a>
      <a class="fab-link" href="#kalender">📅 Kalender</a>
+     <a class="fab-link" href="#bibit">🌱 Bibit</a>
      <a class="fab-link" href="#panen">🧺 Panen</a>
      <a class="fab-link" href="#faq">❓ FAQ</a>
      <a class="fab-link" href="#install">⬇️ Install</a>
@@ -542,7 +551,22 @@
   });
   lucide.createIcons();
   document.querySelectorAll('svg.lucide').forEach(function(s){s.setAttribute('aria-hidden','true')});
-   fetch("/api/galeri").then(r=>r.json()).then(d=>{
+  fetch("/api/publik/bibit").then(r=>r.json()).then(function(d){
+   var w=document.getElementById("bibit-live");if(!w)return;
+   if(!d||d.kosong||!Array.isArray(d.katalog)||!d.katalog.length){
+     w.innerHTML='<p class="text-sm text-gray-500">Belum ada stok bibit siap jual. Cek lagi minggu depan 🌱</p>';return;
+   }
+   var rp=function(n){try{return "Rp "+Number(n).toLocaleString("id-ID")}catch(e){return "Rp "+n}};
+   w.innerHTML=d.katalog.map(function(k){
+     var stok=k.siap>0?k.siap+" pcs siap":"Stok habis";
+     var h=k.harga!=null?rp(k.harga)+"/pcs":"Harga tanya admin";
+     var habis=k.siap<=0?'opacity:.65':'';
+     return '<article class="overflow-hidden rounded-3xl bg-white soft-shadow" style="'+habis+'"><div class="p-5"><h3 class="font-bold" style="font-size:19px">🌱 '+k.nama+'</h3><p class="mt-2 font-bold text-[#166534]">'+stok+' · '+h+'</p><a href="/masuk" class="canva-button pill mt-4 inline-block border border-[#166534] text-[#166534]" style="min-height:48px;display:inline-flex;align-items:center;padding:10px 20px;font-weight:700">Tanya / order →</a></div></article>';
+   }).join('');
+  }).catch(function(){
+   var w=document.getElementById("bibit-live");if(w)w.innerHTML='<p class="text-sm text-gray-500">Stok bibit belum bisa dimuat.</p>';
+  });
+  fetch("/api/galeri").then(r=>r.json()).then(d=>{
    var w=document.getElementById("galeri-live");if(!w)return;
    var f=(d.foto||[]).slice(0,8);
    if(!f.length){w.innerHTML='<p class="text-sm text-gray-500">Belum ada foto kebun. Upload pertama dari aplikasi untuk mengisi galeri ini.</p>';return}

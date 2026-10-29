@@ -40,7 +40,7 @@ export default function SeedButton() {
       </button>
       {pesan && <p className="mt-2 text-xs text-red-700">{pesan}</p>}
       <p className="mt-1 text-xs text-zinc-500">
-        Mengisi 2 lokasi, 6 tipe media, 9 komoditas. Aman ditekan berkali-kali.
+        Mengisi 2 lokasi, 6 tipe media, 13 komoditas (8 bibit jual). Aman ditekan berkali-kali.
       </p>
     </div>
   );

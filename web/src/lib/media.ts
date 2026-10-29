@@ -11,7 +11,10 @@ export function ikonKomoditas(nama: string | null | undefined): string {
   if (n.includes("lavender")) return "💜";
   if (n.includes("selada") || n.includes("lettuce")) return "🥬";
   if (n.includes("sawi") || n.includes("pakcoy") || n.includes("pakcoi")) return "🥬";
+  if (n.includes("daun bawang") || n.includes("bawang merah")) return "🧅";
   if (n.includes("bawang")) return "🧅";
+  if (n.includes("seledri")) return "🥬";
+  if (n.includes("mint")) return "🌿";
   if (n.includes("wortel")) return "🥕";
   if (n.includes("jagung")) return "🌽";
   if (n.includes("stroberi") || n.includes("strawberry")) return "🍓";

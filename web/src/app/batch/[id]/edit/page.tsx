@@ -14,11 +14,11 @@ export default async function BatchEditPage({
     supabase
       .from("plant_batches")
       .select(
-        "id,commodity_id,location_id,sub_block_id,media_type_id,jumlah,tgl_tanam,tgl_semai,catatan,status,commodities(nama)",
+        "id,commodity_id,location_id,sub_block_id,media_type_id,jumlah,tgl_tanam,tgl_semai,catatan,status,tujuan,stok_siap,harga_pcs,commodities(nama)",
       )
       .eq("id", id)
       .single(),
-    supabase.from("commodities").select("id,nama,aktif").order("nama"),
+    supabase.from("commodities").select("id,nama,aktif,siram_default,jual_bibit,harga_pcs").order("nama"),
     supabase.from("locations").select("id,nama").eq("aktif", true).order("nama"),
     supabase.from("sub_blocks").select("id,nama,location_id"),
     supabase.from("media_types").select("id,nama"),
@@ -59,6 +59,9 @@ export default async function BatchEditPage({
             tgl_tanam: b.tgl_tanam,
             tgl_semai: b.tgl_semai,
             catatan: b.catatan,
+            tujuan: (b as {tujuan?: string}).tujuan ?? null,
+            harga_pcs: (b as {harga_pcs?: number}).harga_pcs ?? null,
+            stok_siap: (b as {stok_siap?: number}).stok_siap ?? null,
           }}
         />
       </div>

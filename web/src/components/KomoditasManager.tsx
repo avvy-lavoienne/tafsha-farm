@@ -15,6 +15,10 @@ export type KomoditasItem = {
   siram_default: string | null;
   catatan: string | null;
   aktif: boolean;
+  jual_bibit?: boolean | null;
+  harga_pcs?: number | null;
+  umur_siap_min?: number | null;
+  umur_siap_maks?: number | null;
 };
 
 const TIPE_PANEN = [
@@ -34,6 +38,10 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
   const [umurMaks, setUmurMaks] = useState("");
   const [siram, setSiram] = useState("");
   const [catatan, setCatatan] = useState("");
+  const [jual, setJual] = useState(false);
+  const [harga, setHarga] = useState("");
+  const [siapMin, setSiapMin] = useState("");
+  const [siapMaks, setSiapMaks] = useState("");
   const [editId, setEditId] = useState<string | null>(null);
   const [edit, setEdit] = useState({
     nama: "",
@@ -42,6 +50,10 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
     umurMaks: "",
     siram: "",
     catatan: "",
+    jual: false,
+    harga: "",
+    siapMin: "",
+    siapMaks: "",
   });
   const [sibuk, setSibuk] = useState(false);
   const [pesan, setPesan] = useState<string | null>(null);
@@ -89,9 +101,13 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
           siram_default: siram.trim() || null,
           catatan: catatan.trim() || null,
           aktif: true,
+          jual_bibit: jual,
+          harga_pcs: harga ? Number(harga) : null,
+          umur_siap_min: siapMin ? Number(siapMin) : null,
+          umur_siap_maks: siapMaks ? Number(siapMaks) : null,
         })
         .select(
-          "id,nama,tipe_panen,umur_panen_min,umur_panen_maks,siram_default,catatan,aktif",
+          "id,nama,tipe_panen,umur_panen_min,umur_panen_maks,siram_default,catatan,aktif,jual_bibit,harga_pcs,umur_siap_min,umur_siap_maks",
         )
         .single();
       if (error) throw error;
@@ -102,6 +118,10 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
       setUmurMaks("");
       setSiram("");
       setCatatan("");
+      setJual(false);
+      setHarga("");
+      setSiapMin("");
+      setSiapMaks("");
       setTambahBuka(false);
       segarkan();
     } catch (e) {
@@ -120,6 +140,10 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
       umurMaks: k.umur_panen_maks != null ? String(k.umur_panen_maks) : "",
       siram: k.siram_default ?? "",
       catatan: k.catatan ?? "",
+      jual: Boolean(k.jual_bibit),
+      harga: k.harga_pcs != null ? String(k.harga_pcs) : "",
+      siapMin: k.umur_siap_min != null ? String(k.umur_siap_min) : "",
+      siapMaks: k.umur_siap_maks != null ? String(k.umur_siap_maks) : "",
     });
   }
 
@@ -141,6 +165,10 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
           umur_panen_maks: edit.umurMaks ? Number(edit.umurMaks) : null,
           siram_default: edit.siram.trim() || null,
           catatan: edit.catatan.trim() || null,
+          jual_bibit: edit.jual,
+          harga_pcs: edit.harga ? Number(edit.harga) : null,
+          umur_siap_min: edit.siapMin ? Number(edit.siapMin) : null,
+          umur_siap_maks: edit.siapMaks ? Number(edit.siapMaks) : null,
         })
         .eq("id", id);
       if (error) throw error;
@@ -157,6 +185,10 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
                 umur_panen_maks: edit.umurMaks ? Number(edit.umurMaks) : null,
                 siram_default: edit.siram.trim() || null,
                 catatan: edit.catatan.trim() || null,
+                jual_bibit: edit.jual,
+                harga_pcs: edit.harga ? Number(edit.harga) : null,
+                umur_siap_min: edit.siapMin ? Number(edit.siapMin) : null,
+                umur_siap_maks: edit.siapMaks ? Number(edit.siapMaks) : null,
               }
             : k,
         ),
@@ -227,6 +259,7 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
   }
 
   const aktif = daftar.filter((k) => k.aktif).length;
+  const jualCount = daftar.filter((k) => k.jual_bibit).length;
 
   return (
     <div className="flex flex-col gap-4">
@@ -236,7 +269,7 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
             <h1 className="text-xl font-bold text-green-900">Komoditas</h1>
             <p className="mt-1 text-sm text-zinc-600">
               {daftar.length} komoditas • {aktif} aktif •{" "}
-              {daftar.length - aktif} rencana
+              {daftar.length - aktif} rencana • 🌱 {jualCount} jual bibit
             </p>
           </div>
           <button onClick={() => setTambahBuka((v) => !v)} className="tf-btn">
@@ -313,6 +346,52 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
                 className="tf-input mt-1"
               />
             </label>
+            <label className="flex items-center gap-2 text-sm font-medium">
+              <input
+                type="checkbox"
+                checked={jual}
+                onChange={(e) => setJual(e.target.checked)}
+                className="h-5 w-5 accent-green-700"
+              />
+              🌱 Jual bibit per pcs polybag
+            </label>
+            {jual && (
+              <div className="grid grid-cols-3 gap-2">
+                <label className="text-sm font-medium">
+                  Harga/pcs (Rp)
+                  <input
+                    type="number"
+                    min={0}
+                    value={harga}
+                    onChange={(e) => setHarga(e.target.value)}
+                    placeholder="cth: 5000"
+                    className="tf-input mt-1"
+                  />
+                </label>
+                <label className="text-sm font-medium">
+                  Siap min (HST)
+                  <input
+                    type="number"
+                    min={0}
+                    value={siapMin}
+                    onChange={(e) => setSiapMin(e.target.value)}
+                    placeholder="cth: 30"
+                    className="tf-input mt-1"
+                  />
+                </label>
+                <label className="text-sm font-medium">
+                  Siap maks (HST)
+                  <input
+                    type="number"
+                    min={0}
+                    value={siapMaks}
+                    onChange={(e) => setSiapMaks(e.target.value)}
+                    placeholder="cth: 45"
+                    className="tf-input mt-1"
+                  />
+                </label>
+              </div>
+            )}
             <button onClick={tambah} disabled={sibuk} className="tf-btn">
               {sibuk ? (
                 <>
@@ -363,6 +442,14 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
                   {k.umur_panen_min ?? "-"}–{k.umur_panen_maks ?? "-"} • siram:{" "}
                   {k.siram_default ?? "-"}
                 </p>
+                {k.jual_bibit && (
+                  <p className="mt-1 text-xs font-semibold text-green-800">
+                    🌱 Bibit
+                    {k.harga_pcs != null ? ` • Rp ${Number(k.harga_pcs).toLocaleString("id-ID")}/pcs` : " • harga belum diisi"}
+                    {(k.umur_siap_min != null || k.umur_siap_maks != null) &&
+                      ` • siap HST ${k.umur_siap_min ?? "-"}–${k.umur_siap_maks ?? "-"}`}
+                  </p>
+                )}
                 {k.catatan && (
                   <p className="mt-1 text-xs text-zinc-500">📝 {k.catatan}</p>
                 )}
@@ -431,6 +518,51 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
                   placeholder="Catatan (opsional)"
                   className="tf-input"
                 />
+                <label className="flex items-center gap-2 text-sm font-medium">
+                  <input
+                    type="checkbox"
+                    checked={edit.jual}
+                    onChange={(e) =>
+                      setEdit((s) => ({ ...s, jual: e.target.checked }))
+                    }
+                    className="h-5 w-5 accent-green-700"
+                  />
+                  🌱 Jual bibit per pcs polybag
+                </label>
+                {edit.jual && (
+                  <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-3">
+                    <input
+                      type="number"
+                      min={0}
+                      value={edit.harga}
+                      onChange={(e) =>
+                        setEdit((s) => ({ ...s, harga: e.target.value }))
+                      }
+                      placeholder="Harga/pcs Rp"
+                      className="tf-input"
+                    />
+                    <input
+                      type="number"
+                      min={0}
+                      value={edit.siapMin}
+                      onChange={(e) =>
+                        setEdit((s) => ({ ...s, siapMin: e.target.value }))
+                      }
+                      placeholder="Siap min HST"
+                      className="tf-input"
+                    />
+                    <input
+                      type="number"
+                      min={0}
+                      value={edit.siapMaks}
+                      onChange={(e) =>
+                        setEdit((s) => ({ ...s, siapMaks: e.target.value }))
+                      }
+                      placeholder="Siap maks HST"
+                      className="tf-input"
+                    />
+                  </div>
+                )}
                 <div className="flex gap-2">
                   <button
                     onClick={() => simpanEdit(k.id)}

@@ -11,7 +11,7 @@ export default async function BatchBaruPage({
   const dariId = params.dari ?? "";
 
   const [komoditas, lokasi, subBlok, media] = await Promise.all([
-    supabase.from("commodities").select("id,nama,aktif,siram_default").order("nama"),
+    supabase.from("commodities").select("id,nama,aktif,siram_default,jual_bibit,harga_pcs").order("nama"),
     supabase.from("locations").select("id,nama").eq("aktif", true).order("nama"),
     supabase.from("sub_blocks").select("id,nama,location_id"),
     supabase.from("media_types").select("id,nama"),
@@ -22,7 +22,7 @@ export default async function BatchBaruPage({
     const { data: asal } = await supabase
       .from("plant_batches")
       .select(
-        "commodity_id,location_id,sub_block_id,media_type_id,jumlah,tgl_semai,tgl_tanam,catatan,commodities(nama)",
+        "commodity_id,location_id,sub_block_id,media_type_id,jumlah,tgl_semai,tgl_tanam,catatan,tujuan,stok_siap,harga_pcs,commodities(nama)",
       )
       .eq("id", dariId)
       .single();
@@ -39,7 +39,7 @@ export default async function BatchBaruPage({
         tgl_semai: (asal.tgl_semai as string | null) ?? null,
         catatan: (asal.catatan as string | null) ?? null,
         nama,
-        tgl_tanam_asal: (asal.tgl_tanam as string | null) ?? null,
+        tgl_tanam_asal: (asal.tgl_tanam as string | null) ?? null, tujuan: (asal as {tujuan?: string}).tujuan ?? "kebun", harga_pcs: (asal as {harga_pcs?: number}).harga_pcs ?? null, stok_siap: (asal as {stok_siap?: number}).stok_siap ?? null,
       };
     }
   }

@@ -13,7 +13,8 @@ export default function LogoutButton() {
     setSibuk(true);
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/masuk");
+    // Setelah logout langsung ke landing promosi, bukan form login.
+    router.push("/landing.html");
     router.refresh();
   }
 

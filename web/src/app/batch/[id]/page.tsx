@@ -13,6 +13,7 @@ import LogForm from "@/components/LogForm";
 import HarvestForm from "@/components/HarvestForm";
 import DaftarTugas from "@/components/DaftarTugas";
 import RiwayatFoto from "@/components/RiwayatFoto";
+import BibitTracker, { TimelineMoves } from "@/components/BibitTracker";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
 
 export default async function BatchDetailPage({
@@ -26,7 +27,7 @@ export default async function BatchDetailPage({
   const { data: b } = await supabase
     .from("plant_batches")
     .select(
-      "id,jumlah,tgl_semai,tgl_tanam,status,penyebab_gagal,catatan,foto_url,created_at,commodities(id,nama,tipe_panen,umur_panen_min,umur_panen_maks,siram_default),locations(id,nama),sub_blocks(nama),media_types(nama)",
+      "id,jumlah,tgl_semai,tgl_tanam,status,penyebab_gagal,catatan,foto_url,created_at,tujuan,stok_siap,harga_pcs,commodities(id,nama,tipe_panen,umur_panen_min,umur_panen_maks,siram_default,jual_bibit,harga_pcs,umur_siap_min,umur_siap_maks),locations(id,nama),sub_blocks(nama),media_types(nama)",
     )
     .eq("id", id)
     .single();
@@ -41,7 +42,7 @@ export default async function BatchDetailPage({
   const siap =
     komoditas?.umur_panen_min != null && hst >= komoditas.umur_panen_min;
 
-  const [tugasRes, logRes, panenRes] = await Promise.all([
+  const [tugasRes, logRes, moveRes, panenRes] = await Promise.all([
     supabase
       .from("care_tasks")
       .select(
@@ -56,8 +57,7 @@ export default async function BatchDetailPage({
       .eq("batch_id", id)
       .order("created_at", { ascending: false })
       .limit(20),
-    supabase
-      .from("harvests")
+    supabase.from("batch_moves").select("id,jenis,dari_status,ke_status,jumlah,sisa,stok_siap,catatan,created_at").eq("batch_id", id).order("created_at", { ascending: false }).limit(50), supabase.from("harvests")
       .select("id,tanggal,jumlah,satuan,kualitas,peruntukan")
       .eq("batch_id", id)
       .order("tanggal", { ascending: false }),
@@ -118,10 +118,10 @@ export default async function BatchDetailPage({
           Siram default: {komoditas?.siram_default ?? "-"} • Tipe:{" "}
           {komoditas?.tipe_panen ?? "-"}
         </p>
-        <BatchStatusButtons id={b.id} status={b.status} />
+        <BatchStatusButtons id={b.id} status={b.status} />{b.tujuan === "jual" && (<BibitTracker batchId={b.id} awalSisa={Number((b as {jumlah:number}).jumlah ?? 0)} awalSiap={Number((b as {stok_siap:number|null}).stok_siap ?? 0)} harga={(b as {harga_pcs:number|null}).harga_pcs ?? satu(b.commodities)?.harga_pcs ?? null} tutup={tutup} />)}
       </section>
 
-      <RiwayatFoto subjek="batch" id={b.id} fotoUtama={b.foto_url ?? null} />
+      <RiwayatFoto subjek="batch" id={b.id} fotoUtama={b.foto_url ?? null} />{b.tujuan === "jual" && ((moveRes.data ?? []).length > 0 || true) && (<section className="tf-card"><h2 className="font-bold text-green-900">🧾 Riwayat tracker</h2><p className="mt-1 text-xs text-zinc-600">Semai → siap jual → terjual/mati, tercatat otomatis.</p><TimelineMoves moves={(moveRes.data ?? []) as never} /></section>)}
       {!tutup && (
         <section className="tf-card">
           <h2 className="font-bold text-green-900">🔔 Pengingat</h2>

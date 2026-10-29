@@ -187,7 +187,7 @@ export default function PengaturanClient({
       }
       const supabase = createClient();
       await supabase.auth.signOut();
-      router.push("/masuk");
+      router.push("/landing.html");
       router.refresh();
     } catch (e) {
       setPesan(e instanceof Error ? e.message : "Gagal menghapus akun, coba lagi ya.");
