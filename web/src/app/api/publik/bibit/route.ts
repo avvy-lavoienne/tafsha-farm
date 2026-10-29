@@ -1,9 +1,26 @@
 import { createClient as buatAdmin } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { hariIniISO } from "@/lib/tanggal";
 
-// Katalog bibit publik anonim: stok siap jual per pcs + harga.
-// Tanpa id/nama user/lokasi/batch. Cache 5 menit.
-export const revalidate = 300;
+// Etalase bibit publik anonim untuk landing marketing:
+// stok siap per pcs + harga + umur batch (HST) + estimasi siap dipasarkan.
+// Tanpa id/nama user/lokasi/batch. Cache 2 menit (stok jualan berubah cepat).
+export const revalidate = 120;
+
+function hst(tglTanam: string, hariIni: string): number {
+  const a = new Date(tglTanam + "T00:00:00").getTime();
+  const b = new Date(hariIni + "T00:00:00").getTime();
+  return Math.max(0, Math.floor((b - a) / 86400000));
+}
+
+function tambahHari(iso: string, n: number): string {
+  const d = new Date(iso + "T00:00:00");
+  d.setDate(d.getDate() + n);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const t = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${t}`;
+}
 
 export async function GET() {
   try {
@@ -13,10 +30,11 @@ export async function GET() {
     const admin = buatAdmin(url, kunci, {
       auth: { autoRefreshToken: false, persistSession: false },
     });
+    const hariIni = hariIniISO();
     const { data, error } = await admin
       .from("plant_batches")
       .select(
-        "jumlah,stok_siap,harga_pcs,tgl_tanam,commodities(nama,harga_pcs,umur_siap_min,umur_siap_maks)",
+        "jumlah,stok_siap,harga_pcs,tgl_tanam,status,commodities(nama,harga_pcs,umur_siap_min,umur_siap_maks)",
       )
       .eq("tujuan", "jual")
       .not("status", "in", "(selesai,gagal)")
@@ -28,35 +46,102 @@ export async function GET() {
       stok_siap: number | null;
       harga_pcs: number | null;
       tgl_tanam: string;
+      status: string | null;
       commodities: unknown;
     };
-    const perKom = new Map<string, { siap: number; harga: number | null }>();
+    type Kom = {
+      nama?: string | null;
+      harga_pcs?: number | null;
+      umur_siap_min?: number | null;
+      umur_siap_maks?: number | null;
+    };
+    const satu = (v: unknown): Kom | null =>
+      Array.isArray(v) ? ((v[0] as Kom) ?? null) : ((v as Kom) ?? null);
+
+    const perKom = new Map<
+      string,
+      { siap: number; total: number; harga: number | null; batch: number }
+    >();
+    const batch: {
+      nama: string;
+      jumlah: number;
+      siap: number;
+      harga: number | null;
+      hst: number;
+      tgl_tanam: string;
+      siapMin: number | null;
+      siapMaks: number | null;
+      sudahSiap: boolean;
+      estimasi: string | null;
+      sisaHari: number | null;
+    }[] = [];
+
     for (const b of (data ?? []) as Baris[]) {
-      const kom = Array.isArray(b.commodities)
-        ? (b.commodities[0] as {
-            nama?: string | null;
-            harga_pcs?: number | null;
-          } | null)
-        : (b.commodities as {
-            nama?: string | null;
-            harga_pcs?: number | null;
-          } | null);
+      const kom = satu(b.commodities);
       const nama = kom?.nama ?? "?";
       const siap = Number(b.stok_siap ?? 0);
+      const jumlah = Number(b.jumlah ?? 0);
       const harga =
-        b.harga_pcs != null ? Number(b.harga_pcs) : (kom?.harga_pcs != null ? Number(kom.harga_pcs) : null);
-      const s = perKom.get(nama) ?? { siap: 0, harga: null };
+        b.harga_pcs != null
+          ? Number(b.harga_pcs)
+          : kom?.harga_pcs != null
+            ? Number(kom.harga_pcs)
+            : null;
+      const umur = hst(b.tgl_tanam, hariIni);
+      const siapMin = kom?.umur_siap_min ?? null;
+      const siapMaks = kom?.umur_siap_maks ?? null;
+      const sudahSiap = siapMin != null ? umur >= siapMin && siap > 0 : siap > 0;
+      const estimasi =
+        siapMin != null && umur < siapMin
+          ? tambahHari(b.tgl_tanam, siapMin)
+          : null;
+      batch.push({
+        nama,
+        jumlah,
+        siap,
+        harga,
+        hst: umur,
+        tgl_tanam: b.tgl_tanam,
+        siapMin,
+        siapMaks,
+        sudahSiap,
+        estimasi,
+        sisaHari: estimasi ? Math.max(0, siapMin! - umur) : null,
+      });
+      const s = perKom.get(nama) ?? { siap: 0, total: 0, harga: null, batch: 0 };
       s.siap += siap;
+      s.total += jumlah;
+      s.batch += 1;
       if (harga != null && s.harga == null) s.harga = harga;
       perKom.set(nama, s);
     }
+
     const katalog = [...perKom.entries()].map(([nama, s]) => ({
       nama,
       siap: s.siap,
+      total: s.total,
       harga: s.harga,
+      batch: s.batch,
     }));
     const totalSiap = katalog.reduce((a, k) => a + k.siap, 0);
-    return NextResponse.json({ totalSiap, katalog });
+    // Estimasi terdekat: batch belum siap, urut sisa hari terkecil, max 6.
+    const estimasi = batch
+      .filter((b) => !b.sudahSiap && b.estimasi)
+      .sort((a, b) => (a.sisaHari ?? 99) - (b.sisaHari ?? 99))
+      .slice(0, 6);
+    const siapList = batch
+      .filter((b) => b.sudahSiap)
+      .sort((a, b) => b.siap - a.siap)
+      .slice(0, 12);
+
+    return NextResponse.json({
+      hariIni,
+      totalSiap,
+      totalBatch: batch.length,
+      katalog,
+      siap: siapList,
+      estimasi,
+    });
   } catch {
     return NextResponse.json({ kosong: true });
   }

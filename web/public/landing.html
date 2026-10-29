@@ -3,8 +3,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#166534">
-  <meta name="description" content="Tafsha Farm — aplikasi manajemen kebun rumahan. Catat tanam, ingat rawat, rayakan panen. Halaman Depan & Lahan Mushola, Pakuwon, Cisurupan, Garut.">
-  <title>Tafsha Farm — Kebun Lebih Teratur</title>
+  <meta name="description" content="Tafsha Farm — jual bibit sayur per pcs polybag: cabai, tomat, daun bawang, seledri, bawang merah, terong, strawberry, mint. Stok live + estimasi siap. Dukung ketahanan pangan mandiri & urban farming. Pakuwon, Cisurupan, Garut.">
+  <title>Tafsha Farm — Jual Bibit per Pcs Polybag</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet">
@@ -17,376 +17,188 @@
     :focus-visible{outline:3px solid #f59e0b;outline-offset:4px}
     .site-shell{width:100%;margin:auto}
     .wrap{width:min(100% - 40px,1160px);margin-inline:auto}
-    .pill{border-radius:999px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:12px 23px;font-weight:700;transition:transform .2s,filter .2s}
+    .pill{border-radius:999px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:12px 23px;font-weight:700;transition:transform .2s,filter .2s;text-decoration:none}
     .pill:hover{transform:translateY(-2px);filter:brightness(1.07)}
     .eyebrow{font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--green)}
     .section-pad{padding:88px 0}.soft-shadow{box-shadow:0 14px 38px #1f4d2810}
-    .photo{width:100%;height:100%;object-fit:cover}
-    .crop-card{border:1px solid #e5eddf;transition:transform .2s,box-shadow .2s;text-align:left}
-    .crop-card:hover{transform:translateY(-4px);box-shadow:0 17px 35px #193f2020}
-    .crop-card img{height:155px}
-    .modal-layer{position:fixed;inset:0;z-index:100;background:#092715ae;display:flex;align-items:center;justify-content:center;padding:20px}
-    .modal-layer[hidden],.detail-panel[hidden]{display:none}
-    .modal-box{width:min(100%,500px);max-height:calc(90 * min(var(--vh, 1vh), 1vh));overflow:auto}
     .fab-nav{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:90}
     .fab-btn{width:56px;height:56px;min-width:56px;min-height:56px;border-radius:50%;background:#166534;color:#fff;border:none;font-size:24px;line-height:1;display:grid;place-items:center;box-shadow:0 10px 30px #1a482a55;cursor:pointer}
     .fab-sheet{position:fixed;inset:0;z-index:95}
     .fab-sheet[hidden]{display:none}
     .fab-scrim{position:absolute;inset:0;background:#092715ae;border:0;padding:0;cursor:pointer}
-    .fab-panel{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:24px 24px 0 0;padding:12px 16px calc(16px + env(safe-area-inset-bottom));display:grid;gap:6px;max-height:80vh;max-height:80dvh;overflow:auto;animation:fab-naik .22s ease-out}
-    @keyframes fab-naik{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+    .fab-panel{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:24px 24px 0 0;padding:12px 16px calc(16px + env(safe-area-inset-bottom));display:grid;gap:6px;max-height:80vh;max-height:80dvh;overflow:auto}
     .fab-link{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;color:var(--ink);text-decoration:none;font-weight:700;font-size:15px;min-height:52px;background:none;border:0;width:100%;text-align:left;cursor:pointer;font-family:inherit}
     .fab-link:hover{background:#f0fdf4}
-    .fab-cta{background:#166534;color:#fff!important;justify-content:center}
+    .table-scroll{-webkit-overflow-scrolling:touch}
+    .table-scroll:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
     @media(max-width:700px){
-.hero-grid,.feature-grid,.crop-grid,.stats-grid,.gallery-grid,.location-grid,.harvest-grid,.footer-grid,.md\:grid-cols-2,.md\:grid-cols-3,.sm\:grid-cols-2{grid-template-columns:1fr!important}
-      .modal-close{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+      .hero-grid,.feature-grid,.crop-grid,.stats-grid,.gallery-grid,.footer-grid{grid-template-columns:1fr!important}
       .hero-title{font-size:32px!important}.hero-actions{flex-direction:column}.hero-actions>*{width:100%}
       .section-pad{padding:64px 0}.site-main{padding-bottom:76px}
       .wrap{width:min(100% - 32px,1160px)}
     }
-    .skip-link{position:absolute;left:12px;top:-64px;z-index:200;background:#166534;color:#fff!important;padding:12px 20px;border-radius:999px;font-weight:700;font-size:14px;transition:top .2s}
+    .skip-link{position:absolute;left:12px;top:-64px;z-index:200;background:#166534;color:#fff!important;padding:12px 20px;border-radius:999px;font-weight:700;font-size:14px;transition:top .2s;text-decoration:none}
     .skip-link:focus{top:12px}
     #faq summary{padding-top:10px;padding-bottom:10px}
-    .table-scroll{-webkit-overflow-scrolling:touch}
-    .table-scroll:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.577.0/dist/umd/lucide.min.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
  </head>
- <body data-template-id="__page-root" class="w-full" style="background: rgb(255, 251, 235);">
+ <body class="w-full" style="background: rgb(255, 251, 235);">
   <a class="skip-link" href="#konten">Lewati ke konten utama</a>
   <div id="site-shell" class="site-shell w-full">
-   <header data-template-id="site-header" class="canva-header sticky top-0 z-40 border-b border-green-900/10 bg-[#fffbeb]/95 backdrop-blur" style="background: rgb(255, 251, 235);">
-    <nav class="wrap flex min-h-[76px] items-center justify-between gap-4" aria-label="Navigasi utama"><a href="#beranda" class="flex items-center gap-2 font-extrabold text-[#166534]" aria-label="Tafsha Farm, kembali ke Beranda"><span class="grid h-10 w-10 place-items-center rounded-2xl bg-[#166534] text-white"><i data-lucide="sprout" class="h-6 w-6"></i></span><span data-template-id="brand-name" class="canva-text" style="color: rgb(22, 101, 52); font-weight: 800; font-style: normal; font-size: 16px;">Tafsha Farm</span></a>
-     <a href="/masuk" class="canva-button rounded-full border border-[#166534] px-5 py-3 text-sm font-bold text-[#166534]" style="font-weight: 400; font-style: normal; font-size: 16px;min-height:48px;display:inline-flex;align-items:center">Masuk aplikasi</a>
+   <header class="sticky top-0 z-40 border-b border-green-900/10 backdrop-blur" style="background: rgb(255, 251, 235);">
+    <nav class="wrap flex min-h-[76px] items-center justify-between gap-4" aria-label="Navigasi utama">
+     <a href="#beranda" class="flex items-center gap-2 font-extrabold text-[#166534]" aria-label="Tafsha Farm, kembali ke Beranda">
+      <span class="grid h-10 w-10 place-items-center rounded-2xl bg-[#166534] text-white"><i data-lucide="sprout" class="h-6 w-6"></i></span>
+      <span style="color: rgb(22, 101, 52); font-weight: 800; font-size: 16px;">Tafsha Farm</span>
+     </a>
+     <div class="flex items-center gap-2">
+      <a href="#stok" class="rounded-full bg-[#166534] px-5 py-3 text-sm font-bold text-white" style="min-height:48px;display:inline-flex;align-items:center">🌱 Lihat Stok</a>
+      <a href="/masuk" class="rounded-full border border-[#166534] px-5 py-3 text-sm font-bold text-[#166534]" style="min-height:48px;display:inline-flex;align-items:center">Masuk pengelola</a>
+     </div>
     </nav>
    </header>
    <main class="site-main" id="konten">
-    <section id="beranda" data-template-id="hero-section" class="canva-section overflow-hidden bg-[#fffbeb]" style="background: rgb(255, 251, 235);">
+    <section id="beranda" class="overflow-hidden bg-[#fffbeb]" style="background: rgb(255, 251, 235);">
      <div class="wrap hero-grid grid items-center gap-8 py-12 sm:py-16 md:grid-cols-2 md:gap-12 md:py-24">
       <div>
-       <p data-template-id="hero-kicker" class="canva-text eyebrow mb-5" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">KEBUN RUMAHAN, LEBIH TENANG</p>
-       <h1 data-template-id="hero-title" class="canva-text hero-title max-w-[650px] text-[32px] font-extrabold leading-[1.15] text-[#18181b] sm:text-[clamp(38px,5vw,72px)]" style="color: rgb(24, 24, 27); font-weight: 800;">Tidak Ada Lagi Siram yang Terlewat.</h1>
-       <p data-template-id="hero-description" class="canva-text mt-6 max-w-lg leading-8 text-[#52584f]" style="color: rgb(82, 88, 79); font-weight: 400; font-style: normal; font-size: 16px;">Catat tanam, ingat rawat, rayakan panen — semua dari HP, bahkan tanpa sinyal di kebun.</p>
-       <div class="hero-actions mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap"><button data-open-install="" data-template-id="hero-install" class="canva-button pill bg-[#166534] text-white" type="button" style="background: rgb(22, 101, 52); color: rgb(255, 255, 255);"><i data-lucide="download" class="h-5 w-5"></i><span data-template-id="hero-install-label" class="canva-text" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">Install Gratis di HP</span></button> <a data-template-id="hero-how" href="#cara-kerja" class="canva-button pill border border-[#166534] text-[#166534]" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">Lihat Cara Kerja</a>
+       <p class="eyebrow mb-5">KETAHANAN PANGAN MANDIRI • URBAN FARMING</p>
+       <h1 class="hero-title max-w-[650px] text-[32px] font-extrabold leading-[1.15] text-[#18181b] sm:text-[clamp(38px,5vw,72px)]">Bibit Sayur per Pcs Polybag, Siap Tanam di Rumah.</h1>
+       <p class="mt-6 max-w-lg leading-8 text-[#52584f]">Mulai ketahanan pangan dari halaman sendiri. Bibit dirawat harian di kebun kami — umur transparan, stok live, harga per pcs jelas.</p>
+       <div id="hero-stok" class="mt-6 inline-flex items-center gap-2 rounded-full bg-[#dcfce7] px-4 py-2 text-sm font-bold text-[#166534]">🌱 Memuat stok live...</div>
+       <div class="hero-actions mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <a href="#stok" class="pill bg-[#166534] text-white">Lihat Stok Live</a>
+        <a href="#cara-order" class="pill border border-[#166534] text-[#166534]">Cara Order</a>
        </div>
-       <p data-template-id="hero-footnote" class="canva-text mt-6 text-sm text-[#68736a]" style="color: rgb(104, 115, 106); font-weight: 400; font-style: normal; font-size: 16px;">Dibuat untuk keluarga di Pakuwon, Cisurupan, Garut · <a href="/masuk" style="font-weight:700;text-decoration:underline;">Sudah punya akun? Masuk</a> · Gratis · Tanpa alat tambahan</p>
+       <p class="mt-6 text-sm text-[#68736a]">Pakuwon, Cisurupan, Garut · 8 jenis bibit · 1 polybag = 1 pcs · Tanpa minimal order besar</p>
       </div>
       <div class="relative mx-auto w-full max-w-[510px]">
        <div class="absolute inset-8 rounded-full bg-[#dcfce7] blur-3xl"></div>
-       <div class="relative mx-auto max-w-[305px] rotate-[3deg] rounded-[43px] border-[9px] border-[#193b25] bg-[#193b25] p-1 shadow-[0_35px_75px_#1a482a4d]">
-        <div data-template-id="phone-screen" class="canva-panel overflow-hidden rounded-[31px] bg-[#f0fdf4]" style="background: rgb(240, 253, 244);">
-         <div class="flex items-center justify-between bg-[#166534] px-5 pb-6 pt-8 text-white">
-          <div>
-           <p data-template-id="phone-greeting" class="canva-text text-sm opacity-80" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">Selamat pagi, keluarga Tafsha!</p>
-           <h2 data-template-id="phone-heading" class="canva-text mt-1 font-bold" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 24px;">Kebun hari ini 🌱</h2>
-          </div><i data-lucide="sun" class="h-7 w-7"></i>
-         </div>
-         <div class="space-y-3 p-4">
-          <div class="rounded-2xl bg-white p-4 shadow-sm">
-           <p data-template-id="phone-task-label" class="canva-text text-sm text-gray-500" style="font-weight: 400; font-style: normal; font-size: 16px;">Tugas hari ini</p>
-           <p data-template-id="phone-task" class="canva-text mt-2 font-bold text-[#166534]" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">💧 Siram cabai &amp; tomat</p>
-          </div>
-          <div class="rounded-2xl bg-white p-4 shadow-sm">
-           <p data-template-id="phone-growing-label" class="canva-text text-sm text-gray-500" style="font-weight: 400; font-style: normal; font-size: 16px;">Sedang tumbuh</p>
-           <p data-template-id="phone-growing" class="canva-text mt-2 font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">9 komoditas · 2 lokasi</p>
-          </div>
-          <div class="rounded-2xl bg-[#dcfce7] p-4">
-           <p data-template-id="phone-harvest-label" class="canva-text text-sm text-[#166534]" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">Siap dipetik</p>
-           <p data-template-id="phone-harvest" class="canva-text mt-2 font-bold text-[#166534]" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">Kangkung &amp; bayam →</p>
-          </div>
-          <p data-template-id="phone-demo" class="canva-text py-2 text-center text-xs text-gray-500" style="font-weight: 400; font-style: normal; font-size: 16px;">Pratinjau tampilan aplikasi</p>
-         </div>
-        </div>
-       </div>
-       <div data-template-id="hero-float" class="canva-card absolute bottom-10 right-0 hidden rounded-2xl bg-white p-4 shadow-xl sm:block" style="background: rgb(255, 255, 255);">
-        <span data-template-id="hero-float-text" class="canva-text text-sm font-bold text-[#166534]" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">✓ Rawat kebun, tanpa lupa</span>
+       <div class="relative rounded-3xl bg-white p-6 shadow-xl sm:p-8" style="background: rgb(255, 255, 255);">
+        <p class="eyebrow">KENAPA DARI KAMI</p>
+        <h2 class="mt-2 font-bold" style="font-size: 24px;">Dari kebun yang dirawat harian, bukan asal semai.</h2>
+        <ul class="mt-5 space-y-3 text-sm leading-6 text-gray-700">
+         <li>✅ <strong>Umur transparan (HST)</strong> — tiap batch tercatat tanggal semai &amp; tanam.</li>
+         <li>✅ <strong>Stok live</strong> — angka di halaman ini langsung dari data kebun.</li>
+         <li>✅ <strong>Siap urban farming</strong> — polybag tinggal pindah / rawat di teras.</li>
+         <li>✅ <strong>Dukung pangan mandiri</strong> — tanam sendiri, panen sendiri.</li>
+        </ul>
+        <a href="#batch" class="pill mt-6 w-full border border-[#166534] text-[#166534]">🔍 Cek umur tiap batch →</a>
        </div>
       </div>
      </div>
     </section>
-    <section id="masalah" class="section-pad bg-white">
-     <div class="wrap grid items-center gap-10 md:grid-cols-2">
-      <div>
-       <p data-template-id="problem-kicker" class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">TERASA AKRAB?</p>
-       <h2 data-template-id="problem-title" class="canva-text mt-3 text-4xl font-bold leading-tight" style="font-weight: 700; font-style: normal; font-size: 24px;">Kebun kecil pun punya banyak yang perlu diingat.</h2>
-      </div>
-      <div class="grid gap-3">
-       <p data-template-id="problem-one" class="canva-card rounded-2xl bg-[#f0fdf4] p-5 font-medium" style="background: rgb(240, 253, 244); font-weight: 400; font-style: normal; font-size: 16px;">“Terakhir pupuk tanaman ini kapan, ya?”</p>
-       <p data-template-id="problem-two" class="canva-card rounded-2xl bg-[#f0fdf4] p-5 font-medium" style="background: rgb(240, 253, 244); font-weight: 400; font-style: normal; font-size: 16px;">“Cabai di halaman sudah berapa hari sejak tanam?”</p>
-       <p data-template-id="problem-three" class="canva-card rounded-2xl bg-[#f0fdf4] p-5 font-medium" style="background: rgb(240, 253, 244); font-weight: 400; font-style: normal; font-size: 16px;">“Panen bulan lalu sebenarnya dapat berapa?”</p>
-      </div>
+
+    <section class="bg-[#f0fdf4]" style="background: rgb(240, 253, 244);">
+     <div class="wrap stats-grid grid gap-4 py-10 sm:grid-cols-3">
+      <article class="rounded-2xl bg-white p-6 soft-shadow">
+       <i data-lucide="shopping-basket" class="mb-4 text-[#166534]"></i>
+       <p id="stat-siap" class="font-bold text-[#166534]" style="font-size:22px">...</p>
+       <p class="mt-1 text-sm text-gray-600">pcs bibit siap jual hari ini</p>
+      </article>
+      <article class="rounded-2xl bg-white p-6 soft-shadow">
+       <i data-lucide="sprout" class="mb-4 text-[#166534]"></i>
+       <p id="stat-jenis" class="font-bold text-[#166534]" style="font-size:22px">...</p>
+       <p class="mt-1 text-sm text-gray-600">jenis bibit tersedia</p>
+      </article>
+      <article class="rounded-2xl bg-white p-6 soft-shadow">
+       <i data-lucide="calendar-days" class="mb-4 text-[#166534]"></i>
+       <p id="stat-batch" class="font-bold text-[#166534]" style="font-size:22px">...</p>
+       <p class="mt-1 text-sm text-gray-600">batch aktif dirawat</p>
+      </article>
      </div>
     </section>
-    <section id="fitur" data-template-id="features-section" class="canva-section section-pad bg-[#f0fdf4]" style="background: rgb(240, 253, 244);">
+
+    <section id="stok" class="section-pad bg-[#fffbeb]">
      <div class="wrap">
-      <p data-template-id="feature-kicker" class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">SATU TEMPAT UNTUK SEMUANYA</p>
-      <h2 data-template-id="feature-title" class="canva-text mt-3 max-w-2xl text-4xl font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Lebih banyak waktu menikmati kebun.</h2>
-      <div class="feature-grid mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-       <article class="canva-card rounded-3xl bg-white p-7 soft-shadow">
-        <span class="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-[#dcfce7] text-[#166534]"><i data-lucide="droplets"></i></span>
-        <h3 data-template-id="feature-one-title" class="canva-text font-bold" style="font-weight: 700; font-style: normal; font-size: 19px;">Tugas Harian Otomatis</h3>
-        <p data-template-id="feature-one-body" class="canva-text mt-2 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Siram &amp; pupuk muncul sendiri tiap pagi.</p>
-       </article>
-       <article class="canva-card rounded-3xl bg-white p-7 soft-shadow">
-        <span class="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-[#dcfce7] text-[#166534]"><i data-lucide="calendar-days"></i></span>
-        <h3 data-template-id="feature-two-title" class="canva-text font-bold" style="font-weight: 700; font-style: normal; font-size: 19px;">Umur Tanaman (HST)</h3>
-        <p data-template-id="feature-two-body" class="canva-text mt-2 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Hari sejak tanam terhitung otomatis, jadi fase tumbuh mudah dipantau.</p>
-       </article>
-       <article class="canva-card rounded-3xl bg-white p-7 soft-shadow">
-        <span class="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-[#dcfce7] text-[#166534]"><i data-lucide="wifi-off"></i></span>
-        <h3 data-template-id="feature-three-title" class="canva-text font-bold" style="font-weight: 700; font-style: normal; font-size: 19px;">Bisa Offline di Kebun</h3>
-        <p data-template-id="feature-three-body" class="canva-text mt-2 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Dirancang agar catatan tetap bisa diakses saat sinyal sulit.</p>
-       </article>
-       <article class="canva-card rounded-3xl bg-white p-7 soft-shadow md:col-span-3">
-        <div class="flex flex-wrap items-center gap-5">
-         <span class="grid h-12 w-12 place-items-center rounded-2xl bg-[#dcfce7] text-[#166534]"><i data-lucide="package-check"></i></span>
-         <div>
-          <h3 data-template-id="feature-four-title" class="canva-text font-bold" style="font-weight: 700; font-style: normal; font-size: 19px;">Panen &amp; Stok Terpantau</h3>
-          <p data-template-id="feature-four-body" class="canva-text mt-2 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Dari petik sampai stok di rumah, semua lebih mudah dicatat.</p>
-         </div><span data-template-id="stock-badge" class="canva-tag ml-auto rounded-full bg-[#f59e0b] px-4 py-2 text-sm font-bold text-[#18181b]" style="background: rgb(245, 158, 11); color: rgb(24, 24, 27); font-weight: 400; font-style: normal; font-size: 16px;">Ingat cek stok</span>
-        </div>
-       </article>
-      </div>
+      <p class="eyebrow">ETALASE LIVE</p>
+      <h2 class="mt-3 text-4xl font-bold">Stok bibit hari ini</h2>
+      <p class="mt-3 text-sm text-gray-600">Angka langsung dari data kebun (diperbarui otomatis). Harga per pcs polybag.</p>
+      <div id="katalog-live" class="crop-grid mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-4"><p class="text-sm text-gray-500">Memuat stok bibit...</p></div>
      </div>
     </section>
-    <section id="cara-kerja" class="section-pad bg-white">
+
+    <section id="batch" class="section-pad bg-white">
      <div class="wrap">
-      <p data-template-id="steps-kicker" class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">SEDERHANA SETIAP HARI</p>
-      <h2 data-template-id="steps-title" class="canva-text mt-3 text-4xl font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Tiga langkah, dari bibit sampai piring.</h2>
-      <div class="feature-grid mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-       <article class="rounded-3xl border border-green-100 p-7">
-        <span class="text-4xl font-extrabold text-[#166534]">01</span>
-        <h3 data-template-id="step-one-title" class="canva-text mt-5 font-bold" style="font-weight: 700; font-style: normal; font-size: 19px;">Tanam Baru</h3>
-        <p data-template-id="step-one-body" class="canva-text mt-2 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Pilih komoditas, lokasi, dan tanggal tanam.</p>
-       </article>
-       <article class="rounded-3xl border border-green-100 p-7">
-        <span class="text-4xl font-extrabold text-[#166534]">02</span>
-        <h3 data-template-id="step-two-title" class="canva-text mt-5 font-bold" style="font-weight: 700; font-style: normal; font-size: 19px;">Rawat Harian</h3>
-        <p data-template-id="step-two-body" class="canva-text mt-2 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Ikuti pengingat siram dan pupuk di timeline perawatan.</p>
-       </article>
-       <article class="rounded-3xl border border-green-100 p-7">
-        <span class="text-4xl font-extrabold text-[#166534]">03</span>
-        <h3 data-template-id="step-three-title" class="canva-text mt-5 font-bold" style="font-weight: 700; font-style: normal; font-size: 19px;">Panen</h3>
-        <p data-template-id="step-three-body" class="canva-text mt-2 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Catat hasilnya dan lihat perkembangan kebun.</p>
-       </article>
-      </div>
-      <div data-template-id="timeline-panel" class="canva-panel mt-7 rounded-3xl bg-[#fffbeb] p-6" style="background: rgb(255, 251, 235);">
-       <h3 data-template-id="timeline-title" class="canva-text font-bold" style="font-weight: 700; font-style: normal; font-size: 19px;">Contoh timeline perawatan</h3>
-       <div class="mt-5 flex flex-wrap items-center gap-3 text-sm">
-        <span data-template-id="timeline-one" class="canva-tag rounded-full bg-white px-4 py-2" style="background: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">🌱 Hari 0 · Tanam</span><span aria-hidden="true">→</span><span data-template-id="timeline-two" class="canva-tag rounded-full bg-white px-4 py-2" style="background: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">💧 Pagi · Siram</span><span aria-hidden="true">→</span><span data-template-id="timeline-three" class="canva-tag rounded-full bg-white px-4 py-2" style="background: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">☀️ Pekan 2 · Cek tumbuh</span><span aria-hidden="true">→</span><span data-template-id="timeline-four" class="canva-tag rounded-full bg-white px-4 py-2" style="background: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">🧺 Saat siap · Panen</span>
-       </div>
-      </div>
-     </div>
-    </section>
-    <section id="komoditas" class="section-pad bg-[#fffbeb]">
-     <div class="wrap">
-      <p data-template-id="crops-kicker" class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">ISI KEBUN KITA</p>
-      <h2 data-template-id="crops-title" class="canva-text mt-3 text-4xl font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Sembilan komoditas, banyak cerita.</h2>
-      <p data-template-id="crops-hint" class="canva-text mt-3 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Klik komoditas untuk melihat detail singkat.</p>
-      <div class="crop-grid mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"><button class="crop-card overflow-hidden rounded-3xl bg-white" data-crop="cabai" type="button" aria-label="Lihat detail Cabai"><img data-template-id="crop-cabai-image" class="canva-image photo" loading="lazy" src="https://images.pexels.com/photos/17913595/pexels-photo-17913595.jpeg" alt="Cabai merah tumbuh di kebun"><span data-template-id="crop-cabai-name" class="canva-text block p-5 font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">Cabai ↗</span></button> <button class="crop-card overflow-hidden rounded-3xl bg-white" data-crop="timun" type="button" aria-label="Lihat detail Timun"><img data-template-id="crop-timun-image" class="canva-image photo" loading="lazy" src="https://images.pexels.com/photos/31737291/pexels-photo-31737291.jpeg" alt="Timun tumbuh pada sulur dengan daun dan bunga"><span data-template-id="crop-timun-name" class="canva-text block p-5 font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">Timun ↗</span></button> <button class="crop-card overflow-hidden rounded-3xl bg-white" data-crop="terong" type="button" aria-label="Lihat detail Terong"><img data-template-id="crop-terong-image" class="canva-image photo" loading="lazy" src="https://images.pexels.com/photos/37958741/pexels-photo-37958741.jpeg" alt="Terong tumbuh dalam kebun pot"><span data-template-id="crop-terong-name" class="canva-text block p-5 font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">Terong ↗</span></button> <button class="crop-card overflow-hidden rounded-3xl bg-white" data-crop="talas" type="button" aria-label="Lihat detail Talas"><img data-template-id="crop-talas-image" class="canva-image photo" loading="lazy" src="https://images.pexels.com/photos/5479879/pexels-photo-5479879.jpeg" alt="Daun talas besar di kebun"><span data-template-id="crop-talas-name" class="canva-text block p-5 font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">Talas ↗</span></button> <button class="crop-card overflow-hidden rounded-3xl bg-white" data-crop="tomat" type="button" aria-label="Lihat detail Tomat"><img data-template-id="crop-tomat-image" class="canva-image photo" loading="lazy" src="https://images.pexels.com/photos/36317349/pexels-photo-36317349.jpeg" alt="Tomat merah tumbuh pada tanaman"><span data-template-id="crop-tomat-name" class="canva-text block p-5 font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">Tomat ↗</span></button> <button class="crop-card overflow-hidden rounded-3xl bg-white" data-crop="kangkung" type="button" aria-label="Lihat detail Kangkung"><img data-template-id="crop-kangkung-image" class="canva-image photo" loading="lazy" src="https://images.pexels.com/photos/13768938/pexels-photo-13768938.jpeg" alt="Ikatan kangkung segar"><span data-template-id="crop-kangkung-name" class="canva-text block p-5 font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">Kangkung ↗</span></button> <button class="crop-card overflow-hidden rounded-3xl bg-white" data-crop="bayam" type="button" aria-label="Lihat detail Bayam"><img data-template-id="crop-bayam-image" class="canva-image photo" loading="lazy" src="https://images.pexels.com/photos/35252800/pexels-photo-35252800.jpeg" alt="Daun bayam hijau tumbuh di bedeng kebun"><span data-template-id="crop-bayam-name" class="canva-text block p-5 font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">Bayam ↗</span></button> <button class="crop-card overflow-hidden rounded-3xl bg-white" data-crop="lavender" type="button" aria-label="Lihat detail Lavender"><img data-template-id="crop-lavender-image" class="canva-image photo" loading="lazy" src="https://images.pexels.com/photos/128883/lavender-flowers-purple-flowers-blue-flowers-128883.jpeg" alt="Bunga lavender ungu bermekaran"><span data-template-id="crop-lavender-name" class="canva-text block p-5 font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">Lavender ↗</span></button> <button class="crop-card overflow-hidden rounded-3xl bg-white" data-crop="selada" type="button" aria-label="Lihat detail Selada"><img data-template-id="crop-selada-image" class="canva-image photo" loading="lazy" src="https://images.pexels.com/photos/33384524/pexels-photo-33384524.jpeg" alt="Selada hijau tumbuh di luar ruangan"><span data-template-id="crop-selada-name" class="canva-text block p-5 font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">Selada ↗</span></button>
-      </div>
-     </div>
-    </section>
-    <section id="statistik" class="section-pad bg-[#f0fdf4]">
-     <div class="wrap">
-      <p data-template-id="stats-kicker" class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">SEKILAS KEBUN</p>
-      <h2 data-template-id="stats-title" class="canva-text mt-3 text-4xl font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Semua terlihat jelas.</h2>
-      <p data-template-id="stats-note" class="canva-text mt-3 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Ilustrasi statistik untuk memperlihatkan tampilan aplikasi; bukan data langsung.</p>
-      <div class="stats-grid mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-       <article data-template-id="stat-card-one" class="canva-card rounded-2xl bg-white p-6 soft-shadow" style="background: rgb(255, 255, 255);">
-        <i data-lucide="list-checks" class="mb-4 text-[#166534]"></i>
-        <p data-template-id="stat-one-value" class="canva-text font-bold text-[#166534]" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">3 tugas</p>
-        <p data-template-id="stat-one-label" class="canva-text mt-2 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Tugas hari ini</p>
-       </article>
-       <article data-template-id="stat-card-two" class="canva-card rounded-2xl bg-white p-6 soft-shadow" style="background: rgb(255, 255, 255);">
-        <i data-lucide="sprout" class="mb-4 text-[#166534]"></i>
-        <p data-template-id="stat-two-value" class="canva-text font-bold text-[#166534]" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">9 jenis</p>
-        <p data-template-id="stat-two-label" class="canva-text mt-2 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Komoditas</p>
-       </article>
-       <article data-template-id="stat-card-three" class="canva-card rounded-2xl bg-white p-6 soft-shadow" style="background: rgb(255, 255, 255);">
-        <i data-lucide="shopping-basket" class="mb-4 text-[#166534]"></i>
-        <p data-template-id="stat-three-value" class="canva-text font-bold text-[#166534]" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">2 siap</p>
-        <p data-template-id="stat-three-label" class="canva-text mt-2 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Siap panen</p>
-       </article>
-       <article data-template-id="stat-card-four" class="canva-card rounded-2xl bg-white p-6 soft-shadow" style="background: rgb(255, 255, 255);">
-        <i data-lucide="scale" class="mb-4 text-[#166534]"></i>
-        <p data-template-id="stat-four-value" class="canva-text font-bold text-[#166534]" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">4,5 kg</p>
-        <p data-template-id="stat-four-label" class="canva-text mt-2 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Contoh total panen</p>
-       </article>
-      </div>
-      <div class="table-scroll mt-8 overflow-x-auto rounded-2xl bg-white p-5 soft-shadow" tabindex="0">
-       <h3 data-template-id="table-heading" class="canva-text mb-4 font-bold" style="font-weight: 400; font-style: normal; font-size: 19px;">Contoh tabel panen bulanan</h3>
-       <table class="w-full min-w-[400px] text-left text-sm">
+      <p class="eyebrow">TRANSPARANSI UMUR</p>
+      <h2 class="mt-3 text-4xl font-bold">Umur tiap batch (HST)</h2>
+      <p class="mt-3 text-sm text-gray-600">HST = hari setelah tanam. Batch berlabel <strong>Siap</strong> bisa langsung dipesan. Yang lain ada estimasi tanggal siapnya.</p>
+      <div class="table-scroll mt-8 overflow-x-auto rounded-2xl bg-[#f0fdf4] p-5 soft-shadow" tabindex="0">
+       <table class="w-full min-w-[640px] text-left text-sm">
         <thead class="border-b text-gray-500">
-         <tr>
-          <th class="py-3">Bulan</th>
-          <th>Komoditas</th>
-          <th>Hasil</th>
-         </tr>
+         <tr><th class="py-3">Bibit</th><th>Umur</th><th>Total</th><th>Siap</th><th>Harga</th><th>Status</th></tr>
         </thead>
-        <tbody>
-         <tr class="border-b">
-          <td class="py-3">Oktober</td>
-          <td>Cabai</td>
-          <td>1,5 kg</td>
-         </tr>
-         <tr class="border-b">
-          <td class="py-3">Oktober</td>
-          <td>Tomat</td>
-          <td>3 kg</td>
-         </tr>
-         <tr>
-          <td class="py-3">Oktober</td>
-          <td>Kangkung</td>
-          <td>6 ikat</td>
-         </tr>
+        <tbody id="batch-live">
+         <tr><td colspan="6" class="py-4 text-gray-500">Memuat data batch...</td></tr>
         </tbody>
        </table>
       </div>
      </div>
     </section>
-    <section id="galeri" class="section-pad bg-white">
+
+    <section id="estimasi" class="section-pad bg-[#f0fdf4]">
      <div class="wrap">
-      <p data-template-id="gallery-kicker" class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">RUANG TUMBUH</p>
-      <h2 data-template-id="gallery-title" class="canva-text mt-3 text-4xl font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Kebun bisa mulai dari sudut kecil.</h2>
-      <p data-template-id="gallery-disclaimer" class="canva-text mt-3 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Galeri live — foto asli dari kebun, diperbarui tiap ada upload baru.</p>
-      <div id="galeri-live" class="gallery-grid mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"></div>
-      <p class="canva-text mt-3 text-sm text-gray-600">Foto ilustrasi metode berkebun di bawah ini.</p>
-      <div class="gallery-grid mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-       <figure class="overflow-hidden rounded-3xl bg-[#f0fdf4]">
-        <img data-template-id="gallery-one-image" class="canva-image photo h-52" loading="lazy" src="https://images.pexels.com/photos/16981288/pexels-photo-16981288.jpeg" alt="Bibit disiram dalam wadah plastik daur ulang di kebun">
-        <figcaption data-template-id="gallery-one-caption" class="canva-text p-4 text-sm font-semibold" style="font-weight: 400; font-style: normal; font-size: 16px;">Wadah daur ulang, termasuk galon Le Minerale 15L</figcaption>
-       </figure>
-       <figure class="overflow-hidden rounded-3xl bg-[#f0fdf4]">
-        <img data-template-id="gallery-two-image" class="canva-image photo h-52" loading="lazy" src="https://images.pexels.com/photos/7728371/pexels-photo-7728371.jpeg" alt="Pekebun menyiram tanaman selada">
-        <figcaption data-template-id="gallery-two-caption" class="canva-text p-4 text-sm font-semibold" style="font-weight: 400; font-style: normal; font-size: 16px;">Rutinitas siram pagi</figcaption>
-       </figure>
-       <figure class="overflow-hidden rounded-3xl bg-[#f0fdf4]">
-        <img data-template-id="gallery-three-image" class="canva-image photo h-52" loading="lazy" src="https://images.pexels.com/photos/40058824/pexels-photo-40058824.jpeg" alt="Keranjang berisi hasil panen sayuran">
-        <figcaption data-template-id="gallery-three-caption" class="canva-text p-4 text-sm font-semibold" style="font-weight: 400; font-style: normal; font-size: 16px;">Hasil panen rumahan</figcaption>
-       </figure>
-       <figure class="overflow-hidden rounded-3xl bg-[#f0fdf4]">
-        <img data-template-id="gallery-four-image" class="canva-image photo h-52" loading="lazy" src="https://images.pexels.com/photos/31321715/pexels-photo-31321715.jpeg" alt="Bibit muda tumbuh dalam polybag hitam">
-        <figcaption data-template-id="gallery-four-caption" class="canva-text p-4 text-sm font-semibold" style="font-weight: 400; font-style: normal; font-size: 16px;">Bibit dalam polybag</figcaption>
-       </figure>
-      </div>
-      <h3 data-template-id="location-heading" class="canva-text mt-14 font-bold" style="font-weight: 700; font-style: normal; font-size: 19px;">Dua lokasi, satu catatan kebun.</h3>
-      <div class="location-grid mt-6 grid gap-5 md:grid-cols-2">
-       <article class="overflow-hidden rounded-3xl border border-green-100">
-        <img data-template-id="location-one-image" class="canva-image photo h-52" loading="lazy" src="https://images.pexels.com/photos/37057166/pexels-photo-37057166.jpeg" alt="Ilustrasi taman hijau di depan rumah">
-        <div class="p-5">
-         <h3 data-template-id="location-one-name" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 19px;">Halaman Depan</h3>
-         <p data-template-id="location-one-count" class="canva-text mt-2 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Contoh: 5 batch tanaman</p><span data-template-id="location-one-status" class="canva-tag mt-4 inline-block rounded-full bg-[#dcfce7] px-3 py-1 text-sm font-semibold text-[#166534]" style="background: rgb(220, 252, 231); color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">Aktif</span>
-        </div>
-       </article>
-       <article class="overflow-hidden rounded-3xl border border-green-100">
-        <img data-template-id="location-two-image" class="canva-image photo h-52" loading="lazy" src="https://images.pexels.com/photos/36310145/pexels-photo-36310145.jpeg" alt="Ilustrasi kebun tropis sederhana di area permukiman">
-        <div class="p-5">
-         <h3 data-template-id="location-two-name" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 19px;">Lahan Depan Mushola</h3>
-        <p data-template-id="location-two-count" class="canva-text mt-2 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Contoh: 4 batch tanaman</p><span data-template-id="location-two-status" class="canva-tag mt-4 inline-block rounded-full bg-[#dcfce7] px-3 py-1 text-sm font-semibold text-[#166534]" style="background: rgb(220, 252, 231); color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">Aktif</span>
-        </div>
-       </article>
+      <p class="eyebrow">SEGERA HADIR</p>
+      <h2 class="mt-3 text-4xl font-bold">Estimasi bibit siap dipasarkan</h2>
+      <p class="mt-3 text-sm text-gray-600">Batch yang masih dirawat — catat tanggalnya, amankan slot lebih dulu.</p>
+      <div id="estimasi-live" class="crop-grid mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"><p class="text-sm text-gray-500">Memuat estimasi...</p></div>
+     </div>
+    </section>
+
+    <section id="kenapa" class="section-pad bg-white">
+     <div class="wrap">
+      <p class="eyebrow">KENAPA TAFSHA FARM</p>
+      <h2 class="mt-3 max-w-2xl text-4xl font-bold">Misi kami: ketahanan pangan mandiri &amp; urban farming.</h2>
+      <div class="feature-grid mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+       <article class="rounded-3xl bg-[#f0fdf4] p-7"><span class="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-[#dcfce7] text-[#166534]"><i data-lucide="sprout"></i></span><h3 class="font-bold" style="font-size:19px">Per pcs polybag</h3><p class="mt-2 text-sm leading-7 text-gray-600">Beli satuan sesuai kebutuhan teras — 1 polybag = 1 pcs.</p></article>
+       <article class="rounded-3xl bg-[#f0fdf4] p-7"><span class="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-[#dcfce7] text-[#166534]"><i data-lucide="calendar-days"></i></span><h3 class="font-bold" style="font-size:19px">Umur terbuka</h3><p class="mt-2 text-sm leading-7 text-gray-600">Tiap batch tampil umur HST + estimasi siapnya.</p></article>
+       <article class="rounded-3xl bg-[#f0fdf4] p-7"><span class="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-[#dcfce7] text-[#166534]"><i data-lucide="home"></i></span><h3 class="font-bold" style="font-size:19px">Siap urban farming</h3><p class="mt-2 text-sm leading-7 text-gray-600">Cocok untuk teras, halaman sempit, dan pemula.</p></article>
+       <article class="rounded-3xl bg-[#f0fdf4] p-7"><span class="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-[#dcfce7] text-[#166534]"><i data-lucide="heart-handshake"></i></span><h3 class="font-bold" style="font-size:19px">Pangan mandiri</h3><p class="mt-2 text-sm leading-7 text-gray-600">Setiap bibit yang ditanam mengurangi belanja sayur.</p></article>
       </div>
      </div>
     </section>
-    <section id="kalender" class="section-pad bg-[#f0fdf4]">
+
+    <section id="cara-order" class="section-pad bg-[#fffbeb]">
      <div class="wrap">
-      <p class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">KALENDER KEBUN</p>
-      <h2 class="canva-text mt-3 text-4xl font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Minggu ini di kebun komunitas.</h2>
-      <p class="canva-text mt-3 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Estimasi siap panen 7 hari ke depan — dihitung otomatis dari tanggal tanam tiap batch. <a href="/masuk" style="font-weight:700;text-decoration:underline;">Masuk untuk lihat kalender kebunmu →</a></p>
-      <div id="kalender-live" class="mt-6 grid grid-cols-7 gap-1 sm:gap-2"></div>
-      <div id="kalender-stat" class="mt-4 grid gap-3 sm:grid-cols-3"></div>
-     </div>
-    </section>
-    <section id="bibit" class="section-pad bg-[#fffbeb]">
-     <div class="wrap">
-      <p class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">JUALAN BIBIT</p>
-      <h2 class="canva-text mt-3 text-4xl font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Bibit per pcs polybag, siap tanam.</h2>
-      <p class="canva-text mt-3 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Stok live dari kebun — cabai, tomat, daun bawang, seledri, bawang merah, terong, strawberry, mint. Harga per pcs, hubungi untuk order.</p>
-      <div id="bibit-live" class="crop-grid mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"><p class="text-sm text-gray-500">Memuat stok bibit...</p></div>
-     </div>
-    </section>
-    <section id="panen" class="section-pad bg-[#fffbeb]">
-     <div class="wrap">
-      <p data-template-id="harvest-kicker" class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">PORTOFOLIO MINI</p>
-      <h2 data-template-id="harvest-title" class="canva-text mt-3 text-4xl font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Hasil Kebun Bulan Ini</h2>
-      <p data-template-id="harvest-note" class="canva-text mt-3 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Contoh tampilan hasil; angka dapat diganti sesuai panen sebenarnya.</p>
-      <div class="harvest-grid mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-       <article class="overflow-hidden rounded-3xl bg-white soft-shadow">
-        <img data-template-id="harvest-one-image" class="canva-image photo h-52" loading="lazy" src="https://images.pexels.com/photos/18009298/pexels-photo-18009298.jpeg" alt="Cabai merah dan hijau di keranjang anyaman">
-        <div class="p-5">
-         <h3 data-template-id="harvest-one-name" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 19px;">Cabai merah</h3>
-         <p data-template-id="harvest-one-amount" class="canva-text mt-2 font-bold text-[#166534]" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">1,5 kg panen</p>
-        </div>
-       </article>
-       <article class="overflow-hidden rounded-3xl bg-white soft-shadow">
-        <img data-template-id="harvest-two-image" class="canva-image photo h-52" loading="lazy" src="https://images.pexels.com/photos/32873342/pexels-photo-32873342.jpeg" alt="Tomat merah matang dalam keranjang">
-        <div class="p-5">
-         <h3 data-template-id="harvest-two-name" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 19px;">Tomat segar</h3>
-         <p data-template-id="harvest-two-amount" class="canva-text mt-2 font-bold text-[#166534]" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">3 kg panen</p>
-        </div>
-       </article>
-       <article class="flex flex-col justify-center rounded-3xl bg-[#166534] p-8 text-white">
-        <i data-lucide="leaf" class="mb-8 h-10 w-10"></i>
-        <h3 data-template-id="harvest-three-name" class="canva-text font-bold" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 19px;">Kangkung</h3>
-        <p data-template-id="harvest-three-amount" class="canva-text mt-2 font-bold" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">6 ikat panen</p>
-        <p data-template-id="harvest-three-note" class="canva-text mt-5 text-sm text-green-100" style="color: rgb(220, 252, 231); font-weight: 400; font-style: normal; font-size: 16px;">Dari wadah sederhana ke meja makan keluarga.</p>
-       </article>
+      <p class="eyebrow">CARA ORDER</p>
+      <h2 class="mt-3 text-4xl font-bold">Tiga langkah bawa pulang bibit.</h2>
+      <div class="feature-grid mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+       <article class="rounded-3xl border border-green-100 bg-white p-7"><span class="text-4xl font-extrabold text-[#166534]">01</span><h3 class="mt-5 font-bold" style="font-size:19px">Pilih di stok live</h3><p class="mt-2 text-sm leading-7 text-gray-600">Lihat #stok — pilih jenis + jumlah pcs yang masih tersedia.</p></article>
+       <article class="rounded-3xl border border-green-100 bg-white p-7"><span class="text-4xl font-extrabold text-[#166534]">02</span><h3 class="mt-5 font-bold" style="font-size:19px">Cek umur batch</h3><p class="mt-2 text-sm leading-7 text-gray-600">Pastikan berlabel Siap di tabel #batch, atau catat estimasinya.</p></article>
+       <article class="rounded-3xl border border-green-100 bg-white p-7"><span class="text-4xl font-extrabold text-[#166534]">03</span><h3 class="mt-5 font-bold" style="font-size:19px">Chat untuk order</h3><p class="mt-2 text-sm leading-7 text-gray-600">Sebutkan nama bibit + jumlah pcs. Ambil di Pakuwon, Cisurupan, Garut.</p></article>
+      </div>
+      <div class="mt-7 rounded-3xl bg-[#166534] p-8 text-white text-center">
+       <h3 class="font-bold" style="font-size:20px">Siap mulai tanam minggu ini?</h3>
+       <p class="mt-2 text-sm text-green-100">Stok terbatas per batch — yang siap duluan, dapat duluan.</p>
+       <a href="#stok" class="pill mt-5 bg-white text-[#166534]">🌱 Cek stok sekarang</a>
       </div>
      </div>
     </section>
-    <section id="testimoni" class="section-pad bg-white">
-     <div class="wrap max-w-3xl text-center">
-      <p data-template-id="testimonial-kicker" class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">CERITA PENGGUNA</p>
-      <h2 data-template-id="testimonial-heading" class="canva-text mt-3 text-4xl font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Merawat kebun jadi lebih ringan.</h2>
-      <div class="mt-9 rounded-3xl bg-[#f0fdf4] p-8 md:p-12">
-       <p data-template-id="testimonial-quote" class="canva-text text-xl leading-relaxed" style="font-weight: 400; font-style: normal; font-size: 16px;">“Bayangkan semua jadwal siram dan catatan panen ada di satu tempat. Lebih gampang berbagi tugas dengan keluarga.”</p>
-       <p data-template-id="testimonial-attribution" class="canva-text mt-6 text-sm font-semibold text-[#166534]" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">Ilustrasi pengalaman petani rumahan · bukan testimoni pelanggan terverifikasi</p>
-      </div>
-     </div>
-    </section>
+
     <section id="faq" class="section-pad bg-[#f0fdf4]">
      <div class="wrap max-w-3xl">
-      <p data-template-id="faq-kicker" class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">PERTANYAAN UMUM</p>
-      <h2 data-template-id="faq-title" class="canva-text mt-3 text-4xl font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Masih penasaran?</h2>
+      <p class="eyebrow">PERTANYAAN UMUM</p>
+      <h2 class="mt-3 text-4xl font-bold">Sebelum order?</h2>
       <div class="mt-8 space-y-3">
-       <details class="group rounded-2xl bg-white p-5">
-        <summary data-template-id="faq-one-question" class="canva-text cursor-pointer font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">Apakah Tafsha Farm gratis?</summary>
-        <p data-template-id="faq-one-answer" class="canva-text mt-3 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Konsep aplikasi ini ditujukan untuk penggunaan gratis oleh keluarga, tanpa alat tambahan.</p>
-       </details>
-       <details class="group rounded-2xl bg-white p-5">
-        <summary data-template-id="faq-two-question" class="canva-text cursor-pointer font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">Apakah cocok untuk kebun kecil?</summary>
-        <p data-template-id="faq-two-answer" class="canva-text mt-3 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Ya. Rancangannya cocok untuk kebun rumahan yang dirawat bersama oleh 1–3 orang.</p>
-       </details>
-       <details class="group rounded-2xl bg-white p-5">
-        <summary data-template-id="faq-three-question" class="canva-text cursor-pointer font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">Bagaimana jika sinyal di kebun kurang bagus?</summary>
-        <p data-template-id="faq-three-answer" class="canva-text mt-3 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Pengalaman aplikasi dirancang untuk penggunaan offline. Fitur offline dan pemasangan perlu diaktifkan pada versi PWA yang dipublikasikan.</p>
-       </details>
-       <details class="group rounded-2xl bg-white p-5">
-        <summary data-template-id="faq-four-question" class="canva-text cursor-pointer font-bold" style="font-weight: 400; font-style: normal; font-size: 16px;">Apakah bisa memisahkan dua lokasi tanam?</summary>
-        <p data-template-id="faq-four-answer" class="canva-text mt-3 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Ya, rancangan kebun memisahkan Halaman Depan dan Lahan Depan Mushola agar tiap batch mudah dikenali.</p>
-       </details>
+       <details class="group rounded-2xl bg-white p-5"><summary class="cursor-pointer font-bold">Apa maksud harga per pcs polybag?</summary><p class="mt-3 text-sm leading-7 text-gray-600">Satu harga untuk satu polybag berisi satu bibit. Beli 5 pcs = 5 polybag.</p></details>
+       <details class="group rounded-2xl bg-white p-5"><summary class="cursor-pointer font-bold">Apa itu HST di tabel batch?</summary><p class="mt-3 text-sm leading-7 text-gray-600">Hari Setelah Tanam — umur bibit dihitung dari tanggal tanam. Makin transparan, makin yakin.</p></details>
+       <details class="group rounded-2xl bg-white p-5"><summary class="cursor-pointer font-bold">Kalau yang kumau belum siap?</summary><p class="mt-3 text-sm leading-7 text-gray-600">Lihat seksi Estimasi — ada perkiraan tanggal siap per batch. Chat untuk amankan slot.</p></details>
+       <details class="group rounded-2xl bg-white p-5"><summary class="cursor-pointer font-bold">Cocok untuk pemula / lahan sempit?</summary><p class="mt-3 text-sm leading-7 text-gray-600">Sangat cocok. Bibit polybag tinggal rawat di teras — misi kami memang urban farming.</p></details>
+       <details class="group rounded-2xl bg-white p-5"><summary class="cursor-pointer font-bold">Bisa ambil di mana?</summary><p class="mt-3 text-sm leading-7 text-gray-600">Langsung di kebun: Pakuwon, Cisurupan, Garut. Atur jadwal pengambilan saat order.</p></details>
       </div>
-     </div>
-    </section>
-    <section id="install" data-template-id="cta-section" class="canva-section section-pad bg-[#166534] text-white" style="background: rgb(22, 101, 52);">
-     <div class="wrap text-center">
-      <p data-template-id="cta-kicker" class="canva-text text-sm font-bold uppercase tracking-widest text-green-200" style="color: rgb(220, 252, 231); font-weight: 400; font-style: normal; font-size: 16px;">MULAI DARI KEBUN SENDIRI</p>
-      <h2 data-template-id="cta-title" class="canva-text mx-auto mt-4 max-w-2xl text-4xl font-bold" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 24px;">Tanam lebih tertata. Panen lebih terasa.</h2>
-      <p data-template-id="cta-description" class="canva-text mx-auto mt-5 max-w-xl leading-7 text-green-100" style="color: rgb(220, 252, 231); font-weight: 400; font-style: normal; font-size: 16px;">Satu tempat untuk rutinitas kecil yang membuat kebun keluarga terus tumbuh.</p><button data-open-install="" data-template-id="cta-button" class="canva-button pill mt-8 bg-white text-[#166534]" type="button" style="background: rgb(255, 255, 255); color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">Lihat Cara Install di HP</button>
      </div>
     </section>
    </main>
-   <footer data-template-id="site-footer" class="canva-footer bg-[#133e25] py-10 text-white" style="background: rgb(19, 62, 37);">
+   <footer class="bg-[#133e25] py-10 text-white" style="background: rgb(19, 62, 37);">
     <div class="wrap footer-grid grid gap-7 md:grid-cols-2">
      <div>
-      <p data-template-id="footer-brand" class="canva-text font-bold" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">Tafsha Farm 🌱</p>
-      <p data-template-id="footer-location" class="canva-text mt-2 text-sm text-green-100" style="color: rgb(220, 252, 231); font-weight: 400; font-style: normal; font-size: 16px;">Pakuwon, Cisurupan, Garut · Untuk kebun keluarga.</p>
+      <p class="font-bold" style="font-size:16px;">Tafsha Farm 🌱</p>
+      <p class="mt-2 text-sm text-green-100">Jual bibit per pcs polybag · Pakuwon, Cisurupan, Garut.</p>
+      <p class="mt-1 text-sm text-green-100">Misi: ketahanan pangan mandiri &amp; urban farming.</p>
      </div>
-     <p data-template-id="footer-disclaimer" class="canva-text text-sm leading-6 text-green-100 md:text-right" style="color: rgb(220, 252, 231); font-weight: 400; font-style: normal; font-size: 16px;">Prototipe showcase. Foto, statistik, dan hasil panen adalah ilustrasi. Pemasangan serta penggunaan offline memerlukan versi PWA yang dipublikasikan.</p>
+     <p class="text-sm leading-6 text-green-100 md:text-right">Stok &amp; umur batch di halaman ini live dari data kebun. <a href="/masuk" style="text-decoration:underline;color:#fff;">Masuk pengelola →</a></p>
     </div>
    </footer>
    <div class="fab-nav"><button id="fab-btn" class="fab-btn" type="button" aria-expanded="false" aria-controls="fab-sheet" aria-label="Buka menu navigasi">☰</button></div>
@@ -394,75 +206,13 @@
     <button class="fab-scrim" type="button" aria-label="Tutup menu navigasi" tabindex="-1"></button>
     <div class="fab-panel" role="dialog" aria-modal="true" aria-label="Menu navigasi">
      <a class="fab-link" href="#beranda">🏠 Beranda</a>
-     <a class="fab-link" href="#fitur">✨ Fitur</a>
-     <a class="fab-link" href="#cara-kerja">🪜 Cara kerja</a>
-     <a class="fab-link" href="#komoditas">🌿 Komoditas</a>
-     <a class="fab-link" href="#statistik">📊 Statistik</a>
-     <a class="fab-link" href="#galeri">🖼️ Galeri</a>
-     <a class="fab-link" href="#kalender">📅 Kalender</a>
-     <a class="fab-link" href="#bibit">🌱 Bibit</a>
-     <a class="fab-link" href="#panen">🧺 Panen</a>
+     <a class="fab-link" href="#stok">🌱 Stok live</a>
+     <a class="fab-link" href="#batch">🔍 Umur batch</a>
+     <a class="fab-link" href="#estimasi">📅 Estimasi siap</a>
+     <a class="fab-link" href="#kenapa">💚 Misi kami</a>
+     <a class="fab-link" href="#cara-order">🛒 Cara order</a>
      <a class="fab-link" href="#faq">❓ FAQ</a>
-     <a class="fab-link" href="#install">⬇️ Install</a>
-     <a class="fab-link fab-cta" href="/masuk">🔑 Masuk aplikasi</a>
     </div>
-   </div>
-  </div>
-  <div id="install-modal" class="modal-layer" hidden="" role="dialog" aria-modal="true" aria-labelledby="install-title">
-   <div class="modal-box rounded-3xl bg-white p-5 shadow-2xl sm:p-7" tabindex="-1">
-    <div class="flex items-start justify-between gap-4">
-     <h2 id="install-title" data-template-id="install-modal-title" class="canva-text font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Install Tafsha Farm di HP</h2><button class="modal-close rounded-full p-2 hover:bg-gray-100" type="button" aria-label="Tutup petunjuk instal"><i data-lucide="x"></i></button>
-    </div>
-    <p data-template-id="install-modal-intro" class="canva-text mt-4 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Saat versi PWA sudah dipublikasikan, buka alamat aplikasinya di browser HP lalu ikuti langkah berikut:</p>
-    <ol class="mt-5 list-inside list-decimal space-y-3 text-sm leading-6">
-     <li data-template-id="install-step-one" class="canva-text" style="font-weight: 400; font-style: normal; font-size: 16px;">Android / Chrome: ketuk menu ⋮ lalu pilih “Instal aplikasi” atau “Tambahkan ke layar utama”.</li>
-     <li data-template-id="install-step-two" class="canva-text" style="font-weight: 400; font-style: normal; font-size: 16px;">iPhone / Safari: ketuk Bagikan lalu pilih “Tambahkan ke Layar Utama”.</li>
-     <li data-template-id="install-step-three" class="canva-text" style="font-weight: 400; font-style: normal; font-size: 16px;">Buka ikon Tafsha Farm dari layar utama untuk mulai berkebun.</li>
-    </ol>
-    <p data-template-id="install-modal-note" class="canva-text mt-5 rounded-xl bg-[#fffbeb] p-4 text-sm text-gray-700" style="font-weight: 400; font-style: normal; font-size: 16px;">Ini adalah prototipe landing page. Tombol instal browser hanya tersedia setelah aplikasi diterbitkan sebagai PWA yang memenuhi syarat.</p><button id="native-install" data-template-id="native-install-button" class="canva-button pill mt-5 hidden w-full bg-[#166534] text-white" type="button" style="background: rgb(22, 101, 52); color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">Install lewat browser</button> <button data-template-id="install-close-button" class="canva-button modal-close pill mt-3 w-full border border-green-700 text-[#166534]" type="button" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">Mengerti</button>
-   </div>
-  </div>
-  <div id="crop-modal" class="modal-layer" hidden="" role="dialog" aria-modal="true" aria-label="Detail komoditas">
-   <div class="modal-box rounded-3xl bg-white p-5 shadow-2xl sm:p-7" tabindex="-1">
-    <div class="flex justify-end">
-     <button class="modal-close rounded-full p-2 hover:bg-gray-100" type="button" aria-label="Tutup detail komoditas"><i data-lucide="x"></i></button>
-    </div>
-    <div class="detail-panel" data-detail="cabai" hidden="">
-     <h2 data-template-id="detail-cabai-title" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 24px;">Cabai</h2>
-     <p data-template-id="detail-cabai-body" class="canva-text mt-3 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Favorit dapur. Pantau penyiraman dan pertumbuhan buahnya secara rutin.</p>
-    </div>
-    <div class="detail-panel" data-detail="timun" hidden="">
-     <h2 data-template-id="detail-timun-title" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 24px;">Timun</h2>
-     <p data-template-id="detail-timun-body" class="canva-text mt-3 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Tanaman merambat yang segar. Beri ruang rambat dan cek kebutuhan airnya.</p>
-    </div>
-    <div class="detail-panel" data-detail="terong" hidden="">
-     <h2 data-template-id="detail-terong-title" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 24px;">Terong</h2>
-     <p data-template-id="detail-terong-body" class="canva-text mt-3 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Kenali umur tanaman dan catat perkembangan bunga hingga buah.</p>
-    </div>
-    <div class="detail-panel" data-detail="talas" hidden="">
-     <h2 data-template-id="detail-talas-title" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 24px;">Talas</h2>
-     <p data-template-id="detail-talas-body" class="canva-text mt-3 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Daun besar yang menarik untuk sudut kebun; catat lokasi dan fase tumbuhnya.</p>
-    </div>
-    <div class="detail-panel" data-detail="tomat" hidden="">
-     <h2 data-template-id="detail-tomat-title" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 24px;">Tomat</h2>
-     <p data-template-id="detail-tomat-body" class="canva-text mt-3 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Pantau buah yang mulai memerah agar waktu petiknya tidak terlewat.</p>
-    </div>
-    <div class="detail-panel" data-detail="kangkung" hidden="">
-     <h2 data-template-id="detail-kangkung-title" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 24px;">Kangkung</h2>
-     <p data-template-id="detail-kangkung-body" class="canva-text mt-3 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Sayuran daun untuk panen rumahan; catat hasilnya dalam satuan ikat.</p>
-    </div>
-    <div class="detail-panel" data-detail="bayam" hidden="">
-     <h2 data-template-id="detail-bayam-title" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 24px;">Bayam</h2>
-     <p data-template-id="detail-bayam-body" class="canva-text mt-3 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Sayuran daun yang praktis. Atur rutinitas siram dan amati pertumbuhannya.</p>
-    </div>
-    <div class="detail-panel" data-detail="lavender" hidden="">
-     <h2 data-template-id="detail-lavender-title" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 24px;">Lavender</h2>
-     <p data-template-id="detail-lavender-body" class="canva-text mt-3 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Sentuhan bunga harum di antara tanaman pangan; pantau kondisinya secara berkala.</p>
-    </div>
-    <div class="detail-panel" data-detail="selada" hidden="">
-     <h2 data-template-id="detail-selada-title" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 24px;">Selada</h2>
-     <p data-template-id="detail-selada-body" class="canva-text mt-3 leading-7 text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Daun segar untuk meja makan. Catat batch tanam dan hasil petiknya.</p>
-    </div><button data-template-id="crop-close-button" class="canva-button modal-close pill mt-7 w-full bg-[#166534] text-white" type="button" style="background: rgb(22, 101, 52); color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">Kembali ke komoditas</button>
    </div>
   </div>
   <script>
@@ -470,135 +220,68 @@
    var fab=document.getElementById('fab-btn');
    var sheet=document.getElementById('fab-sheet');
    if(!fab||!sheet)return;
-   var panel=sheet.querySelector('.fab-panel');
-   var balik=null;
-   function buka(){
-     balik=document.activeElement;
-     sheet.hidden=false;
-     fab.setAttribute('aria-expanded','true');
-     fab.textContent='✕';
-     fab.setAttribute('aria-label','Tutup menu navigasi');
-     document.body.style.overflow='hidden';
-     var awal=sheet.querySelector('.fab-link');
-     if(awal)awal.focus();
-   }
-   function tutup(){
-     sheet.hidden=true;
-     fab.setAttribute('aria-expanded','false');
-     fab.textContent='☰';
-     fab.setAttribute('aria-label','Buka menu navigasi');
-     document.body.style.overflow='';
-     if(balik&&balik.focus)balik.focus();
-   }
+   function buka(){sheet.hidden=false;fab.setAttribute('aria-expanded','true');fab.textContent='✕';document.body.style.overflow='hidden';}
+   function tutup(){sheet.hidden=true;fab.setAttribute('aria-expanded','false');fab.textContent='☰';document.body.style.overflow='';}
    fab.addEventListener('click',function(){sheet.hidden?buka():tutup()});
    sheet.querySelector('.fab-scrim').addEventListener('click',tutup);
    sheet.querySelectorAll('.fab-link').forEach(function(a){a.addEventListener('click',tutup)});
-   document.addEventListener('keydown',function(e){
-     if(sheet.hidden)return;
-     if(e.key==='Escape'){tutup();return}
-     if(e.key==='Tab'&&panel){
-       var f=[...panel.querySelectorAll('.fab-link')].filter(function(el){return el.offsetParent!==null});
-       if(!f.length)return;
-       var awal=f[0],akhir=f[f.length-1];
-       if(e.shiftKey&&document.activeElement===awal){e.preventDefault();akhir.focus()}
-       else if(!e.shiftKey&&document.activeElement===akhir){e.preventDefault();awal.focus()}
-     }
-   });
+   document.addEventListener('keydown',function(e){if(!sheet.hidden&&e.key==='Escape')tutup()});
   })();
-  let deferredInstall=null;
-  window.addEventListener('beforeinstallprompt',event=>{
-    event.preventDefault();
-    deferredInstall=event;
-    document.getElementById('native-install').classList.remove('hidden');
-  });
-  let previousFocus=null;
-  function showModal(modal){
-    previousFocus=document.activeElement;
-    modal.hidden=false;
-    document.body.style.overflow='hidden';
-    modal.querySelector('.modal-box').focus();
-  }
-  function closeModals(){
-    document.querySelectorAll('.modal-layer').forEach(modal=>modal.hidden=true);
-    document.body.style.overflow='';
-    if(previousFocus)previousFocus.focus();
-  }
-  document.querySelectorAll('[data-open-install]').forEach(button=>button.addEventListener('click',()=>showModal(document.getElementById('install-modal'))));
-  document.querySelectorAll('[data-crop]').forEach(button=>button.addEventListener('click',()=>{
-    document.querySelectorAll('.detail-panel').forEach(panel=>panel.hidden=panel.dataset.detail!==button.dataset.crop);
-    showModal(document.getElementById('crop-modal'));
-  }));
-  document.querySelectorAll('.modal-close').forEach(button=>button.addEventListener('click',closeModals));
-  document.querySelectorAll('.modal-layer').forEach(modal=>modal.addEventListener('click',event=>{if(event.target===modal)closeModals()}));
-  document.addEventListener('keydown',event=>{
-    const open=document.querySelector('.modal-layer:not([hidden])');
-    if(!open)return;
-    if(event.key==='Escape')closeModals();
-    if(event.key==='Tab'){
-      const focusables=[...open.querySelectorAll('button:not(.hidden),a[href]')].filter(el=>el.offsetParent!==null);
-      if(!focusables.length)return;
-      const first=focusables[0],last=focusables[focusables.length-1];
-      if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
-      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
-    }
-  });
-  document.getElementById('native-install').addEventListener('click',async()=>{
-    if(!deferredInstall)return;
-    deferredInstall.prompt();
-    await deferredInstall.userChoice;
-    deferredInstall=null;
-    document.getElementById('native-install').classList.add('hidden');
-  });
   lucide.createIcons();
   document.querySelectorAll('svg.lucide').forEach(function(s){s.setAttribute('aria-hidden','true')});
-  fetch("/api/publik/bibit").then(r=>r.json()).then(function(d){
-   var w=document.getElementById("bibit-live");if(!w)return;
-   if(!d||d.kosong||!Array.isArray(d.katalog)||!d.katalog.length){
-     w.innerHTML='<p class="text-sm text-gray-500">Belum ada stok bibit siap jual. Cek lagi minggu depan 🌱</p>';return;
+  var IKON={"cabai":"🌶️","tomat":"🍅","daun bawang":"🧅","seledri":"🥬","bawang merah":"🧅","terong":"🍆","strawberry":"🍓","mint":"🌿"};
+  function ikon(n){n=(n||"").toLowerCase();for(var k in IKON){if(n.indexOf(k)>-1)return IKON[k]}return "🌱"}
+  function rp(n){try{return "Rp "+Number(n).toLocaleString("id-ID")}catch(e){return "Rp "+n}}
+  function tgl(id){try{return new Date(id+"T00:00:00").toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"})}catch(e){return id||"-"}}
+  fetch("/api/publik/bibit").then(function(r){return r.json()}).then(function(d){
+   var hero=document.getElementById("hero-stok");
+   if(!d||d.kosong){
+    if(hero)hero.textContent="🌱 Stok live belum tersambung";
+    ["katalog-live","batch-live","estimasi-live"].forEach(function(id){var w=document.getElementById(id);if(w)w.innerHTML='<p class="text-sm text-gray-500">Belum ada data. Cek lagi nanti 🌱</p>'});
+    var st=document.getElementById("stat-siap");if(st)st.textContent="-";
+    var jn=document.getElementById("stat-jenis");if(jn)jn.textContent="-";
+    var bt=document.getElementById("stat-batch");if(bt)bt.textContent="-";
+    return;
    }
-   var rp=function(n){try{return "Rp "+Number(n).toLocaleString("id-ID")}catch(e){return "Rp "+n}};
-   w.innerHTML=d.katalog.map(function(k){
-     var stok=k.siap>0?k.siap+" pcs siap":"Stok habis";
-     var h=k.harga!=null?rp(k.harga)+"/pcs":"Harga tanya admin";
-     var habis=k.siap<=0?'opacity:.65':'';
-     return '<article class="overflow-hidden rounded-3xl bg-white soft-shadow" style="'+habis+'"><div class="p-5"><h3 class="font-bold" style="font-size:19px">🌱 '+k.nama+'</h3><p class="mt-2 font-bold text-[#166534]">'+stok+' · '+h+'</p><a href="/masuk" class="canva-button pill mt-4 inline-block border border-[#166534] text-[#166534]" style="min-height:48px;display:inline-flex;align-items:center;padding:10px 20px;font-weight:700">Tanya / order →</a></div></article>';
-   }).join('');
-  }).catch(function(){
-   var w=document.getElementById("bibit-live");if(w)w.innerHTML='<p class="text-sm text-gray-500">Stok bibit belum bisa dimuat.</p>';
-  });
-  fetch("/api/galeri").then(r=>r.json()).then(d=>{
-   var w=document.getElementById("galeri-live");if(!w)return;
-   var f=(d.foto||[]).slice(0,8);
-   if(!f.length){w.innerHTML='<p class="text-sm text-gray-500">Belum ada foto kebun. Upload pertama dari aplikasi untuk mengisi galeri ini.</p>';return}
-   w.innerHTML=f.map(function(x){
-   var t=x.created_at?new Date(x.created_at).toLocaleDateString("id-ID",{day:"numeric",month:"short"}):"";
-   var tag=x.subjek_tipe==="lokasi"?"📍 Lokasi":x.subjek_tipe==="sub_blok"?"🧱 Sub-blok":"🌱 Batch";
-   return '<figure class="overflow-hidden rounded-3xl bg-[#f0fdf4]"><img loading="lazy" src="'+x.foto_url+'" alt="'+tag+' kebun Tafsha Farm '+(t?t:'')+'" style="width:100%;height:13rem;object-fit:cover"><figcaption class="p-4 text-sm font-semibold">'+tag+(t?" · "+t:"")+'</figcaption></figure>'
-   }).join('')
-   }).catch(function(){});
-   fetch("/api/publik/ringkasan").then(r=>r.json()).then(function(d){
-   if(!d||d.kosong)return;
-   var wk=document.getElementById("kalender-live");
-   if(wk&&Array.isArray(d.minggu)){
-     var hari=["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
-     var now=new Date();var awal=(now.getDay()+6)%7;
-     wk.innerHTML=d.minggu.map(function(m,i){
-       var dt=new Date(m.tanggal+"T00:00:00");
-       var tgl=dt.getDate();
-       var nm=hari[(awal+i)%7];
-       var isi=m.siap>0?'<span style="display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:999px;background:#166534;color:#fff;font-size:12px;font-weight:800">'+m.siap+'</span>':'<span style="color:#a1a1aa">·</span>';
-       var hariIni=m.tanggal===now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
-       return '<div style="text-align:center;background:#fff;border-radius:14px;padding:8px 2px;'+(hariIni?'outline:2px solid #f59e0b':'')+'"><p style="font-size:11px;color:#71717a;font-weight:700">'+nm+'</p><p style="font-size:15px;font-weight:800">'+tgl+'</p><p style="margin-top:2px">'+isi+'</p></div>';
+   if(hero)hero.textContent="🌱 "+(d.totalSiap||0)+" pcs siap hari ini · live";
+   var st=document.getElementById("stat-siap");if(st)st.textContent=(d.totalSiap||0)+" pcs";
+   var jn=document.getElementById("stat-jenis");if(jn)jn.textContent=((d.katalog||[]).filter(function(k){return k.siap>0}).length||0)+" jenis";
+   var bt=document.getElementById("stat-batch");if(bt)bt.textContent=(d.totalBatch||0)+" batch";
+   var w=document.getElementById("katalog-live");
+   if(w){
+    if(!(d.katalog||[]).length){w.innerHTML='<p class="text-sm text-gray-500">Belum ada stok bibit. Cek lagi minggu depan 🌱</p>'}
+    else{
+     w.innerHTML=d.katalog.map(function(k){
+      var ada=k.siap>0;
+      var badge=ada?'<span class="rounded-full bg-[#166534] px-3 py-1 text-xs font-bold text-white">'+k.siap+' pcs siap</span>':'<span class="rounded-full bg-zinc-200 px-3 py-1 text-xs font-bold text-zinc-600">Stok habis</span>';
+      var h=k.harga!=null?rp(k.harga)+"/pcs":"Harga tanya penjual";
+      return '<article class="overflow-hidden rounded-3xl bg-white soft-shadow"><div class="p-5"><div class="flex items-center justify-between gap-2"><h3 class="font-bold" style="font-size:19px">'+ikon(k.nama)+' '+k.nama+'</h3></div><p class="mt-3">'+badge+'</p><p class="mt-2 font-bold text-[#166534]">'+h+'</p><p class="mt-1 text-xs text-gray-500">Total dirawat: '+k.total+' pcs · '+k.batch+' batch</p><a href="#cara-order" class="pill mt-4 w-full border border-[#166534] text-[#166534]">Pesan '+k.nama+' →</a></div></article>';
      }).join('');
+    }
    }
-   var st=document.getElementById("kalender-stat");
-   if(st){
-     st.innerHTML=
-       '<div class="rounded-2xl bg-white p-5 soft-shadow"><p class="font-bold text-[#166534]" style="font-size:20px">'+(d.siapMingguIni??0)+' batch</p><p class="mt-1 text-sm text-gray-600">Siap panen 7 hari ke depan (komunitas)</p></div>'+
-       '<div class="rounded-2xl bg-white p-5 soft-shadow"><p class="font-bold text-[#166534]" style="font-size:20px">'+(d.panenBulanIni||"0")+'</p><p class="mt-1 text-sm text-gray-600">Panen bulan ini (komunitas)</p></div>'+
-       '<div class="rounded-2xl bg-white p-5 soft-shadow"><p class="font-bold text-[#166534]" style="font-size:20px">'+(d.totalFoto??0)+' foto</p><p class="mt-1 text-sm text-gray-600">Foto kebun terkumpul di galeri live</p></div>';
+   var tb=document.getElementById("batch-live");
+   if(tb){
+    var semua=(d.siap||[]).concat(d.estimasi||[]);
+    if(!semua.length){tb.innerHTML='<tr><td colspan="6" class="py-4 text-gray-500">Belum ada batch aktif.</td></tr>'}
+    else{
+     tb.innerHTML=semua.map(function(b){
+      var status=b.sudahSiap?'<span class="rounded-full bg-[#166534] px-2 py-0.5 text-xs font-bold text-white">Siap · '+b.siap+' pcs</span>':'<span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">~'+(b.sisaHari||0)+' hari lagi · '+tgl(b.estimasi)+'</span>';
+      var h=b.harga!=null?rp(b.harga):"-";
+      return '<tr class="border-b"><td class="py-3 font-semibold">'+ikon(b.nama)+' '+b.nama+'</td><td>HST '+b.hst+'</td><td>'+b.jumlah+' pcs</td><td>'+b.siap+' pcs</td><td>'+h+'</td><td>'+status+'</td></tr>';
+     }).join('');
+    }
    }
-   }).catch(function(){});
-</script>
- 
-</body></html>
+   var es=document.getElementById("estimasi-live");
+   if(es){
+    if(!(d.estimasi||[]).length){es.innerHTML='<p class="text-sm text-gray-500">Semua batch siap — langsung order 🌱</p>'}
+    else{
+     es.innerHTML=d.estimasi.map(function(b){
+      return '<article class="rounded-3xl bg-white p-6 soft-shadow"><h3 class="font-bold" style="font-size:19px">'+ikon(b.nama)+' '+b.nama+'</h3><p class="mt-2 text-sm text-gray-600">Umur HST '+b.hst+' · target HST '+(b.siapMin||"-")+'</p><p class="mt-2 font-bold text-[#166534]">Siap ± '+tgl(b.estimasi)+' ('+(b.sisaHari||0)+' hari)</p><p class="mt-1 text-xs text-gray-500">'+b.jumlah+' pcs dirawat · '+(b.harga!=null?rp(b.harga)+"/pcs":"harga menyusul")+'</p></article>';
+     }).join('');
+    }
+   }
+  }).catch(function(){
+   var hero=document.getElementById("hero-stok");if(hero)hero.textContent="🌱 Stok bibit belum bisa dimuat";
+  });
+  </script>
+ </body></html>
