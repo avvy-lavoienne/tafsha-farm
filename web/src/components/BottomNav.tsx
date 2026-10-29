@@ -11,6 +11,7 @@ const NAV = [
   { href: "/kebun", label: "Kebun", ikon: "🌱", desc: "Lokasi & sub-blok" },
   { href: "/batch", label: "Tanam", ikon: "➕", desc: "Batch & progres" },
   { href: "/tugas", label: "Tugas", ikon: "🔔", desc: "Pengingat hari ini" },
+  { href: "/kalender", label: "Kalender", ikon: "📅", desc: "Siklus tanam" },
   { href: "/panen", label: "Panen", ikon: "🧺", desc: "Hasil & riwayat" },
   { href: "/sarana", label: "Sarana", ikon: "📦", desc: "Stok & media" },
   { href: "/komoditas", label: "Komoditas", ikon: "🌿", desc: "Tanaman & SOP" },
@@ -53,7 +54,7 @@ export default function BottomNav() {
         className="fixed inset-x-0 bottom-0 z-40 hidden border-t border-green-100 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-lg backdrop-blur lg:block"
         aria-label="Navigasi utama"
       >
-        <ul className="mx-auto grid max-w-6xl grid-cols-8 text-center">
+        <ul className="mx-auto grid max-w-6xl grid-cols-9 text-center">
           {NAV.map((item) => {
             const ya = aktif(path, item.href);
             return (

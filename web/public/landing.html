@@ -286,10 +286,19 @@
         <img data-template-id="location-two-image" class="canva-image photo h-52" loading="lazy" src="https://images.pexels.com/photos/36310145/pexels-photo-36310145.jpeg" alt="Ilustrasi kebun tropis sederhana di area permukiman">
         <div class="p-5">
          <h3 data-template-id="location-two-name" class="canva-text font-bold" style="font-weight: 400; font-style: normal; font-size: 19px;">Lahan Depan Mushola</h3>
-         <p data-template-id="location-two-count" class="canva-text mt-2 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Contoh: 4 batch tanaman</p><span data-template-id="location-two-status" class="canva-tag mt-4 inline-block rounded-full bg-[#dcfce7] px-3 py-1 text-sm font-semibold text-[#166534]" style="background: rgb(220, 252, 231); color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">Aktif</span>
+        <p data-template-id="location-two-count" class="canva-text mt-2 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Contoh: 4 batch tanaman</p><span data-template-id="location-two-status" class="canva-tag mt-4 inline-block rounded-full bg-[#dcfce7] px-3 py-1 text-sm font-semibold text-[#166534]" style="background: rgb(220, 252, 231); color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">Aktif</span>
         </div>
        </article>
       </div>
+     </div>
+    </section>
+    <section id="kalender" class="section-pad bg-[#f0fdf4]">
+     <div class="wrap">
+      <p class="canva-text eyebrow" style="color: rgb(22, 101, 52); font-weight: 400; font-style: normal; font-size: 16px;">KALENDER KEBUN</p>
+      <h2 class="canva-text mt-3 text-4xl font-bold" style="font-weight: 700; font-style: normal; font-size: 24px;">Minggu ini di kebun komunitas.</h2>
+      <p class="canva-text mt-3 text-sm text-gray-600" style="font-weight: 400; font-style: normal; font-size: 16px;">Estimasi siap panen 7 hari ke depan — dihitung otomatis dari tanggal tanam tiap batch. <a href="/masuk" style="font-weight:700;text-decoration:underline;">Masuk untuk lihat kalender kebunmu →</a></p>
+      <div id="kalender-live" class="mt-6 grid grid-cols-7 gap-1 sm:gap-2"></div>
+      <div id="kalender-stat" class="mt-4 grid gap-3 sm:grid-cols-3"></div>
      </div>
     </section>
     <section id="panen" class="section-pad bg-[#fffbeb]">
@@ -382,6 +391,7 @@
      <a class="fab-link" href="#komoditas">🌿 Komoditas</a>
      <a class="fab-link" href="#statistik">📊 Statistik</a>
      <a class="fab-link" href="#galeri">🖼️ Galeri</a>
+     <a class="fab-link" href="#kalender">📅 Kalender</a>
      <a class="fab-link" href="#panen">🧺 Panen</a>
      <a class="fab-link" href="#faq">❓ FAQ</a>
      <a class="fab-link" href="#install">⬇️ Install</a>
@@ -541,6 +551,29 @@
    var tag=x.subjek_tipe==="lokasi"?"📍 Lokasi":x.subjek_tipe==="sub_blok"?"🧱 Sub-blok":"🌱 Batch";
    return '<figure class="overflow-hidden rounded-3xl bg-[#f0fdf4]"><img loading="lazy" src="'+x.foto_url+'" alt="'+tag+' kebun Tafsha Farm '+(t?t:'')+'" style="width:100%;height:13rem;object-fit:cover"><figcaption class="p-4 text-sm font-semibold">'+tag+(t?" · "+t:"")+'</figcaption></figure>'
    }).join('')
+   }).catch(function(){});
+   fetch("/api/publik/ringkasan").then(r=>r.json()).then(function(d){
+   if(!d||d.kosong)return;
+   var wk=document.getElementById("kalender-live");
+   if(wk&&Array.isArray(d.minggu)){
+     var hari=["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
+     var now=new Date();var awal=(now.getDay()+6)%7;
+     wk.innerHTML=d.minggu.map(function(m,i){
+       var dt=new Date(m.tanggal+"T00:00:00");
+       var tgl=dt.getDate();
+       var nm=hari[(awal+i)%7];
+       var isi=m.siap>0?'<span style="display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:999px;background:#166534;color:#fff;font-size:12px;font-weight:800">'+m.siap+'</span>':'<span style="color:#a1a1aa">·</span>';
+       var hariIni=m.tanggal===now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
+       return '<div style="text-align:center;background:#fff;border-radius:14px;padding:8px 2px;'+(hariIni?'outline:2px solid #f59e0b':'')+'"><p style="font-size:11px;color:#71717a;font-weight:700">'+nm+'</p><p style="font-size:15px;font-weight:800">'+tgl+'</p><p style="margin-top:2px">'+isi+'</p></div>';
+     }).join('');
+   }
+   var st=document.getElementById("kalender-stat");
+   if(st){
+     st.innerHTML=
+       '<div class="rounded-2xl bg-white p-5 soft-shadow"><p class="font-bold text-[#166534]" style="font-size:20px">'+(d.siapMingguIni??0)+' batch</p><p class="mt-1 text-sm text-gray-600">Siap panen 7 hari ke depan (komunitas)</p></div>'+
+       '<div class="rounded-2xl bg-white p-5 soft-shadow"><p class="font-bold text-[#166534]" style="font-size:20px">'+(d.panenBulanIni||"0")+'</p><p class="mt-1 text-sm text-gray-600">Panen bulan ini (komunitas)</p></div>'+
+       '<div class="rounded-2xl bg-white p-5 soft-shadow"><p class="font-bold text-[#166534]" style="font-size:20px">'+(d.totalFoto??0)+' foto</p><p class="mt-1 text-sm text-gray-600">Foto kebun terkumpul di galeri live</p></div>';
+   }
    }).catch(function(){});
 </script>
  

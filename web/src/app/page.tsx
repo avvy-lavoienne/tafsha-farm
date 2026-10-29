@@ -334,6 +334,7 @@ function StatCard({
 function MenuGrid() {
   const CARDS = [
     { title: "Pengingat", desc: "Apa yang perlu dikerjakan", href: "/tugas" },
+    { title: "Kalender", desc: "Semai, tanam & panen", href: "/kalender" },
     { title: "Tanam", desc: "Batch per galon/polybag", href: "/batch" },
     { title: "Kebun", desc: "2 lokasi + sub-blok", href: "/kebun" },
     { title: "Panen", desc: "Hasil kg / ikat / buah", href: "/panen" },
