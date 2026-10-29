@@ -273,7 +273,7 @@ export default function UnggahFoto({
             type="button"
             disabled={sibuk}
             onClick={() => kameraRef.current?.click()}
-            className="tf-btn-outline flex-1"
+            className="tf-btn-outline min-w-0 flex-1"
           >
             {sibuk ? (
               <>

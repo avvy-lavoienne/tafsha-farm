@@ -83,7 +83,7 @@ export default function BatchStatusButtons({
             </button>
           ))}
         </div>
-        <div className="mt-3 flex gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           <button
             onClick={() => {
               if (confirm("Tandai batch ini gagal dan tutup?")) ubah("gagal", penyebab);

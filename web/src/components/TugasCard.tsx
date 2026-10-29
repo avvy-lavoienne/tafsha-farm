@@ -201,7 +201,7 @@ export default function TugasCard({
 
   return (
     <li
-      className={`flex items-center gap-3 tf-item ${
+      className={`flex flex-wrap items-center gap-3 tf-item ${
         terlewat
           ? "border-amber-300 bg-amber-50"
           : sudahSelesai

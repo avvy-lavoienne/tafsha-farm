@@ -105,7 +105,7 @@ export default function TambahTugasForm({
           );
         })}
       </select>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-2">
         <select
           value={jenis}
           onChange={(e) => setJenis(e.target.value)}

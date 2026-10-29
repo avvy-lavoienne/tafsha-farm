@@ -146,10 +146,10 @@ export default async function Home() {
   }
 
   return (
-    <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-4 lg:grid-cols-3">
+    <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       <BadgeAntrean />
       <SinkronButton />
-      <section className="tf-card lg:col-span-2 lg:row-span-2">
+      <section className="tf-card md:col-span-2 lg:row-span-2">
         <p className="tf-eyebrow">Kebun hari ini</p>
         <h1 className="mt-1 text-2xl font-extrabold text-[#18181b] lg:text-3xl">
           Selamat berkebun 🌱
@@ -229,13 +229,13 @@ export default async function Home() {
         </section>
       )}
 
-      <div className="lg:col-span-3">
+      <div className="md:col-span-2 lg:col-span-3">
         <MenuGrid />
       </div>
 
       {ringkasan.length > 0 && (
-        <section className="tf-card lg:col-span-3">
-          <div className="flex items-center justify-between gap-2">
+        <section className="tf-card md:col-span-2 lg:col-span-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <p className="tf-eyebrow">Isi kebun</p>
               <h2 className="mt-1 font-bold text-green-900">
@@ -342,7 +342,7 @@ function MenuGrid() {
     { title: "Pengaturan", desc: "Akun, notifikasi & data", href: "/pengaturan" },
   ];
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-3">
       {CARDS.map((c) => (
         <Link
           key={c.title}

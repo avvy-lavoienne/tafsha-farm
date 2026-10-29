@@ -39,7 +39,7 @@ export default function RootLayout({
         className={`${inter.variable} ${jakarta.variable} flex min-h-full flex-col bg-[#fffbeb] text-zinc-900`}
       >
         <header className="sticky top-0 z-40 border-b border-green-900/10 bg-[#fffbeb]/95 backdrop-blur">
-          <div className="mx-auto flex min-h-[76px] w-full max-w-3xl items-center gap-2 px-4 lg:max-w-6xl">
+          <div className="mx-auto flex min-h-[76px] w-full max-w-3xl items-center gap-2 px-4 md:max-w-5xl lg:max-w-6xl">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-[#166534] text-xl text-white">
               🌱
             </span>
@@ -54,7 +54,7 @@ export default function RootLayout({
             <LogoutButton />
           </div>
         </header>
-        <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-4 pb-28 lg:max-w-6xl">
+        <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-4 pb-28 md:max-w-5xl lg:max-w-6xl">
           {children}
         </main>
         <BottomNav />

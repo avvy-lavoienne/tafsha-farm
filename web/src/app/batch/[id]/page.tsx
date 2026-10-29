@@ -68,11 +68,11 @@ export default async function BatchDetailPage({
   return (
     <div className="flex flex-col gap-4">
       <section className="tf-card">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <Link href="/batch" className="text-xs font-semibold text-green-700">
             ← Kembali ke daftar
           </Link>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Link href={`/batch/baru?dari=${id}`} className="tf-btn-kecil">
               Duplikat batch
             </Link>
@@ -81,11 +81,11 @@ export default async function BatchDetailPage({
             </Link>
           </div>
         </div>
-        <div className="mt-1 flex items-center justify-between gap-2">
-          <h1 className="text-xl font-bold text-green-900">
+        <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
+          <h1 className="min-w-0 break-words text-lg font-bold text-green-900 sm:text-xl">
             {ikonKomoditas(komoditas?.nama)} {komoditas?.nama ?? "?"} × {b.jumlah}
           </h1>
-          <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
+          <span className="shrink-0 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
             {LABEL_STATUS[b.status] ?? b.status}
           </span>
         </div>
@@ -199,7 +199,7 @@ export default async function BatchDetailPage({
                     width={160}
                     height={100}
                     loading="lazy"
-                    className="mt-1 h-20 w-auto rounded-xl object-cover"
+                    className="mt-1 h-20 w-20 rounded-xl object-cover"
                   />
                 </a>
               )}
@@ -220,7 +220,7 @@ export default async function BatchDetailPage({
           {(panenRes.data ?? []).map((p) => (
             <li
               key={p.id}
-              className="flex items-center justify-between tf-item text-sm"
+              className="flex flex-wrap items-center justify-between gap-2 tf-item text-sm"
             >
               <span>
                 <strong>

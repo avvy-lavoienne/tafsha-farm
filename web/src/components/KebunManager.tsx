@@ -275,7 +275,7 @@ export default function KebunManager({
   return (
     <div className="flex flex-col gap-4">
       <section className="tf-card">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h1 className="text-xl font-bold text-green-900">Kebun</h1>
             <p className="mt-1 text-sm text-zinc-600">
@@ -294,7 +294,7 @@ export default function KebunManager({
 
         {tambahBuka && (
           <div className="mt-3 flex flex-col gap-2 tf-item">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2 min-[400px]:grid-cols-2">
               <label className="text-sm font-medium">
                 Kode
                 <input
@@ -347,14 +347,21 @@ export default function KebunManager({
       {daftar.map((l) => (
         <section key={l.id} className="tf-card">
           {l.fotoUrl && (
-            <Image
-              src={l.fotoUrl}
-              alt={`Foto ${l.nama}`}
-              width={800}
-              height={300}
-              loading="lazy"
-              className="mb-3 h-44 w-full rounded-2xl object-cover"
-            />
+            <a
+              href={l.fotoUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="tf-foto-full mb-3"
+              aria-label={`Lihat foto ${l.nama} ukuran penuh`}
+            >
+              <Image
+                src={l.fotoUrl}
+                alt={`Foto ${l.nama}`}
+                width={800}
+                height={600}
+                loading="lazy"
+              />
+            </a>
           )}
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
@@ -470,7 +477,7 @@ export default function KebunManager({
                   <li key={bt.id}>
                     <Link
                       href={`/batch/${bt.id}`}
-                      className="flex items-center justify-between gap-2 rounded-xl bg-[#f0fdf4] px-3 py-2"
+                      className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-[#f0fdf4] px-3 py-2"
                     >
                       <span className="min-w-0">
                         <span className="block truncate text-sm font-semibold text-green-900">
@@ -503,11 +510,11 @@ export default function KebunManager({
               <ul className="mt-2 flex flex-col gap-2">
                 {l.subBlok.map((b) =>
                   editBlokId === b.id ? (
-                    <li key={b.id} className="flex gap-2">
+                    <li key={b.id} className="flex flex-wrap gap-2">
                       <input
                         value={editBlokNama}
                         onChange={(e) => setEditBlokNama(e.target.value)}
-                        className="tf-input"
+                        className="tf-input min-w-0 flex-1"
                       />
                       <button
                         onClick={() => simpanEditBlok(l.id, b.id)}
@@ -526,7 +533,7 @@ export default function KebunManager({
                   ) : (
                     <li
                       key={b.id}
-                      className="flex items-center justify-between gap-2 rounded-xl bg-[#f0fdf4] px-3 py-2"
+                      className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-[#f0fdf4] px-3 py-2"
                     >
                       <span className="flex min-w-0 items-center gap-2">
                         {b.fotoUrl && (
@@ -593,7 +600,7 @@ export default function KebunManager({
                   setBlokBaru((s) => ({ ...s, [l.id]: e.target.value }))
                 }
                 placeholder="Nama sub-blok baru, cth: Blok C"
-                className="tf-input"
+                className="tf-input min-w-0 flex-1"
               />
               <button
                 onClick={() => tambahBlok(l.id)}

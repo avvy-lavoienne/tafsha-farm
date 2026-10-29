@@ -150,7 +150,7 @@ export default function NotifButton() {
               <button
                 onClick={matikanPush}
                 disabled={sibuk}
-                className="mt-2 tf-btn-kecil"
+                className="mt-2 tf-btn-kecil tf-btn-abu"
               >
                 {sibuk ? (<><MiniSpin /> Mematikan...</>) : ("Matikan")}
               </button>

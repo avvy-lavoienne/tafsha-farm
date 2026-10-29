@@ -72,7 +72,7 @@ export default function HarvestForm({ batchId }: { batchId: string }) {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-3">
         <input
           type="number"
           min={0}
@@ -100,7 +100,7 @@ export default function HarvestForm({ batchId }: { batchId: string }) {
           className="tf-input"
         />
       </div>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-2">
         <select
           value={kualitas}
           onChange={(e) => setKualitas(e.target.value)}

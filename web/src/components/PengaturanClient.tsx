@@ -224,7 +224,7 @@ export default function PengaturanClient({
           <button
             onClick={unduhPanen}
             disabled={aksi !== null}
-            className="tf-btn-kecil"
+            className="tf-btn-kecil tf-btn-abu"
           >
             {aksi === "panen" ? (
               <><MiniSpin /> Mengunduh...</>
@@ -235,7 +235,7 @@ export default function PengaturanClient({
           <button
             onClick={unduhLogbook}
             disabled={aksi !== null}
-            className="tf-btn-kecil"
+            className="tf-btn-kecil tf-btn-abu"
           >
             {aksi === "logbook" ? (
               <><MiniSpin /> Mengunduh...</>

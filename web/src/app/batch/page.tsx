@@ -192,11 +192,11 @@ export default async function BatchPage({
               href={`/batch/${b.id}`}
               className="tf-card"
             >
-              <div className="flex items-center justify-between gap-2">
-                <p className="font-bold text-green-900">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="min-w-0 break-words font-bold text-green-900">
                   {ikonKomoditas(komoditas)} {komoditas} × {b.jumlah}
                 </p>
-                <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
+                <span className="shrink-0 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
                   {LABEL_STATUS[b.status] ?? b.status}
                 </span>
               </div>

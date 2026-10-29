@@ -32,14 +32,21 @@ export default async function RiwayatFoto({
         Foto terbaru jadi sampul. Semua foto otomatis masuk galeri landing.
       </p>
       {fotoUtama && (
-        <Image
-          src={fotoUtama}
-          alt="Foto terbaru"
-          width={800}
-          height={400}
-          loading="lazy"
-          className="mt-2 h-52 w-full rounded-2xl object-cover"
-        />
+        <a
+          href={fotoUtama}
+          target="_blank"
+          rel="noreferrer"
+          className="tf-foto-full mt-2"
+          aria-label="Lihat foto terbaru ukuran penuh"
+        >
+          <Image
+            src={fotoUtama}
+            alt="Foto terbaru"
+            width={800}
+            height={600}
+            loading="lazy"
+          />
+        </a>
       )}
       <div className="mt-2">
         <UnggahFoto subjek={subjek} id={id} label="Tambah foto progres" />

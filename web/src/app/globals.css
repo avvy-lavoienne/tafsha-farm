@@ -124,8 +124,12 @@ a.tf-card:hover {
 
 /* Chip filter kecil. */
 .tf-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   border-radius: 999px;
-  padding: 0.5rem 1rem;
+  padding: 0.625rem 1rem;
   font-size: 0.875rem;
   font-weight: 600;
   border: 1px solid var(--tf-green);
@@ -176,8 +180,9 @@ a.tf-card:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 44px;
   border-radius: 0.75rem;
-  padding: 0.375rem 0.75rem;
+  padding: 0.625rem 0.875rem;
   font-size: 0.875rem;
   font-weight: 600;
 }
@@ -222,6 +227,7 @@ a.tf-card:hover {
 .tf-btn-kecil:disabled {
   opacity: 0.5;
 }
+}
 
 /* Spinner logo — berputar halus, hormati prefers-reduced-motion. */
 @keyframes tf-putar {
@@ -234,9 +240,44 @@ a.tf-card:hover {
   animation: tf-putar 1.2s linear infinite;
 }
 
+/* Sheet menu FAB — naik halus, hormati reduced-motion. */
+@keyframes tf-sheet-naik {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.tf-fab-sheet {
+  animation: tf-sheet-naik 0.22s ease-out;
+}
+
+/* Foto utama — tampil full tanpa crop (contain di atas backdrop gelap). */
+.tf-foto-full {
+  display: block;
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: #18181b;
+}
+
+.tf-foto-full img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tf-spin {
     animation: none;
   }
-}
+
+  .tf-fab-sheet {
+    animation: none;
+  }
 }

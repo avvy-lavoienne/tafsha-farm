@@ -178,7 +178,7 @@ export default function BatchForm({
         </select>
       </label>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
         <label className="text-sm font-medium">
           Lokasi
           <select
@@ -213,7 +213,7 @@ export default function BatchForm({
         </label>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
         <label className="text-sm font-medium">
           Media
           <select
@@ -240,7 +240,7 @@ export default function BatchForm({
         </label>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
         <label className="text-sm font-medium">
           Tgl tanam
           <input

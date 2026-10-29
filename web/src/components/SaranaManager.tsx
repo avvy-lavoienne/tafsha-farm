@@ -397,7 +397,7 @@ export default function SaranaManager({
       </section>
 
       <section className="tf-card">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="font-bold text-green-900">🧪 Benih & pupuk ({daftar.length})</h2>
           <button onClick={() => setTambahBuka((v) => !v)} className="tf-btn">
             {tambahBuka ? "Tutup" : "+ Sarana"}
@@ -427,7 +427,7 @@ export default function SaranaManager({
                 </select>
               </label>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-3">
               <label className="text-sm font-medium">
                 Stok awal
                 <input
@@ -483,13 +483,13 @@ export default function SaranaManager({
             Belum ada sarana. Tambahkan benih/pupuk pertama lewat tombol + Sarana.
           </p>
         ) : (
-          <div className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-2">
+          <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
             {daftar.map((s) => {
               const habis = Number(s.stok) <= Number(s.min_stok);
               const f = gerakForm[s.id] ?? { arah: "beli", jumlah: "" };
               return (
                 <div key={s.id} className="tf-item">
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
                     <div className="min-w-0">
                       <p className="font-bold text-green-900">{s.nama}</p>
                       <p className="text-xs text-zinc-600">
@@ -510,7 +510,7 @@ export default function SaranaManager({
                         onChange={(e) => setEdit((m) => ({ ...m, nama: e.target.value }))}
                         className="tf-input"
                       />
-                      <div className="grid grid-cols-3 gap-2">
+                      <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-3">
                         <input
                           value={edit.kategori}
                           onChange={(e) => setEdit((m) => ({ ...m, kategori: e.target.value }))}
@@ -577,7 +577,7 @@ export default function SaranaManager({
                         setGerakForm((m) => ({ ...m, [s.id]: { ...f, jumlah: e.target.value } }))
                       }
                       placeholder="Jumlah"
-                      className="tf-input"
+                      className="tf-input min-w-0 flex-1"
                     />
                     <button onClick={() => catatGerak(s)} disabled={sibuk} className="tf-btn shrink-0">
                       {sibuk ? <MiniSpin /> : "Catat"}

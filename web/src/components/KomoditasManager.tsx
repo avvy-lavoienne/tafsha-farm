@@ -231,7 +231,7 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
   return (
     <div className="flex flex-col gap-4">
       <section className="tf-card">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h1 className="text-xl font-bold text-green-900">Komoditas</h1>
             <p className="mt-1 text-sm text-zinc-600">
@@ -339,10 +339,10 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
         </section>
       )}
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {daftar.map((k) => (
           <section key={k.id} className="tf-card">
-            <div className="flex items-start justify-between gap-2">
+            <div className="flex flex-wrap items-start justify-between gap-2">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="font-bold text-green-900">
@@ -371,7 +371,7 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
 
             {editId === k.id ? (
               <div className="tf-item mt-3 flex flex-col gap-2">
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-2">
                   <input
                     value={edit.nama}
                     onChange={(e) =>
@@ -393,7 +393,7 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
                     ))}
                   </select>
                 </div>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-3">
                   <input
                     type="number"
                     min={0}
