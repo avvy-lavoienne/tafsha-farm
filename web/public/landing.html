@@ -15,8 +15,7 @@
     h1,h2,h3{font-family:"Plus Jakarta Sans",sans-serif;letter-spacing:-.045em}
     button,a,summary{touch-action:manipulation}
     :focus-visible{outline:3px solid #f59e0b;outline-offset:4px}
-    .site-shell{width:100%;margin:auto;transition:max-width .35s,box-shadow .35s}
-    .site-shell.preview-mobile{max-width:390px;box-shadow:0 18px 80px #143a2050;min-height:100%;position:relative}
+    .site-shell{width:100%;margin:auto}
     .wrap{width:min(100% - 40px,1160px);margin-inline:auto}
     .pill{border-radius:999px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:12px 23px;font-weight:700;transition:transform .2s,filter .2s}
     .pill:hover{transform:translateY(-2px);filter:brightness(1.07)}
@@ -29,19 +28,21 @@
     .modal-layer{position:fixed;inset:0;z-index:100;background:#092715ae;display:flex;align-items:center;justify-content:center;padding:20px}
     .modal-layer[hidden],.detail-panel[hidden]{display:none}
     .modal-box{width:min(100%,500px);max-height:calc(90 * min(var(--vh, 1vh), 1vh));overflow:auto}
-    .bottom-nav{display:none}
-    .preview-mobile .desktop-links{display:none}
-    .preview-mobile .hero-grid,.preview-mobile .feature-grid,.preview-mobile .crop-grid,.preview-mobile .stats-grid,.preview-mobile .gallery-grid,.preview-mobile .location-grid,.preview-mobile .harvest-grid,.preview-mobile .footer-grid{grid-template-columns:1fr}
-    .preview-mobile .md\:grid-cols-2,.preview-mobile .sm\:grid-cols-2,.preview-mobile .lg\:grid-cols-3,.preview-mobile .lg\:grid-cols-4,.preview-mobile .md\:grid-cols-3{grid-template-columns:1fr!important}
-    .preview-mobile .hero-title{font-size:32px}.preview-mobile .hero-actions{flex-direction:column}.preview-mobile .hero-actions>*{width:100%}
-    .preview-mobile .section-pad{padding:64px 0}.preview-mobile .bottom-nav{display:grid}
-    .preview-mobile .site-main{padding-bottom:76px}
+    .fab-nav{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:90}
+    .fab-btn{width:56px;height:56px;min-width:56px;min-height:56px;border-radius:50%;background:#166534;color:#fff;border:none;font-size:24px;line-height:1;display:grid;place-items:center;box-shadow:0 10px 30px #1a482a55;cursor:pointer}
+    .fab-sheet{position:fixed;inset:0;z-index:95}
+    .fab-sheet[hidden]{display:none}
+    .fab-scrim{position:absolute;inset:0;background:#092715ae;border:0;padding:0;cursor:pointer}
+    .fab-panel{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:24px 24px 0 0;padding:12px 16px calc(16px + env(safe-area-inset-bottom));display:grid;gap:6px;max-height:80vh;max-height:80dvh;overflow:auto;animation:fab-naik .22s ease-out}
+    @keyframes fab-naik{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+    .fab-link{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;color:var(--ink);text-decoration:none;font-weight:700;font-size:15px;min-height:52px;background:none;border:0;width:100%;text-align:left;cursor:pointer;font-family:inherit}
+    .fab-link:hover{background:#f0fdf4}
+    .fab-cta{background:#166534;color:#fff!important;justify-content:center}
     @media(max-width:700px){
-      .desktop-links{display:none}.hero-grid,.feature-grid,.crop-grid,.stats-grid,.gallery-grid,.location-grid,.harvest-grid,.footer-grid,.md\:grid-cols-2,.md\:grid-cols-3,.sm\:grid-cols-2{grid-template-columns:1fr!important}
-      #preview-toggle{display:none}
+.hero-grid,.feature-grid,.crop-grid,.stats-grid,.gallery-grid,.location-grid,.harvest-grid,.footer-grid,.md\:grid-cols-2,.md\:grid-cols-3,.sm\:grid-cols-2{grid-template-columns:1fr!important}
       .modal-close{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
       .hero-title{font-size:32px!important}.hero-actions{flex-direction:column}.hero-actions>*{width:100%}
-      .section-pad{padding:64px 0}.bottom-nav{display:grid}.site-main{padding-bottom:76px}
+      .section-pad{padding:64px 0}.site-main{padding-bottom:76px}
       .wrap{width:min(100% - 32px,1160px)}
     }
     .skip-link{position:absolute;left:12px;top:-64px;z-index:200;background:#166534;color:#fff!important;padding:12px 20px;border-radius:999px;font-weight:700;font-size:14px;transition:top .2s}
@@ -59,10 +60,7 @@
   <div id="site-shell" class="site-shell w-full">
    <header data-template-id="site-header" class="canva-header sticky top-0 z-40 border-b border-green-900/10 bg-[#fffbeb]/95 backdrop-blur" style="background: rgb(255, 251, 235);">
     <nav class="wrap flex min-h-[76px] items-center justify-between gap-4" aria-label="Navigasi utama"><a href="#beranda" class="flex items-center gap-2 font-extrabold text-[#166534]" aria-label="Tafsha Farm, kembali ke Beranda"><span class="grid h-10 w-10 place-items-center rounded-2xl bg-[#166534] text-white"><i data-lucide="sprout" class="h-6 w-6"></i></span><span data-template-id="brand-name" class="canva-text" style="color: rgb(22, 101, 52); font-weight: 800; font-style: normal; font-size: 16px;">Tafsha Farm</span></a>
-     <div class="desktop-links flex items-center gap-6 text-sm font-semibold"><a data-template-id="nav-home" class="canva-link hover:text-green-700" href="#beranda" style="font-weight: 400; font-style: normal; font-size: 16px;">Beranda</a> <a data-template-id="nav-features" class="canva-link hover:text-green-700" href="#fitur" style="font-weight: 400; font-style: normal; font-size: 16px;">Fitur</a> <a data-template-id="nav-crops" class="canva-link hover:text-green-700" href="#komoditas" style="font-weight: 400; font-style: normal; font-size: 16px;">Komoditas</a> <a data-template-id="nav-gallery" class="canva-link hover:text-green-700" href="#galeri" style="font-weight: 400; font-style: normal; font-size: 16px;">Galeri</a> <a data-template-id="nav-faq" class="canva-link hover:text-green-700" href="#faq" style="font-weight: 400; font-style: normal; font-size: 16px;">FAQ</a>
-     </div>
-     <div class="flex items-center gap-2"><button id="preview-toggle" data-template-id="preview-button" class="canva-button rounded-full border border-green-800/20 px-3 py-2 text-xs font-bold text-[#166534] hover:bg-green-50" type="button" aria-pressed="false" style="color: rgb(22, 101, 52);font-size:12px;line-height:1.5">Lihat versi mobile</button> <button data-open-install="" data-template-id="nav-install" class="canva-button hidden rounded-full bg-[#166534] px-5 py-3 text-sm font-bold text-white sm:inline-flex" type="button" style="background: rgb(22, 101, 52); color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">Install Aplikasi</button> <a href="/masuk" class="canva-button rounded-full border border-[#166534] px-5 py-3 text-sm font-bold text-[#166534]" style="font-weight: 400; font-style: normal; font-size: 16px;min-height:48px;display:inline-flex;align-items:center">Masuk aplikasi</a>
-     </div>
+     <a href="/masuk" class="canva-button rounded-full border border-[#166534] px-5 py-3 text-sm font-bold text-[#166534]" style="font-weight: 400; font-style: normal; font-size: 16px;min-height:48px;display:inline-flex;align-items:center">Masuk aplikasi</a>
     </nav>
    </header>
    <main class="site-main" id="konten">
@@ -374,8 +372,22 @@
      <p data-template-id="footer-disclaimer" class="canva-text text-sm leading-6 text-green-100 md:text-right" style="color: rgb(220, 252, 231); font-weight: 400; font-style: normal; font-size: 16px;">Prototipe showcase. Foto, statistik, dan hasil panen adalah ilustrasi. Pemasangan serta penggunaan offline memerlukan versi PWA yang dipublikasikan.</p>
     </div>
    </footer>
-   <nav class="bottom-nav fixed bottom-0 left-0 right-0 z-40 grid-cols-2 border-t border-green-100 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-lg backdrop-blur" aria-label="Navigasi bawah"><a href="#beranda" class="flex min-h-[56px] flex-col items-center justify-center gap-1 text-[#166534]"><i data-lucide="house" class="h-5 w-5"></i><span class="text-[12px] font-semibold">Beranda</span></a> <a href="/masuk" class="flex min-h-[56px] flex-col items-center justify-center gap-1 bg-[#166534] font-bold text-white"><i data-lucide="log-in" class="h-5 w-5"></i><span class="text-[12px] font-semibold">Masuk aplikasi</span></a>
-   </nav>
+   <div class="fab-nav"><button id="fab-btn" class="fab-btn" type="button" aria-expanded="false" aria-controls="fab-sheet" aria-label="Buka menu navigasi">☰</button></div>
+   <div id="fab-sheet" class="fab-sheet" hidden="">
+    <button class="fab-scrim" type="button" aria-label="Tutup menu navigasi" tabindex="-1"></button>
+    <div class="fab-panel" role="dialog" aria-modal="true" aria-label="Menu navigasi">
+     <a class="fab-link" href="#beranda">🏠 Beranda</a>
+     <a class="fab-link" href="#fitur">✨ Fitur</a>
+     <a class="fab-link" href="#cara-kerja">🪜 Cara kerja</a>
+     <a class="fab-link" href="#komoditas">🌿 Komoditas</a>
+     <a class="fab-link" href="#statistik">📊 Statistik</a>
+     <a class="fab-link" href="#galeri">🖼️ Galeri</a>
+     <a class="fab-link" href="#panen">🧺 Panen</a>
+     <a class="fab-link" href="#faq">❓ FAQ</a>
+     <a class="fab-link" href="#install">⬇️ Install</a>
+     <a class="fab-link fab-cta" href="/masuk">🔑 Masuk aplikasi</a>
+    </div>
+   </div>
   </div>
   <div id="install-modal" class="modal-layer" hidden="" role="dialog" aria-modal="true" aria-labelledby="install-title">
    <div class="modal-box rounded-3xl bg-white p-5 shadow-2xl sm:p-7" tabindex="-1">
@@ -435,13 +447,45 @@
    </div>
   </div>
   <script>
-  const shell=document.getElementById('site-shell');
-  const preview=document.getElementById('preview-toggle');
-  preview.addEventListener('click',()=>{
-    const enabled=shell.classList.toggle('preview-mobile');
-    preview.setAttribute('aria-pressed',String(enabled));
-    preview.textContent=enabled?'Kembali ke desktop':'Lihat versi mobile';
-  });
+  (function(){
+   var fab=document.getElementById('fab-btn');
+   var sheet=document.getElementById('fab-sheet');
+   if(!fab||!sheet)return;
+   var panel=sheet.querySelector('.fab-panel');
+   var balik=null;
+   function buka(){
+     balik=document.activeElement;
+     sheet.hidden=false;
+     fab.setAttribute('aria-expanded','true');
+     fab.textContent='✕';
+     fab.setAttribute('aria-label','Tutup menu navigasi');
+     document.body.style.overflow='hidden';
+     var awal=sheet.querySelector('.fab-link');
+     if(awal)awal.focus();
+   }
+   function tutup(){
+     sheet.hidden=true;
+     fab.setAttribute('aria-expanded','false');
+     fab.textContent='☰';
+     fab.setAttribute('aria-label','Buka menu navigasi');
+     document.body.style.overflow='';
+     if(balik&&balik.focus)balik.focus();
+   }
+   fab.addEventListener('click',function(){sheet.hidden?buka():tutup()});
+   sheet.querySelector('.fab-scrim').addEventListener('click',tutup);
+   sheet.querySelectorAll('.fab-link').forEach(function(a){a.addEventListener('click',tutup)});
+   document.addEventListener('keydown',function(e){
+     if(sheet.hidden)return;
+     if(e.key==='Escape'){tutup();return}
+     if(e.key==='Tab'&&panel){
+       var f=[...panel.querySelectorAll('.fab-link')].filter(function(el){return el.offsetParent!==null});
+       if(!f.length)return;
+       var awal=f[0],akhir=f[f.length-1];
+       if(e.shiftKey&&document.activeElement===awal){e.preventDefault();akhir.focus()}
+       else if(!e.shiftKey&&document.activeElement===akhir){e.preventDefault();awal.focus()}
+     }
+   });
+  })();
   let deferredInstall=null;
   window.addEventListener('beforeinstallprompt',event=>{
     event.preventDefault();

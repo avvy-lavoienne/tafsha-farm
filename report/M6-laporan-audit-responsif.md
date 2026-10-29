@@ -59,8 +59,8 @@ Temuan yang tadinya kelewat:
 |---|---|---|
 | L1 | Hero `clamp(42px…)` + `gap-12/py-16` — judul raksasa & sempit di HP 360px | Judul 32px di HP → `clamp` mulai `sm`; tombol hero vertikal penuh di HP; `gap-8/py-12` |
 | L2 | Aturan mobile CSS hanya kenal grid lama — `sm:grid-cols-2` / `lg:grid-cols-3/4` tetap multi-kolom di HP & pad portrait | Selector mobile + preview mencakup semua varian Tailwind |
-| L3 | Bottom nav 5 anchor section (Kebun/Tanam/Tugas/Panen) — membingungkan tamu (bukan menu aplikasi login) | 2 tombol: "Beranda" + "Masuk aplikasi" (CTA hijau penuh) |
-| L4 | Tombol header "Lihat versi mobile" muncul di HP + "Masuk aplikasi" < 44px | Preview hanya desktop (`display:none` ≤700px); link Masuk 48px |
+| L3 | Bottom nav 2 tombol masih overlap di HP sempit + hanya 2 tautan | Menu bulat ☰ + sheet 10 tautan semua section + Masuk (Escape/scrim tutup, fokus kembali, trap Tab, aria-modal); header atas tinggal logo + Masuk |
+| L4 | Tombol header "Lihat versi mobile" tak terpakai di HP + "Masuk aplikasi" < 44px | Fitur preview dihapus (header bersih); link Masuk 48px |
 | L5 | Belum ada skip-link; target `#konten` belum ada | Skip-link "Lewati ke konten utama" + `id="konten"`, muncul saat fokus |
 | L6 | Tabel panen scroll horizontal tak terjangkau keyboard | Pembungkus `tabindex="0"` + `table-scroll` (scroll halus + fokus terlihat) |
 | L7 | Modal p-7 sempit di HP; tombol ✕ kecil | Modal `p-5→sm:p-7`; `.modal-close` 44px |
@@ -70,7 +70,7 @@ Temuan yang tadinya kelewat:
 
 Verifikasi: `npm run build` sukses (16 route) setelah semua edit landing.
 
-Cara uji: buka `/landing.html` di HP 360px → tidak ada horizontal scroll; grid 1 kolom; bottom nav hanya 2 tombol; Tab dari atas → skip-link muncul → Enter lompat ke konten; tabel bisa di-scroll via keyboard; pad portrait → grid 2 kolom.
+Cara uji: buka `/landing.html` di HP 360px → tidak ada horizontal scroll; grid 1 kolom; FAB ☰ kanan-bawah → sheet 10 tautan (9 section + Masuk aplikasi); Escape/scrim menutup; pad portrait → grid 2 kolom.
 
 ---
 
