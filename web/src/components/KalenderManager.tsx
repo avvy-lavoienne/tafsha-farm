@@ -46,10 +46,8 @@ export default function KalenderManager({
   tanpaUmur: number;
 }) {
   const router = useRouter();
-  const [pilihan, setPilihan] = useState(bulan);
-  const [tglPilih, setTglPilih] = useState(
-    bulan === hariIni.slice(0, 7) ? hariIni : `${bulan}-01`,
-  );
+  const [tglPilih, setTglPilih] = useState<string | null>(null);
+  const tglAktif = tglPilih ?? (bulan === hariIni.slice(0, 7) ? hariIni : `${bulan}-01`);
 
   function qs(patch: Record<string, string | undefined>): string {
     const s = new URLSearchParams();
@@ -77,7 +75,7 @@ export default function KalenderManager({
   ];
   while (sel.length % 7 !== 0) sel.push(null);
 
-  const daftar = perTanggal[tglPilih] ?? [];
+  const daftar = perTanggal[tglAktif] ?? [];
 
   return (
     <div className="flex flex-col gap-4">
@@ -116,20 +114,20 @@ export default function KalenderManager({
           </button>
           <input
             type="month"
-            value={pilihan}
-            onChange={(e) => setPilihan(e.target.value)}
+            value={bulan}
+            onChange={(e) => {
+              const v = e.target.value;
+              if (/^\d{4}-\d{2}$/.test(v)) router.push(qs({ bulan: v }));
+            }}
             className="tf-input max-w-44"
             aria-label="Pilih bulan"
           />
-          <button
-            onClick={() => {
-              if (/^\d{4}-\d{2}$/.test(pilihan))
-                router.push(qs({ bulan: pilihan }));
-            }}
+          <Link
+            href={qs({ bulan: hariIni.slice(0, 7) })}
             className="tf-btn-kecil tf-btn-abu"
           >
-            Tampilkan
-          </button>
+            Bulan ini
+          </Link>
         </div>
         {daftarLokasi.length > 1 && (
           <div className="mt-3 flex flex-wrap gap-2">
@@ -200,7 +198,7 @@ export default function KalenderManager({
           {sel.map((tgl, i) => {
             if (!tgl) return <span key={`k-${i}`} />;
             const ev = perTanggal[tgl] ?? [];
-            const aktif = tgl === tglPilih;
+            const aktif = tgl === tglAktif;
             const ini = tgl === hariIni;
             const labelHari = Number(tgl.slice(8, 10));
             const ringkas = ev.length === 0
@@ -251,7 +249,7 @@ export default function KalenderManager({
 
       <section className="tf-card" aria-live="polite">
         <h2 className="font-bold text-green-900">
-          📌 {formatTanggal(tglPilih)} ({daftar.length} kejadian)
+          📌 {formatTanggal(tglAktif)} ({daftar.length} kejadian)
         </h2>
         {daftar.length === 0 ? (
           <p className="mt-1 text-sm text-zinc-500">

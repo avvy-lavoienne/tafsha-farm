@@ -43,6 +43,7 @@
 - [x] **Dashboard:** `/kalender` tampil grid + filter + detail hari + badge. (statis: kode + build; klik butuh login)
 - [x] **Landing:** `#kalender` + statistik komunitas anonim, tanpa bocor data user. (statis: endpoint agregat + build)
 - [x] **Nav:** kalender ada di bar desktop, sheet mobile, MenuGrid. (statis: kode)
+- [x] **Pindah bulan:** input month langsung navigasi + tombol "Bulan ini"; tanggal detail ikut reset per bulan. (statis: kode + build; klik butuh login)
 - [x] **Verifikasi:** tsc bersih, lint 0/0, build 18 route + `ƒ Proxy (Middleware)`.
 
 ---
