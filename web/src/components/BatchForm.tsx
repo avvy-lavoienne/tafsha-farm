@@ -371,7 +371,7 @@ export default function BatchForm({
           />
         </label>
         <label className="text-sm font-medium">
-          Tgl semai (opsional)
+          Tanggal semai (opsional)
           <input
             type="date"
             value={tglSemai}
@@ -380,6 +380,11 @@ export default function BatchForm({
           />
         </label>
       </div>
+      <p className="text-xs leading-5 text-zinc-500">
+        Semai sendiri: isi tanggal semai sebenarnya. Beli bibit: isi perkiraan
+        tanggal semainya (mis. tanggal tanam dikurangi umur bibit saat dibeli).
+        Kosongkan bila tanam langsung tanpa semai.
+      </p>
 
       <label className="text-sm font-medium">
         Catatan (opsional)
