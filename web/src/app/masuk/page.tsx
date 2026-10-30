@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const configured = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 
 export default function MasukPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pesan, setPesan] = useState<string | null>(null);
@@ -38,10 +36,12 @@ export default function MasukPage() {
         );
         return;
       }
-      // Penting: refresh agar cache prefetch (bottom nav ikut prefetch
-      // saat masih tamu) tidak menyajikan halaman /masuk yang basi.
-      router.push("/");
-      router.refresh();
+      // Penting: navigasi keras agar cookie sesi pasti terbawa ke server.
+      // router.push + refresh kadang masih menyajikan cache prefetch
+      // (bottom nav ikut prefetch saat masih tamu) → dikira sesi hilang
+      // dan mental balik ke /masuk tiap pindah menu.
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+      window.location.assign("/");
     } catch (e) {
       setPesan(e instanceof Error ? e.message : "Gagal. Coba lagi.");
     } finally {

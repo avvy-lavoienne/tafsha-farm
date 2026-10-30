@@ -1,11 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LogoutButton() {
-  const router = useRouter();
   const [sibuk, setSibuk] = useState(false);
 
   async function keluar() {
@@ -13,9 +11,9 @@ export default function LogoutButton() {
     setSibuk(true);
     const supabase = createClient();
     await supabase.auth.signOut();
-    // Setelah logout langsung ke landing promosi, bukan form login.
-    router.push("/landing.html");
-    router.refresh();
+    // Navigasi keras supaya cache dashboard tidak disajikan lagi.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    window.location.assign("/landing.html");
   }
 
   return (
