@@ -9,7 +9,7 @@ export default async function BibitPage() {
   const { data: batch, error } = await supabase
     .from("plant_batches")
     .select(
-      "id,jumlah,tgl_tanam,status,tujuan,stok_siap,harga_pcs,commodities(nama,harga_pcs,umur_siap_min,umur_siap_maks,umur_panen_min),locations(nama)",
+      "id,jumlah,tgl_semai,tgl_tanam,status,tujuan,stok_siap,harga_pcs,commodities(nama,harga_pcs,umur_siap_min,umur_siap_maks,umur_panen_min),locations(nama)",
     )
     .eq("tujuan", "jual")
     .not("status", "in", "(selesai,gagal)")
@@ -112,8 +112,13 @@ export default async function BibitPage() {
             const nama = kom?.nama ?? "?";
             const harga = (b.harga_pcs ?? kom?.harga_pcs ?? null) as number | null;
             const hst = hitungHST(b.tgl_tanam);
-            const siapMin = kom?.umur_siap_min ?? kom?.umur_panen_min ?? null;
-            const siapJual = siapMin != null && hst >= siapMin;
+            const umurSemai = b.tgl_semai ? hitungHST(b.tgl_semai) : null;
+            const siapMin = kom?.umur_siap_min ?? null;
+            // Kesiapan bibit dihitung sejak semai; tanpa umur siap, pakai umur panen dari tanam.
+            const siapJual =
+              siapMin != null
+                ? (umurSemai ?? hst) >= siapMin
+                : kom?.umur_panen_min != null && hst >= kom.umur_panen_min;
             return (
               <Link key={b.id} href={`/batch/${b.id}`} className="tf-card">
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -126,6 +131,7 @@ export default async function BibitPage() {
                 </div>
                 <p className="mt-1 text-xs text-zinc-600">
                   {satuLok(b.locations)} • HST {hst}
+                  {umurSemai != null ? ` • semai ${umurSemai} hr` : ""}
                   {harga ? ` • Rp ${Number(harga).toLocaleString("id-ID")}/pcs` : ""}
                   {siapJual && (
                     <span className="ml-2 font-semibold text-green-700">

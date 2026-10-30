@@ -369,7 +369,7 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
                   />
                 </label>
                 <label className="text-sm font-medium">
-                  Siap min (HST)
+                  Siap min (hari semai)
                   <input
                     type="number"
                     min={0}
@@ -380,7 +380,7 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
                   />
                 </label>
                 <label className="text-sm font-medium">
-                  Siap maks (HST)
+                  Siap maks (hari semai)
                   <input
                     type="number"
                     min={0}
@@ -447,7 +447,7 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
                     🌱 Bibit
                     {k.harga_pcs != null ? ` • Rp ${Number(k.harga_pcs).toLocaleString("id-ID")}/pcs` : " • harga belum diisi"}
                     {(k.umur_siap_min != null || k.umur_siap_maks != null) &&
-                      ` • siap HST ${k.umur_siap_min ?? "-"}–${k.umur_siap_maks ?? "-"}`}
+                      ` • siap semai ${k.umur_siap_min ?? "-"}–${k.umur_siap_maks ?? "-"} hari`}
                   </p>
                 )}
                 {k.catatan && (
@@ -548,7 +548,7 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
                       onChange={(e) =>
                         setEdit((s) => ({ ...s, siapMin: e.target.value }))
                       }
-                      placeholder="Siap min HST"
+                      placeholder="Siap min (hari semai)"
                       className="tf-input"
                     />
                     <input
@@ -558,7 +558,7 @@ export default function KomoditasManager({ awal }: { awal: KomoditasItem[] }) {
                       onChange={(e) =>
                         setEdit((s) => ({ ...s, siapMaks: e.target.value }))
                       }
-                      placeholder="Siap maks HST"
+                      placeholder="Siap maks (hari semai)"
                       className="tf-input"
                     />
                   </div>

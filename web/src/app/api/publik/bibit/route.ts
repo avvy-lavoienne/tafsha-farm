@@ -36,7 +36,7 @@ export async function GET() {
     const { data, error } = await admin
       .from("plant_batches")
       .select(
-        "jumlah,stok_siap,harga_pcs,tgl_tanam,status,tujuan,commodities(nama,harga_pcs,umur_siap_min,umur_siap_maks,umur_panen_min,umur_panen_maks)",
+        "jumlah,stok_siap,harga_pcs,tgl_semai,tgl_tanam,status,tujuan,commodities(nama,harga_pcs,umur_siap_min,umur_siap_maks,umur_panen_min,umur_panen_maks)",
       )
       .not("status", "in", "(selesai,gagal)")
       .limit(500);
@@ -46,6 +46,7 @@ export async function GET() {
       jumlah: number | null;
       stok_siap: number | null;
       harga_pcs: number | null;
+      tgl_semai: string | null;
       tgl_tanam: string;
       status: string | null;
       tujuan: string | null;
@@ -75,7 +76,10 @@ export async function GET() {
       tgl_tanam: string;
       siapMin: number | null;
       siapMaks: number | null;
+      umurAcuan: number | null;
+      dasarUmur: "semai" | "tanam";
       sudahSiap: boolean;
+      lewatUmur: boolean;
       estimasi: string | null;
       sisaHari: number | null;
     }[] = [];
@@ -91,19 +95,29 @@ export async function GET() {
           : kom?.harga_pcs != null
             ? Number(kom.harga_pcs)
             : null;
-      const umur = hst(b.tgl_tanam, hariIni);
-      // Batch jual pakai umur siap jual; batch kebun fallback ke umur panen
-      // supaya tetap punya perkiraan tanggal tersedia di landing.
-      const siapMin =
-        kom?.umur_siap_min ?? kom?.umur_panen_min ?? null;
-      const siapMaks =
-        kom?.umur_siap_maks ?? kom?.umur_panen_maks ?? null;
+      const umurTanam = hst(b.tgl_tanam, hariIni);
+      const umurSemai = b.tgl_semai
+        ? hst(b.tgl_semai, hariIni)
+        : umurTanam;
+      // Kesiapan bibit dihitung dari tanggal semai (umur_siap_min = hari
+      // sejak semai). Batch tanpa umur siap memakai umur panen dari tanam.
+      const pakaiSemai = kom?.umur_siap_min != null;
+      const siapMin = pakaiSemai
+        ? (kom?.umur_siap_min ?? null)
+        : (kom?.umur_panen_min ?? null);
+      const siapMaks = pakaiSemai
+        ? (kom?.umur_siap_maks ?? null)
+        : (kom?.umur_panen_maks ?? null);
+      const umurAcuan = pakaiSemai ? umurSemai : umurTanam;
+      const tanggalAcuan =
+        pakaiSemai && b.tgl_semai ? b.tgl_semai : b.tgl_tanam;
       const sudahSiap = siap > 0;
-      const lewatUmur = siapMin != null && umur >= siapMin;
+      const lewatUmur =
+        siapMin != null && umurAcuan >= siapMin && !sudahSiap;
       const estimasi =
-        siapMin != null && umur < siapMin
-          ? tambahHari(b.tgl_tanam, siapMin)
-          : lewatUmur && siap <= 0
+        siapMin != null && umurAcuan < siapMin
+          ? tambahHari(tanggalAcuan, siapMin)
+          : lewatUmur
             ? hariIni
             : null;
       batch.push({
@@ -111,16 +125,19 @@ export async function GET() {
         jumlah,
         siap,
         harga,
-        hst: umur,
+        hst: umurTanam,
         tgl_tanam: b.tgl_tanam,
         siapMin,
         siapMaks,
+        umurAcuan,
+        dasarUmur: pakaiSemai ? "semai" : "tanam",
         sudahSiap,
+        lewatUmur,
         estimasi,
         sisaHari:
           estimasi == null || siapMin == null
             ? null
-            : Math.max(0, siapMin - umur),
+            : Math.max(0, siapMin - umurAcuan),
       });
       // Katalog etalase hanya dari batch yang memang dijual.
       if (b.tujuan !== "jual") continue;
