@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -51,8 +52,18 @@ export default function MasukPage() {
 
   return (
     <div className="mx-auto max-w-sm tf-card">
-      <h1 className="text-xl font-bold text-green-900">Masuk Tafsha Farm</h1>
-      <p className="mt-1 text-sm text-zinc-600">
+      <Image
+        src="/brand/logo-icon.png"
+        alt="Tafsha Farm"
+        width={64}
+        height={64}
+        priority
+        className="mx-auto h-16 w-16 rounded-2xl object-cover"
+      />
+      <h1 className="mt-3 text-center text-xl font-bold text-green-900">
+        Masuk Tafsha Farm
+      </h1>
+      <p className="mt-1 text-center text-sm text-zinc-600">
         Satu akun untuk pemilik + anggota keluarga.
       </p>
       <label className="mt-4 block text-sm font-medium">

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -108,7 +109,14 @@ export default function BottomNav() {
             className="tf-fab-sheet absolute inset-x-0 bottom-0 rounded-t-3xl bg-white p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-2xl"
           >
             <div className="mb-3 flex items-center justify-between gap-2">
-              <p className="font-bold text-green-900">🌱 Menu Tafsha Farm</p>
+              <Image
+                src="/brand/logo-icon.png"
+                alt=""
+                width={28}
+                height={28}
+                className="h-7 w-7 rounded-lg object-cover"
+              />
+              <p className="flex-1 font-bold text-green-900">Menu Tafsha Farm</p>
               <button
                 ref={tutupRef}
                 type="button"

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 // Logo Tafsha Farm berputar — dipakai sebagai indikator loading.
 export default function LoadingLogo({ teks }: { teks?: string }) {
   return (
@@ -6,9 +8,14 @@ export default function LoadingLogo({ teks }: { teks?: string }) {
       role="status"
       aria-label={teks ?? "Memuat..."}
     >
-      <span className="tf-spin grid h-14 w-14 place-items-center rounded-2xl bg-[#166534] text-3xl text-white">
-        🌱
-      </span>
+      <Image
+        src="/brand/logo-icon.png"
+        alt=""
+        width={56}
+        height={56}
+        priority
+        className="tf-spin h-14 w-14 rounded-2xl object-cover"
+      />
       <p className="text-sm font-medium text-zinc-500">
         {teks ?? "Memuat..."}
       </p>
