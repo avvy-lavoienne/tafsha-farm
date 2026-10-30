@@ -4,6 +4,8 @@ import { hariIniISO } from "@/lib/tanggal";
 
 // Etalase bibit publik anonim untuk landing marketing:
 // stok siap per pcs + harga + umur batch (HST) + estimasi siap dipasarkan.
+// Semua batch aktif ikut dihitung estimasinya (termasuk batch kebun),
+// karena tujuan landing adalah transparansi kapan bibit tersedia.
 // Tanpa id/nama user/lokasi/batch. Cache 2 menit (stok jualan berubah cepat).
 export const revalidate = 120;
 
@@ -34,9 +36,8 @@ export async function GET() {
     const { data, error } = await admin
       .from("plant_batches")
       .select(
-        "jumlah,stok_siap,harga_pcs,tgl_tanam,status,commodities(nama,harga_pcs,umur_siap_min,umur_siap_maks)",
+        "jumlah,stok_siap,harga_pcs,tgl_tanam,status,tujuan,commodities(nama,harga_pcs,umur_siap_min,umur_siap_maks,umur_panen_min,umur_panen_maks)",
       )
-      .eq("tujuan", "jual")
       .not("status", "in", "(selesai,gagal)")
       .limit(500);
     if (error) return NextResponse.json({ kosong: true });
@@ -47,6 +48,7 @@ export async function GET() {
       harga_pcs: number | null;
       tgl_tanam: string;
       status: string | null;
+      tujuan: string | null;
       commodities: unknown;
     };
     type Kom = {
@@ -54,6 +56,8 @@ export async function GET() {
       harga_pcs?: number | null;
       umur_siap_min?: number | null;
       umur_siap_maks?: number | null;
+      umur_panen_min?: number | null;
+      umur_panen_maks?: number | null;
     };
     const satu = (v: unknown): Kom | null =>
       Array.isArray(v) ? ((v[0] as Kom) ?? null) : ((v as Kom) ?? null);
@@ -88,13 +92,20 @@ export async function GET() {
             ? Number(kom.harga_pcs)
             : null;
       const umur = hst(b.tgl_tanam, hariIni);
-      const siapMin = kom?.umur_siap_min ?? null;
-      const siapMaks = kom?.umur_siap_maks ?? null;
-      const sudahSiap = siapMin != null ? umur >= siapMin && siap > 0 : siap > 0;
+      // Batch jual pakai umur siap jual; batch kebun fallback ke umur panen
+      // supaya tetap punya perkiraan tanggal tersedia di landing.
+      const siapMin =
+        kom?.umur_siap_min ?? kom?.umur_panen_min ?? null;
+      const siapMaks =
+        kom?.umur_siap_maks ?? kom?.umur_panen_maks ?? null;
+      const sudahSiap = siap > 0;
+      const lewatUmur = siapMin != null && umur >= siapMin;
       const estimasi =
         siapMin != null && umur < siapMin
           ? tambahHari(b.tgl_tanam, siapMin)
-          : null;
+          : lewatUmur && siap <= 0
+            ? hariIni
+            : null;
       batch.push({
         nama,
         jumlah,
@@ -106,8 +117,13 @@ export async function GET() {
         siapMaks,
         sudahSiap,
         estimasi,
-        sisaHari: estimasi ? Math.max(0, siapMin! - umur) : null,
+        sisaHari:
+          estimasi == null || siapMin == null
+            ? null
+            : Math.max(0, siapMin - umur),
       });
+      // Katalog etalase hanya dari batch yang memang dijual.
+      if (b.tujuan !== "jual") continue;
       const s = perKom.get(nama) ?? { siap: 0, total: 0, harga: null, batch: 0 };
       s.siap += siap;
       s.total += jumlah;
@@ -124,7 +140,7 @@ export async function GET() {
       batch: s.batch,
     }));
     const totalSiap = katalog.reduce((a, k) => a + k.siap, 0);
-    // Estimasi terdekat: batch belum siap, urut sisa hari terkecil, max 6.
+    // Estimasi terdekat: batch belum punya stok siap, urut sisa hari terkecil, max 6.
     const estimasi = batch
       .filter((b) => !b.sudahSiap && b.estimasi)
       .sort((a, b) => (a.sisaHari ?? 99) - (b.sisaHari ?? 99))
