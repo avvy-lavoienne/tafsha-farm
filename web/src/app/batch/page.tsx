@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { LABEL_STATUS, formatTanggal, hitungHST } from "@/lib/tanggal";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
+import { badgeJual, statusJual } from "@/lib/jual";
 
 export default async function BatchPage({
   searchParams,
@@ -37,7 +38,7 @@ export default async function BatchPage({
     let q = supabase
       .from("plant_batches")
       .select(
-        "id,commodity_id,jumlah,tgl_semai,tgl_tanam,status,tujuan,stok_siap,harga_pcs,location_id,commodities(nama,umur_panen_min),locations(nama),sub_blocks(nama),media_types(nama)",
+        "id,commodity_id,jumlah,tgl_semai,tgl_tanam,status,tujuan,stok_siap,harga_pcs,location_id,commodities(nama,umur_panen_min,umur_panen_maks,umur_jual_min,umur_jual_maks),locations(nama),sub_blocks(nama),media_types(nama)",
       )
       .order("tgl_tanam", { ascending: false });
     if (filterStatus === "aktif") q = q.not("status", "in", "(selesai,gagal)");
@@ -63,11 +64,22 @@ export default async function BatchPage({
 
   const rows = await ambilBatch();
 
-  // Chip "Siap panen": HST >= umur_min (hitung di sini, reuse hitungHST).
+  // Chip "Siap panen": batch kebun pakai umur panen, batch jual pakai usia jual.
   const daftar = (rows ?? []).filter((b) => {
     if (!hanyaSiap) return true;
-    const umurMin = satu(b.commodities)?.umur_panen_min;
-    return umurMin != null && hitungHST(b.tgl_tanam) >= umurMin;
+    const kom = komRow(b.commodities);
+    const hst = hitungHST(b.tgl_tanam);
+    if (((b as { tujuan?: string }).tujuan ?? "kebun") === "jual") {
+      const st = statusJual({
+        hst,
+        umurJualMin: kom?.umur_jual_min,
+        umurJualMaks: kom?.umur_jual_maks,
+        umurPanenMin: kom?.umur_panen_min,
+        umurPanenMaks: kom?.umur_panen_maks,
+      });
+      return st.fase === "siap" || st.fase === "lewat";
+    }
+    return kom?.umur_panen_min != null && hst >= kom.umur_panen_min;
   });
 
   function qs(patch: Record<string, string | undefined>): string {
@@ -214,12 +226,27 @@ export default async function BatchPage({
         </section>
       ) : (
         daftar.map((b) => {
-          const komoditas = satu(b.commodities)?.nama ?? "?";
-          const umurMin = satu(b.commodities)?.umur_panen_min;
+          const kom = komRow(b.commodities);
+          const komoditas = kom?.nama ?? "?";
           const hst = hitungHST(b.tgl_tanam);
-          const siap = umurMin != null && hst >= umurMin;
           const tujuan = (b as { tujuan?: string }).tujuan ?? "kebun";
+          const jual = tujuan === "jual";
           const stokSiap = Number((b as { stok_siap?: number }).stok_siap ?? 0);
+          // Batch jual dinilai dari usia jual (mendekati berbunga/berbuah),
+          // batch kebun dari umur panen.
+          const status = statusJual({
+            hst,
+            umurJualMin: jual ? kom?.umur_jual_min : kom?.umur_panen_min,
+            umurJualMaks: jual ? kom?.umur_jual_maks : kom?.umur_panen_maks,
+            umurPanenMin: kom?.umur_panen_min,
+            umurPanenMaks: kom?.umur_panen_maks,
+          });
+          const badge = jual
+            ? badgeJual(status)
+            : kom?.umur_panen_min != null && hst >= kom.umur_panen_min
+              ? "Siap panen"
+              : null;
+          const nadaHijau = jual ? status.fase === "siap" : badge != null;
           return (
             <Link
               key={b.id}
@@ -249,9 +276,13 @@ export default async function BatchPage({
               </p>
               <p className="mt-1 text-xs text-zinc-600">
                 HST {hst} • tanam {formatTanggal(b.tgl_tanam)}
-                {siap && (
-                  <span className="ml-2 font-semibold text-green-700">
-                    Siap panen!
+                {badge && (
+                  <span
+                    className={`ml-2 font-semibold ${
+                      nadaHijau ? "text-green-700" : "text-amber-700"
+                    }`}
+                  >
+                    {badge}
                   </span>
                 )}
               </p>
@@ -266,4 +297,19 @@ export default async function BatchPage({
 function satu<T>(v: T | T[] | null): T | null {
   if (Array.isArray(v)) return v[0] ?? null;
   return v;
+}
+
+type KomRow = {
+  nama: string | null;
+  umur_panen_min: number | null;
+  umur_panen_maks: number | null;
+  umur_jual_min: number | null;
+  umur_jual_maks: number | null;
+};
+
+// Relasi komoditas bisa berbentuk objek atau array; kolom usia jual mungkin
+// belum ada di DB lama, jadi dibaca longgar lalu diisi default di statusJual.
+function komRow(v: unknown): KomRow | null {
+  const x = Array.isArray(v) ? v[0] : v;
+  return (x as KomRow | null) ?? null;
 }

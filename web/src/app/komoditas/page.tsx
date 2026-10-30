@@ -8,7 +8,7 @@ export default async function KomoditasPage() {
   const baru = await supabase
     .from("commodities")
     .select(
-      "id,nama,tipe_panen,umur_panen_min,umur_panen_maks,siram_default,catatan,aktif,jual_bibit,harga_pcs,umur_siap_min,umur_siap_maks",
+      "id,nama,tipe_panen,umur_panen_min,umur_panen_maks,siram_default,catatan,aktif,jual_bibit,harga_pcs,umur_jual_min,umur_jual_maks",
     )
     .order("nama");
   let data: never[] = (baru.data ?? []) as never[];

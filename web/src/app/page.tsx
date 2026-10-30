@@ -7,6 +7,7 @@ import BadgeAntrean from "@/components/BadgeAntrean";
 import SinkronButton from "@/components/SinkronButton";
 import { formatTanggal, hariIniISO, hitungHST } from "@/lib/tanggal";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
+import { badgeJual, statusJual } from "@/lib/jual";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -25,7 +26,7 @@ export default async function Home() {
     supabase
       .from("plant_batches")
       .select(
-        "id,jumlah,tgl_tanam,status,location_id,commodities(nama,umur_panen_min,umur_panen_maks),locations(nama),sub_blocks(nama),media_types(nama)",
+        "*,commodities(*),locations(nama),sub_blocks(nama),media_types(nama)",
       )
       .not("status", "in", "(selesai,gagal)")
       .order("tgl_tanam", { ascending: false }),
@@ -67,8 +68,8 @@ export default async function Home() {
     subBlok: string | null;
     jumlah: number;
     hst: number;
-    siap: boolean;
-    dekatPanen: boolean;
+    badge: string | null;
+    hijau: boolean;
   };
   const ringkasan: Ringkas[] = [];
   let siapPanen = 0;
@@ -79,6 +80,8 @@ export default async function Home() {
           nama: string | null;
           umur_panen_min: number | null;
           umur_panen_maks: number | null;
+          umur_jual_min: number | null;
+          umur_jual_maks: number | null;
         } | null);
     const lok = Array.isArray(b.locations)
       ? b.locations[0]
@@ -90,10 +93,24 @@ export default async function Home() {
       ? b.media_types[0]
       : (b.media_types as { nama: string | null } | null);
     const hst = hitungHST(b.tgl_tanam);
-    const siap = kom?.umur_panen_min != null && hst >= kom.umur_panen_min;
-    const sisa =
-      kom?.umur_panen_min != null ? kom.umur_panen_min - hst : null;
-    if (siap) siapPanen++;
+    const jual = (b.tujuan as string | null) === "jual";
+    // Batch jual dinilai dari usia jual; batch kebun dari umur panen.
+    const status = statusJual({
+      hst,
+      umurJualMin: jual ? kom?.umur_jual_min : kom?.umur_panen_min,
+      umurJualMaks: jual ? kom?.umur_jual_maks : kom?.umur_panen_maks,
+      umurPanenMin: kom?.umur_panen_min,
+      umurPanenMaks: kom?.umur_panen_maks,
+    });
+    const siapPanenBatch =
+      !jual && kom?.umur_panen_min != null && hst >= kom.umur_panen_min;
+    if (siapPanenBatch) siapPanen++;
+    const badge = jual
+      ? badgeJual(status)
+      : siapPanenBatch
+        ? "Siap panen"
+        : null;
+    const hijau = jual ? status.fase === "siap" : siapPanenBatch;
     ringkasan.push({
       id: b.id,
       komoditas: kom?.nama ?? "?",
@@ -102,8 +119,8 @@ export default async function Home() {
       subBlok: blok?.nama ?? null,
       jumlah: b.jumlah,
       hst,
-      siap,
-      dekatPanen: !siap && sisa != null && sisa >= 0 && sisa <= 7,
+      badge,
+      hijau,
     });
   }
 
@@ -143,7 +160,7 @@ export default async function Home() {
           </h1>
           <p className="mt-1 text-sm text-zinc-600">
             Tinggal satu langkah: isi data awal kebun (2 lokasi, 6 tipe media,
-            13 komoditas — 8 bibit jual).
+            13 komoditas — 8 tanaman jual).
           </p>
           <div className="mt-3">
             <SeedButton />
@@ -186,7 +203,7 @@ export default async function Home() {
           />
           <StatCard
             angka={String(totalBibitSiap)}
-            label="Bibit siap jual (pcs)"
+            label="Tanaman siap jual (pcs)"
             href="/bibit"
           />
           <StatCard
@@ -295,13 +312,15 @@ export default async function Home() {
                               {ikonMedia(r.media)} {r.media} • HST {r.hst}
                             </span>
                           </span>
-                          {r.siap ? (
-                            <span className="shrink-0 rounded-full bg-[#166534] px-2 py-0.5 text-[11px] font-semibold text-white">
-                              Siap panen
-                            </span>
-                          ) : r.dekatPanen ? (
-                            <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800">
-                              Segera panen
+                          {r.badge ? (
+                            <span
+                              className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                                r.hijau
+                                  ? "bg-[#166534] text-white"
+                                  : "bg-amber-100 text-amber-800"
+                              }`}
+                            >
+                              {r.badge}
                             </span>
                           ) : null}
                         </Link>
@@ -347,14 +366,14 @@ function StatCard({
 
 function MenuGrid() {
   const CARDS = [
-    { title: "Bibit", desc: "Stok siap jual per pcs", href: "/bibit" },
+    { title: "Tanaman", desc: "Siap jual (hampir berbuah)", href: "/bibit" },
     { title: "Pengingat", desc: "Apa yang perlu dikerjakan", href: "/tugas" },
     { title: "Kalender", desc: "Semai, tanam & panen", href: "/kalender" },
     { title: "Tanam", desc: "Batch per galon/polybag", href: "/batch" },
     { title: "Kebun", desc: "2 lokasi + sub-blok", href: "/kebun" },
     { title: "Panen", desc: "Hasil kg / ikat / buah", href: "/panen" },
     { title: "Sarana", desc: "Benih, pupuk & media", href: "/sarana" },
-    { title: "Komoditas", desc: "13 komoditas + bibit", href: "/komoditas" },
+    { title: "Komoditas", desc: "13 komoditas + usia jual", href: "/komoditas" },
     { title: "Pengaturan", desc: "Akun, notifikasi & data", href: "/pengaturan" },
   ];
   return (

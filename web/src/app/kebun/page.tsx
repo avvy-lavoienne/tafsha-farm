@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import KebunManager from "@/components/KebunManager";
 import { hitungHST } from "@/lib/tanggal";
+import { statusJual } from "@/lib/jual";
 
 export default async function KebunPage() {
   const supabase = await createClient();
@@ -13,9 +14,7 @@ export default async function KebunPage() {
     supabase.from("sub_blocks").select("id,location_id,nama,foto_url").order("nama"),
     supabase
       .from("plant_batches")
-      .select(
-        "id,location_id,sub_block_id,jumlah,tgl_tanam,status,commodities(nama,umur_panen_min),sub_blocks(nama),media_types(nama)",
-      )
+      .select("*,commodities(*),sub_blocks(nama),media_types(nama)")
       .not("status", "in", "(selesai,gagal)")
       .order("tgl_tanam", { ascending: false }),
   ]);
@@ -32,6 +31,9 @@ export default async function KebunPage() {
         : (b.commodities as {
             nama: string | null;
             umur_panen_min: number | null;
+            umur_panen_maks: number | null;
+            umur_jual_min: number | null;
+            umur_jual_maks: number | null;
           } | null);
       const blok = Array.isArray(b.sub_blocks)
         ? b.sub_blocks[0]
@@ -40,6 +42,17 @@ export default async function KebunPage() {
         ? b.media_types[0]
         : (b.media_types as { nama: string | null } | null);
       const hst = hitungHST(b.tgl_tanam);
+      const jual = (b.tujuan as string | null) === "jual";
+      const status = statusJual({
+        hst,
+        umurJualMin: jual ? kom?.umur_jual_min : kom?.umur_panen_min,
+        umurJualMaks: jual ? kom?.umur_jual_maks : kom?.umur_panen_maks,
+        umurPanenMin: kom?.umur_panen_min,
+        umurPanenMaks: kom?.umur_panen_maks,
+      });
+      const siap = jual
+        ? status.fase === "siap" || status.fase === "lewat"
+        : kom?.umur_panen_min != null && hst >= kom.umur_panen_min;
       return {
         id: b.id,
         komoditas: kom?.nama ?? "?",
@@ -47,7 +60,8 @@ export default async function KebunPage() {
         subBlok: blok?.nama ?? null,
         jumlah: b.jumlah,
         hst,
-        siap: kom?.umur_panen_min != null && hst >= kom.umur_panen_min,
+        siap,
+        badge: siap ? (jual ? "Siap jual" : "Siap panen") : null,
       };
     });
     let siap = 0;

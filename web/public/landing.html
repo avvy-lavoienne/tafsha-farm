@@ -77,7 +77,7 @@
         <a href="#stok" class="pill bg-[#166534] text-white">Lihat bibit yang siap</a>
         <a href="#cara-order" class="pill border border-[#166534] text-[#166534]">Cara memesan</a>
        </div>
-       <p class="mt-6 text-sm text-[#68736a]">Pakuwon, Cisurupan, Garut · 8 jenis bibit · 1 polybag = 1 pcs · tanpa minimal order</p>
+        <p class="mt-6 text-sm text-[#68736a]">Pakuwon, Cisurupan, Garut · 8 jenis tanaman · 1 polybag = 1 pcs · tanpa minimal order</p>
       </div>
       <div class="relative mx-auto w-full max-w-[510px]">
        <div class="absolute inset-8 rounded-full bg-[#dcfce7] blur-3xl"></div>
@@ -129,7 +129,7 @@
      <div class="wrap">
       <p class="eyebrow">CATATAN KEBUN</p>
       <h2 class="mt-3 text-4xl font-bold">Umur yang bisa Anda periksa</h2>
-      <p class="mt-3 text-sm text-gray-600">HST dihitung sejak pindah tanam; kesiapan bibit dihitung sejak semai. Tidak ada angka yang kami sembunyikan.</p>
+      <p class="mt-3 text-sm text-gray-600">HST dihitung sejak pindah tanam. Tanaman ditandai siap jual saat usianya mendekati masa berbunga/berbuah — bukan saat masih semai.</p>
       <div class="table-scroll mt-8 overflow-x-auto rounded-2xl bg-[#f0fdf4] p-5 soft-shadow" tabindex="0">
        <table class="w-full min-w-[640px] text-left text-sm">
         <thead class="border-b text-gray-500">
@@ -147,7 +147,7 @@
      <div class="wrap">
       <p class="eyebrow">SEDANG TUMBUH</p>
       <h2 class="mt-3 text-4xl font-bold">Yang sebentar lagi siap</h2>
-      <p class="mt-3 text-sm text-gray-600">Catat tanggalnya, lalu amankan slot. Bibit diambil dari batch yang sama, bukan dari stok yang tak jelas.</p>
+      <p class="mt-3 text-sm text-gray-600">Catat tanggalnya, lalu amankan slot. Tanaman diambil dari batch yang sama dan sudah mendekati masa berbunga/berbuah.</p>
       <div id="estimasi-live" class="crop-grid mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"><p class="text-sm text-gray-500">Memuat perkiraan...</p></div>
      </div>
     </section>
@@ -188,7 +188,7 @@
       <h2 class="mt-3 text-4xl font-bold">Hal yang sering ditanyakan</h2>
       <div class="mt-8 space-y-3">
        <details class="group rounded-2xl bg-white p-5"><summary class="cursor-pointer font-bold">Satu pcs itu apa?</summary><p class="mt-3 text-sm leading-7 text-gray-600">Satu polybag berisi satu bibit. Beli lima pcs berarti lima polybag.</p></details>
-       <details class="group rounded-2xl bg-white p-5"><summary class="cursor-pointer font-bold">Apa bedanya HST dan umur semai?</summary><p class="mt-3 text-sm leading-7 text-gray-600">HST dihitung sejak pindah tanam. Umur semai dihitung sejak benih disemai, dan itu yang kami pakai untuk menandai kesiapan jual bibit. Untuk bibit yang kami beli, tanggal semainya diperkirakan dari umur saat pembelian.</p></details>
+       <details class="group rounded-2xl bg-white p-5"><summary class="cursor-pointer font-bold">Kapan tanaman dianggap siap jual?</summary><p class="mt-3 text-sm leading-7 text-gray-600">Saat usianya (HST, dihitung sejak pindah tanam) mendekati masa berbunga/berbuah — umumnya beberapa hari sebelum masa panen. Jadi yang Anda bawa pulang bukan bibit semai, melainkan tanaman yang tinggal dirawat sebentar lalu panen.</p></details>
        <details class="group rounded-2xl bg-white p-5"><summary class="cursor-pointer font-bold">Bagaimana kalau yang saya mau belum siap?</summary><p class="mt-3 text-sm leading-7 text-gray-600">Lihat seksi Sedang Tumbuh. Ada perkiraan tanggal siap per batch; chat untuk mengamankan slot.</p></details>
        <details class="group rounded-2xl bg-white p-5"><summary class="cursor-pointer font-bold">Saya pemula. Apakah bisa?</summary><p class="mt-3 text-sm leading-7 text-gray-600">Justru cocok. Bibit datang dalam polybag; tinggal rawat di tempat dengan cahaya cukup.</p></details>
        <details class="group rounded-2xl bg-white p-5"><summary class="cursor-pointer font-bold">Di mana bisa mengambil?</summary><p class="mt-3 text-sm leading-7 text-gray-600">Di kebun kami: Pakuwon, Cisurupan, Garut. Jadwal pengambilan diatur saat memesan.</p></details>
@@ -270,13 +270,13 @@
    }
    var tb=document.getElementById("batch-live");
    if(tb){
-    var semua=(d.siap||[]).concat(d.estimasi||[]);
+     var semua=(d.semua&&d.semua.length)?d.semua:(d.siap||[]).concat(d.estimasi||[]);
     if(!semua.length){tb.innerHTML='<tr><td colspan="6" class="py-4 text-gray-500">Belum ada batch yang sedang tumbuh.</td></tr>'}
     else{
      tb.innerHTML=semua.map(function(b){
-      var status=b.sudahSiap?'<span class="rounded-full bg-[#166534] px-2 py-0.5 text-xs font-bold text-white">Siap · '+b.siap+' polybag</span>':(b.lewatUmur?'<span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">Sudah cukup umur · stok belum dipisah</span>':'<span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">~'+(b.sisaHari||0)+' hari lagi · '+tgl(b.estimasi)+'</span>');
+      var status=b.sudahSiap?'<span class="rounded-full bg-[#166534] px-2 py-0.5 text-xs font-bold text-white">Siap · '+b.siap+' polybag</span>':((b.fase==='siap'||b.fase==='lewat')?'<span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">Sudah usia jual · stok belum dipisah</span>':'<span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">~'+(b.sisaHari||0)+' hari lagi · '+tgl(b.estimasi)+'</span>');
       var h=b.harga!=null?rp(b.harga):"-";
-      var umur='HST '+b.hst+(b.dasarUmur==='semai'?'<span class="block text-xs text-gray-500">semai '+b.umurAcuan+' hr</span>':'');
+      var umur='HST '+b.hst+(b.targetMin!=null?'<span class="block text-xs text-gray-500">target '+(b.jenisTarget==='jual'?'jual':'panen')+' HST '+b.targetMin+'</span>':'');
       return '<tr class="border-b"><td class="py-3 font-semibold">'+ikon(b.nama)+' '+esc(b.nama)+'</td><td>'+umur+'</td><td>'+b.jumlah+' polybag</td><td>'+b.siap+' pcs</td><td>'+h+'</td><td>'+status+'</td></tr>';
      }).join('');
     }
@@ -286,8 +286,8 @@
     if(!(d.estimasi||[]).length){es.innerHTML='<p class="text-sm text-gray-500">Sedang tidak ada batch dalam masa tunggu.</p>'}
     else{
      es.innerHTML=d.estimasi.map(function(b){
-      var dasar=b.dasarUmur==='semai'?'Umur semai '+b.umurAcuan+' hari · target '+b.siapMin+' hari':'HST '+b.hst+' · target '+b.siapMin+' HST';
-      var kapan=b.lewatUmur?'Sudah cukup umur — stok belum dipisahkan':'Siap ± '+tgl(b.estimasi)+' ('+(b.sisaHari||0)+' hari)';
+      var dasar='HST '+b.hst+' · usia jual '+(b.targetMin!=null?b.targetMin+' HST':'-');
+      var kapan=b.lewatUmur?'Sudah usia jual — stok belum dipisahkan':(b.fase==='hampir'?'Hampir siap · ±'+(b.sisaHari||0)+' hari':'Siap ± '+tgl(b.estimasi)+' ('+(b.sisaHari||0)+' hari)');
       return '<article class="rounded-3xl bg-white p-6 soft-shadow"><h3 class="font-bold" style="font-size:19px">'+ikon(b.nama)+' '+esc(b.nama)+'</h3><p class="mt-2 text-sm text-gray-600">'+dasar+'</p><p class="mt-2 font-bold text-[#166534]">'+kapan+'</p><p class="mt-1 text-xs text-gray-500">'+b.jumlah+' polybag dirawat · '+(b.harga!=null?rp(b.harga)+"/pcs":"harga menyusul")+'</p></article>';
      }).join('');
     }

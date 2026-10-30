@@ -261,7 +261,7 @@ export default function BatchForm({
             className="mt-1 tf-input"
           >
             <option value="kebun">🏡 Kebun (rawat → panen)</option>
-            <option value="jual">🌱 Bibit jual (per pcs)</option>
+            <option value="jual">🌱 Jual tanaman (mendekati berbuah)</option>
           </select>
         </label>
         <label className="text-sm font-medium">
@@ -356,7 +356,7 @@ export default function BatchForm({
           </select>
         </label>
         <p className="self-end text-xs text-zinc-500">
-          Jumlah pcs diisi di atas — 1 polybag = 1 pcs bibit.
+          Jumlah pcs diisi di atas — 1 polybag = 1 pcs tanaman.
         </p>
       </div>
 

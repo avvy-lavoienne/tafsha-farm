@@ -11,7 +11,7 @@ const NAV = [
   { href: "/", label: "Beranda", ikon: "🏠", desc: "Ringkasan kebun" },
   { href: "/kebun", label: "Kebun", ikon: "🌱", desc: "Lokasi & sub-blok" },
   { href: "/batch", label: "Tanam", ikon: "➕", desc: "Batch & progres" },
-  { href: "/bibit", label: "Bibit", ikon: "🌱", desc: "Stok siap jual" },
+  { href: "/bibit", label: "Jual", ikon: "🌱", desc: "Tanaman siap jual" },
   { href: "/tugas", label: "Tugas", ikon: "🔔", desc: "Pengingat hari ini" },
   { href: "/kalender", label: "Kalender", ikon: "📅", desc: "Siklus tanam" },
   { href: "/panen", label: "Panen", ikon: "🧺", desc: "Hasil & riwayat" },

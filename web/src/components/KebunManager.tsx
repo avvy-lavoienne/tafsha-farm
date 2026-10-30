@@ -26,6 +26,7 @@ type LokasiItem = {
     jumlah: number;
     hst: number;
     siap: boolean;
+    badge: string | null;
   }[];
   batchAktif: number;
   siapPanen: number;
@@ -386,7 +387,7 @@ export default function KebunManager({
                 <p className="mt-1 text-xs text-zinc-600">{l.deskripsi}</p>
               )}
               <p className="mt-1 text-xs text-zinc-600">
-                🌱 {l.batchAktif} batch aktif • ✅ {l.siapPanen} siap panen • 🧱{" "}
+                🌱 {l.batchAktif} batch aktif • ✅ {l.siapPanen} siap • 🧱{" "}
                 {l.subBlok.length} sub-blok
               </p>
             </div>
@@ -488,9 +489,9 @@ export default function KebunManager({
                           {ikonMedia(bt.media)} {bt.media} • HST {bt.hst}
                         </span>
                       </span>
-                      {bt.siap && (
+                      {bt.badge && (
                         <span className="shrink-0 rounded-full bg-[#166534] px-2 py-0.5 text-xs font-semibold text-white">
-                          Siap panen
+                          {bt.badge}
                         </span>
                       )}
                     </Link>
