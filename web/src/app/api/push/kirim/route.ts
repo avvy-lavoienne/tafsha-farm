@@ -2,14 +2,11 @@ import { timingSafeEqual } from "crypto";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import webpush from "web-push";
+import { hariIniISO } from "@/lib/tanggal";
 
 // Pengirim push harian via Vercel Cron (23:00 UTC = 06:00 WIB).
 // Guard: Authorization: Bearer CRON_SECRET (Vercel mengirim otomatis
 // bila env CRON_SECRET ada) atau header x-vercel-cron.
-
-function wibHariIniISO(): string {
-  return new Date(Date.now() + 7 * 3600_000).toISOString().slice(0, 10);
-}
 
 function bearerBenar(req: Request, secret: string): boolean {
   const header = req.headers.get("authorization") ?? "";
@@ -39,7 +36,7 @@ export async function GET(req: Request) {
       { status: 500 },
     );
 
-  const tanggal = wibHariIniISO();
+  const tanggal = hariIniISO();
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,

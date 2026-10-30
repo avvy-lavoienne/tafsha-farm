@@ -65,11 +65,21 @@ export default function BibitTracker({
       catatan: p.catatan || null,
     });
     if (error) throw error;
+    // Sisa hidup ikut disimpan: tanpa kolom ini, mati/terjual hilang setiap
+    // kali halaman dimuat ulang (sisa kembali ke jumlah awal batch).
     const { error: e2 } = await supabase
       .from("plant_batches")
-      .update({ stok_siap: p.siapBaru })
+      .update({ stok_siap: p.siapBaru, jumlah_hidup: p.sisaBaru })
       .eq("id", batchId);
-    if (e2) throw e2;
+    if (e2 && /jumlah_hidup|column|schema cache/i.test(e2.message)) {
+      const { error: e3 } = await supabase
+        .from("plant_batches")
+        .update({ stok_siap: p.siapBaru })
+        .eq("id", batchId);
+      if (e3) throw e3;
+    } else if (e2) {
+      throw e2;
+    }
     setSisa(p.sisaBaru);
     setSiap(p.siapBaru);
   }

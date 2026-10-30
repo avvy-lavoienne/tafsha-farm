@@ -24,15 +24,20 @@ export default async function BatchDetailPage({
   const { id } = await params;
   const supabase = await createClient();
 
+  // select("*") + relasi: tahan skema lama (migrasi 0007/0008 belum jalan)
+  // tanpa fallback bertingkat. Kolom yang belum ada dibaca dengan `?? default`.
   const { data: b } = await supabase
     .from("plant_batches")
     .select(
-      "id,jumlah,tgl_semai,tgl_tanam,status,penyebab_gagal,catatan,foto_url,created_at,tujuan,stok_siap,harga_pcs,commodities(id,nama,tipe_panen,umur_panen_min,umur_panen_maks,siram_default,jual_bibit,harga_pcs,umur_siap_min,umur_siap_maks),locations(id,nama),sub_blocks(nama),media_types(nama)",
+      "*,commodities(*),locations(id,nama),sub_blocks(nama),media_types(nama)",
     )
     .eq("id", id)
     .single();
 
   if (!b) notFound();
+
+  const tujuan = (b.tujuan as string | null) ?? "kebun";
+  const sisaHidup = Number(b.jumlah_hidup ?? b.jumlah ?? 0);
 
   const komoditas = satu(b.commodities);
   const mediaNama = Array.isArray(b.media_types)
@@ -118,10 +123,28 @@ export default async function BatchDetailPage({
           Siram default: {komoditas?.siram_default ?? "-"} • Tipe:{" "}
           {komoditas?.tipe_panen ?? "-"}
         </p>
-        <BatchStatusButtons id={b.id} status={b.status} />{b.tujuan === "jual" && (<BibitTracker batchId={b.id} awalSisa={Number((b as {jumlah:number}).jumlah ?? 0)} awalSiap={Number((b as {stok_siap:number|null}).stok_siap ?? 0)} harga={(b as {harga_pcs:number|null}).harga_pcs ?? satu(b.commodities)?.harga_pcs ?? null} tutup={tutup} />)}
+        <BatchStatusButtons id={b.id} status={b.status} />
+        {tujuan === "jual" && (
+          <BibitTracker
+            batchId={b.id}
+            awalSisa={sisaHidup}
+            awalSiap={Number(b.stok_siap ?? 0)}
+            harga={(b.harga_pcs as number | null) ?? komoditas?.harga_pcs ?? null}
+            tutup={tutup}
+          />
+        )}
       </section>
 
-      <RiwayatFoto subjek="batch" id={b.id} fotoUtama={b.foto_url ?? null} />{b.tujuan === "jual" && ((moveRes.data ?? []).length > 0 || true) && (<section className="tf-card"><h2 className="font-bold text-green-900">🧾 Riwayat tracker</h2><p className="mt-1 text-xs text-zinc-600">Semai → siap jual → terjual/mati, tercatat otomatis.</p><TimelineMoves moves={(moveRes.data ?? []) as never} /></section>)}
+      <RiwayatFoto subjek="batch" id={b.id} fotoUtama={b.foto_url ?? null} />
+      {tujuan === "jual" && (
+        <section className="tf-card">
+          <h2 className="font-bold text-green-900">🧾 Riwayat tracker</h2>
+          <p className="mt-1 text-xs text-zinc-600">
+            Semai → siap jual → terjual/mati, tercatat otomatis.
+          </p>
+          <TimelineMoves moves={(moveRes.data ?? []) as never} />
+        </section>
+      )}
       {!tutup && (
         <section className="tf-card">
           <h2 className="font-bold text-green-900">🔔 Pengingat</h2>

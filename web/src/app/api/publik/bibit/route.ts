@@ -1,6 +1,6 @@
 import { createClient as buatAdmin } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
-import { hariIniISO } from "@/lib/tanggal";
+import { hariIniISO, selisihHari, tambahHariISO } from "@/lib/tanggal";
 
 // Etalase bibit publik anonim untuk landing marketing:
 // stok siap per pcs + harga + umur batch (HST) + estimasi siap dipasarkan.
@@ -10,18 +10,7 @@ import { hariIniISO } from "@/lib/tanggal";
 export const revalidate = 120;
 
 function hst(tglTanam: string, hariIni: string): number {
-  const a = new Date(tglTanam + "T00:00:00").getTime();
-  const b = new Date(hariIni + "T00:00:00").getTime();
-  return Math.max(0, Math.floor((b - a) / 86400000));
-}
-
-function tambahHari(iso: string, n: number): string {
-  const d = new Date(iso + "T00:00:00");
-  d.setDate(d.getDate() + n);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const t = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${t}`;
+  return Math.max(0, selisihHari(tglTanam, hariIni));
 }
 
 export async function GET() {
@@ -116,7 +105,7 @@ export async function GET() {
         siapMin != null && umurAcuan >= siapMin && !sudahSiap;
       const estimasi =
         siapMin != null && umurAcuan < siapMin
-          ? tambahHari(tanggalAcuan, siapMin)
+          ? tambahHariISO(tanggalAcuan, siapMin)
           : lewatUmur
             ? hariIni
             : null;

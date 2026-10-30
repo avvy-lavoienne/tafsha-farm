@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { hariIniISO } from "@/lib/tanggal";
+import { geserBulan, hariIniISO } from "@/lib/tanggal";
 import PanenManager from "@/components/PanenManager";
 
 function satu<T>(v: T | T[] | null): T | null {
@@ -19,10 +19,11 @@ export default async function PanenPage({
       ? params.bulan
       : hariIniISO().slice(0, 7);
 
+  // Batas bulan dihitung dari string bulan, bukan Date → toISOString:
+  // konversi ke UTC memundurkan tanggal 1 menjadi tanggal terakhir bulan
+  // sebelumnya, sehingga panen di hari terakhir bulan hilang dari rekap.
   const awalBulan = `${bulan}-01`;
-  const d = new Date(awalBulan + "T00:00:00");
-  d.setMonth(d.getMonth() + 1);
-  const awalDepan = d.toISOString().slice(0, 10);
+  const awalDepan = `${geserBulan(bulan, 1)}-01`;
 
   const { data } = await supabase
     .from("harvests")

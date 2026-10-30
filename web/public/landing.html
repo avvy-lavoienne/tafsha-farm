@@ -237,6 +237,9 @@
   document.querySelectorAll('svg.lucide').forEach(function(s){s.setAttribute('aria-hidden','true')});
   var IKON={"cabai":"🌶️","tomat":"🍅","daun bawang":"🧅","seledri":"🥬","bawang merah":"🧅","terong":"🍆","strawberry":"🍓","mint":"🌿"};
   function ikon(n){n=(n||"").toLowerCase();for(var k in IKON){if(n.indexOf(k)>-1)return IKON[k]}return "🌱"}
+  // Nama komoditas berasal dari input pengelola — selalu di-escape sebelum
+  // masuk innerHTML, kalau tidak bisa jadi stored XSS di halaman publik ini.
+  function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
   function rp(n){try{return "Rp "+Number(n).toLocaleString("id-ID")}catch(e){return "Rp "+n}}
   function tgl(id){try{return new Date(id+"T00:00:00").toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"})}catch(e){return id||"-"}}
   fetch("/api/publik/bibit").then(function(r){return r.json()}).then(function(d){
@@ -261,7 +264,7 @@
       var ada=k.siap>0;
       var badge=ada?'<span class="rounded-full bg-[#166534] px-3 py-1 text-xs font-bold text-white">'+k.siap+' polybag siap</span>':'<span class="rounded-full bg-zinc-200 px-3 py-1 text-xs font-bold text-zinc-600">Belum siap</span>';
       var h=k.harga!=null?rp(k.harga)+"/pcs":"Harga menyusul";
-      return '<article class="overflow-hidden rounded-3xl bg-white soft-shadow"><div class="p-5"><div class="flex items-center justify-between gap-2"><h3 class="font-bold" style="font-size:19px">'+ikon(k.nama)+' '+k.nama+'</h3></div><p class="mt-3">'+badge+'</p><p class="mt-2 font-bold text-[#166534]">'+h+'</p><p class="mt-1 text-xs text-gray-500">'+k.total+' polybag dirawat · '+k.batch+' batch</p><a href="#cara-order" class="pill mt-4 w-full border border-[#166534] text-[#166534]">Pesan '+k.nama+' →</a></div></article>';
+      return '<article class="overflow-hidden rounded-3xl bg-white soft-shadow"><div class="p-5"><div class="flex items-center justify-between gap-2"><h3 class="font-bold" style="font-size:19px">'+ikon(k.nama)+' '+esc(k.nama)+'</h3></div><p class="mt-3">'+badge+'</p><p class="mt-2 font-bold text-[#166534]">'+h+'</p><p class="mt-1 text-xs text-gray-500">'+k.total+' polybag dirawat · '+k.batch+' batch</p><a href="#cara-order" class="pill mt-4 w-full border border-[#166534] text-[#166534]">Pesan '+esc(k.nama)+' →</a></div></article>';
      }).join('');
     }
    }
@@ -274,7 +277,7 @@
       var status=b.sudahSiap?'<span class="rounded-full bg-[#166534] px-2 py-0.5 text-xs font-bold text-white">Siap · '+b.siap+' polybag</span>':(b.lewatUmur?'<span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">Sudah cukup umur · stok belum dipisah</span>':'<span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">~'+(b.sisaHari||0)+' hari lagi · '+tgl(b.estimasi)+'</span>');
       var h=b.harga!=null?rp(b.harga):"-";
       var umur='HST '+b.hst+(b.dasarUmur==='semai'?'<span class="block text-xs text-gray-500">semai '+b.umurAcuan+' hr</span>':'');
-      return '<tr class="border-b"><td class="py-3 font-semibold">'+ikon(b.nama)+' '+b.nama+'</td><td>'+umur+'</td><td>'+b.jumlah+' polybag</td><td>'+b.siap+' pcs</td><td>'+h+'</td><td>'+status+'</td></tr>';
+      return '<tr class="border-b"><td class="py-3 font-semibold">'+ikon(b.nama)+' '+esc(b.nama)+'</td><td>'+umur+'</td><td>'+b.jumlah+' polybag</td><td>'+b.siap+' pcs</td><td>'+h+'</td><td>'+status+'</td></tr>';
      }).join('');
     }
    }
@@ -285,7 +288,7 @@
      es.innerHTML=d.estimasi.map(function(b){
       var dasar=b.dasarUmur==='semai'?'Umur semai '+b.umurAcuan+' hari · target '+b.siapMin+' hari':'HST '+b.hst+' · target '+b.siapMin+' HST';
       var kapan=b.lewatUmur?'Sudah cukup umur — stok belum dipisahkan':'Siap ± '+tgl(b.estimasi)+' ('+(b.sisaHari||0)+' hari)';
-      return '<article class="rounded-3xl bg-white p-6 soft-shadow"><h3 class="font-bold" style="font-size:19px">'+ikon(b.nama)+' '+b.nama+'</h3><p class="mt-2 text-sm text-gray-600">'+dasar+'</p><p class="mt-2 font-bold text-[#166534]">'+kapan+'</p><p class="mt-1 text-xs text-gray-500">'+b.jumlah+' polybag dirawat · '+(b.harga!=null?rp(b.harga)+"/pcs":"harga menyusul")+'</p></article>';
+      return '<article class="rounded-3xl bg-white p-6 soft-shadow"><h3 class="font-bold" style="font-size:19px">'+ikon(b.nama)+' '+esc(b.nama)+'</h3><p class="mt-2 text-sm text-gray-600">'+dasar+'</p><p class="mt-2 font-bold text-[#166534]">'+kapan+'</p><p class="mt-1 text-xs text-gray-500">'+b.jumlah+' polybag dirawat · '+(b.harga!=null?rp(b.harga)+"/pcs":"harga menyusul")+'</p></article>';
      }).join('');
     }
    }

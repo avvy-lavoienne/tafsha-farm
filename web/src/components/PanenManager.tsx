@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ikonKomoditas } from "@/lib/media";
-import { formatTanggal } from "@/lib/tanggal";
+import { formatTanggal, geserBulan } from "@/lib/tanggal";
 
 export type PanenItem = {
   id: string;
@@ -49,11 +49,7 @@ export default function PanenManager({
   const maks = total[0]?.total ?? 0;
 
   function bulanGeser(delta: number) {
-    const d = new Date(bulan + "-01T00:00:00");
-    d.setMonth(d.getMonth() + delta);
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, "0");
-    router.push(`/panen?bulan=${y}-${m}`);
+    router.push(`/panen?bulan=${geserBulan(bulan, delta)}`);
   }
 
   function terapkan() {

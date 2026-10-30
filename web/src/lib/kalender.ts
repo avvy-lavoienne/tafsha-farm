@@ -1,5 +1,6 @@
 // Kalender tanam M7 — fungsi murni, tanpa Supabase.
 // Semua tanggal string ISO YYYY-MM-DD agar perbandingan leksikal valid.
+import { tambahHariISO } from "@/lib/tanggal";
 
 export type JenisEvent = "semai" | "tanam" | "pindah" | "estimasi" | "panen";
 
@@ -35,21 +36,6 @@ export const META_JENIS: Record<JenisEvent, { ikon: string; nama: string }> = {
   estimasi: { ikon: "🧺", nama: "Estimasi panen" },
   panen: { ikon: "✅", nama: "Panen" },
 };
-
-export function tambahHariISO(iso: string, n: number): string {
-  const d = new Date(iso + "T00:00:00");
-  d.setDate(d.getDate() + n);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const t = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${t}`;
-}
-
-function selisihHari(dari: string, ke: string): number {
-  const a = new Date(dari + "T00:00:00").getTime();
-  const b = new Date(ke + "T00:00:00").getTime();
-  return Math.round((b - a) / 86400000);
-}
 
 // Bangun semua event untuk daftar batch. Batas rentang estimasi 62 hari
 // per batch agar Talas (180-240) tidak meledakkan payload.
@@ -158,25 +144,3 @@ export function siapDalamHari(
   return batch.size;
 }
 
-export function bulanValid(bulan: string | undefined, jatuh: string): string {
-  if (bulan && /^\d{4}-\d{2}$/.test(bulan)) {
-    const [y, m] = bulan.split("-").map(Number);
-    if (y >= 2000 && y <= 2100 && m >= 1 && m <= 12) return bulan;
-  }
-  return jatuh.slice(0, 7);
-}
-
-export function geserBulan(bulan: string, delta: number): string {
-  const [y, m] = bulan.split("-").map(Number);
-  const d = new Date(y, m - 1 + delta, 1);
-  const yy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  return `${yy}-${mm}`;
-}
-
-export function namaBulan(bulan: string): string {
-  const d = new Date(bulan + "-01T00:00:00");
-  return d.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
-}
-
-export { selisihHari };

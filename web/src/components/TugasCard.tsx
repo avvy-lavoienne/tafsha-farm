@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { apakahJaringanGagal, tambahAntrean } from "@/lib/outbox";
-import { LABEL_TUGAS, formatTanggal, hariIniISO } from "@/lib/tanggal";
+import { LABEL_TUGAS, formatTanggal, hariIniISO, tambahHariISO } from "@/lib/tanggal";
 import { ikonKomoditas } from "@/lib/media";
 import MiniSpin from "@/components/MiniSpin";
 
@@ -25,15 +25,6 @@ export type Tugas = {
 };
 
 type Aksi = "selesai" | "lewat" | "besok";
-
-function tambahHari(iso: string, n: number): string {
-  const d = new Date(iso + "T00:00:00");
-  d.setDate(d.getDate() + n);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const t = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${t}`;
-}
 
 async function ambilUserId(
   supabase: ReturnType<typeof createClient>,
@@ -72,7 +63,7 @@ export default function TugasCard({
 
   const hariIni = hariIniISO();
   const terlewat = tugas.due_date < hariIni && tugas.status === "belum";
-  const besok = tambahHari(hariIni, 1);
+  const besok = tambahHariISO(hariIni, 1);
   const kapan =
     tugas.due_date === hariIni
       ? "Hari ini"
@@ -103,6 +94,12 @@ export default function TugasCard({
       };
       if (sedangOffline) {
         const n = await tambahAntrean("activity_log", muatan);
+        // Status tugas ikut diantrekan. Tanpa ini tugas kembali "belum"
+        // setelah sinkron dan dicentang ulang → logbook ganda.
+        await tambahAntrean("tugas_selesai", {
+          id: tugas.id,
+          selesai_at: new Date().toISOString(),
+        });
         setPesan(`📴 tersimpan offline, menunggu sinkron: ${n}`);
         saatBerubah?.();
         return;
@@ -125,6 +122,10 @@ export default function TugasCard({
       } catch (e) {
         if (apakahJaringanGagal(e)) {
           const n = await tambahAntrean("activity_log", muatan);
+          await tambahAntrean("tugas_selesai", {
+            id: tugas.id,
+            selesai_at: new Date().toISOString(),
+          });
           setPesan(`📴 tersimpan offline, menunggu sinkron: ${n}`);
           saatBerubah?.();
           return;
@@ -182,7 +183,7 @@ export default function TugasCard({
         throw new Error("📴 sedang offline, coba lagi saat online ya 📶");
       const { error } = await supabase
         .from("care_tasks")
-        .update({ due_date: tambahHari(tugas.due_date, 1) })
+        .update({ due_date: tambahHariISO(tugas.due_date, 1) })
         .eq("id", tugas.id);
       if (error) throw error;
       saatBerubah?.();

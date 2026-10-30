@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { hariIniISO } from "@/lib/tanggal";
+import { hariIniISO, tambahHariISO } from "@/lib/tanggal";
 import { ikonKomoditas, ikonMedia } from "@/lib/media";
 import MiniSpin from "@/components/MiniSpin";
 
@@ -162,10 +162,11 @@ export default function BatchForm({
         status: tglTanam > hariIni ? "semai" : "tumbuh",
         catatan: catatan || null,
       };
+      // Stok siap jual TIDAK diisi otomatis dari jumlah: bibit yang baru
+      // disemai belum siap dijual. Isi lewat field, atau nanti lewat tombol
+      // "Siap jual" di tracker batch.
       const siapBaru =
-        tujuan === "jual"
-          ? (stokAwal !== "" ? Number(stokAwal) : Number(jumlah) || 1)
-          : 0;
+        tujuan === "jual" && stokAwal !== "" ? Number(stokAwal) : 0;
       async function insertBatch() {
         const baru = await supabase
           .from("plant_batches")
@@ -174,6 +175,7 @@ export default function BatchForm({
             tujuan: tujuan === "jual" ? "jual" : "kebun",
             harga_pcs: hargaPcs !== "" ? Number(hargaPcs) : (komTerpilih?.harga_pcs ?? null),
             stok_siap: siapBaru,
+            jumlah_hidup: Number(jumlah) || 1,
           })
           .select("id")
           .single();
@@ -208,13 +210,11 @@ export default function BatchForm({
       const duaKali = siramDefault.includes("2x");
       const tugas = [];
       for (let i = 0; i < 30; i++) {
-        const d = new Date(tglTanam + "T00:00:00");
-        d.setDate(d.getDate() + i);
         const baris = {
           user_id: user.id,
           batch_id: batch.id,
           jenis: "siram",
-          due_date: d.toISOString().slice(0, 10),
+          due_date: tambahHariISO(tglTanam, i),
           status: "belum",
         };
         tugas.push(baris);
@@ -298,7 +298,7 @@ export default function BatchForm({
               min={0}
               value={stokAwal}
               onChange={(e) => setStokAwal(e.target.value)}
-              placeholder={`ikut jumlah (${jumlah}) bila kosong`}
+              placeholder="0 bila kosong"
               className="mt-1 tf-input"
             />
           </label>

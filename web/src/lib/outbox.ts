@@ -4,7 +4,12 @@ import type { createClient } from "@/lib/supabase/client";
 
 type SupabaseClient = ReturnType<typeof createClient>;
 
-export type TipeAntrean = "activity_log" | "harvest" | "care_task" | "foto";
+export type TipeAntrean =
+  | "activity_log"
+  | "harvest"
+  | "care_task"
+  | "tugas_selesai"
+  | "foto";
 export type SubjekFoto = "lokasi" | "sub_blok" | "batch";
 
 export type EntriAntrean = {
@@ -169,6 +174,20 @@ async function kirimSatu(
 ): Promise<void> {
   const p = entri.payload as Record<string, unknown>;
   const pemilik = (p.user_id as string | null | undefined) ?? uid;
+  if (entri.tipe === "tugas_selesai") {
+    // Centang tugas yang dilakukan saat offline. Tanpa ini status tugas
+    // kembali "belum" setelah sinkron (lihat TugasCard.selesaikan).
+    const { error } = await supabase
+      .from("care_tasks")
+      .update({
+        status: "selesai",
+        selesai_at:
+          (p.selesai_at as string | undefined) ?? new Date().toISOString(),
+      })
+      .eq("id", p.id as string);
+    if (error) throw error;
+    return;
+  }
   if (entri.tipe === "activity_log") {
     const { error } = await supabase.from("activity_logs").insert({
       user_id: pemilik,

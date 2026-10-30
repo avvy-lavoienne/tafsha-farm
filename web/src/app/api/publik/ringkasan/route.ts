@@ -1,21 +1,12 @@
 import { createClient as buatAdmin } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { bangunEventKalender, type BatchKalender } from "@/lib/kalender";
-import { hariIniISO } from "@/lib/tanggal";
+import { hariIniISO, tambahHariISO } from "@/lib/tanggal";
 
 // Ringkasan komunitas anonim untuk landing publik.
 // Hanya angka agregat yang keluar — tanpa id/nama user/lokasi.
 // Cache 10 menit di CDN/Vercel.
 export const revalidate = 600;
-
-function tambahHari(iso: string, n: number): string {
-  const d = new Date(iso + "T00:00:00");
-  d.setDate(d.getDate() + n);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const t = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${t}`;
-}
 
 export async function GET() {
   try {
@@ -75,19 +66,19 @@ export async function GET() {
       .from("harvests")
       .select("tanggal")
       .gte("tanggal", ini)
-      .lte("tanggal", tambahHari(ini, 6))
+      .lte("tanggal", tambahHariISO(ini, 6))
       .limit(500);
     for (const h of panenMinggu ?? []) panenAktual.add(h.tanggal as string);
     const siapPerHari = new Map<string, Set<string>>();
     for (const e of events) {
       if (e.jenis !== "estimasi" || e.rentang) continue;
-      if (e.tanggal < ini || e.tanggal > tambahHari(ini, 6)) continue;
+      if (e.tanggal < ini || e.tanggal > tambahHariISO(ini, 6)) continue;
       const s = siapPerHari.get(e.tanggal) ?? new Set<string>();
       s.add(e.batchId);
       siapPerHari.set(e.tanggal, s);
     }
     for (let i = 0; i < 7; i++) {
-      const tgl = tambahHari(ini, i);
+      const tgl = tambahHariISO(ini, i);
       minggu.push({
         tanggal: tgl,
         siap: siapPerHari.get(tgl)?.size ?? 0,
